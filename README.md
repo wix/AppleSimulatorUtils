@@ -1,5 +1,15 @@
 # AppleSimulatorUtils
-A collection of Apple simulator utils
+A collection of utils for Apple simulators.
+
+## Installing
+
+Install [brew](https://brew.sh), then:
+
+```shell
+brew install --HEAD applesimutils
+```
+
+## Usage
 
 ```shell
 Usage: applesimutils --simulator <simulator identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission1>, ..."
