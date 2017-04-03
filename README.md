@@ -6,6 +6,7 @@ A collection of utils for Apple simulators.
 Install [brew](https://brew.sh), then:
 
 ```shell
+brew tap wix/brew
 brew install --HEAD applesimutils
 ```
 
