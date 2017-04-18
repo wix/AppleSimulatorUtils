@@ -24,7 +24,7 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
  
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		userLibraryURL = [NSURL URLWithString:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject];
+		userLibraryURL = [NSURL fileURLWithPath:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject];
 		userLibraryURL = [[[userLibraryURL URLByAppendingPathComponent:@"/Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId] URLByAppendingPathComponent:@"data/Library/"];
 	});
 	
@@ -47,7 +47,8 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 		
 		NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
 		
-		if ([tccURL checkResourceIsReachableAndReturnError:NULL])
+		NSError* err;
+		if ([tccURL checkResourceIsReachableAndReturnError:&err] == NO)
 		{
 			continue;
 		}
@@ -75,6 +76,13 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 + (void)setPermisionEnabled:(BOOL)enabled forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId
 {
 	[self _changeAccessToService:service simulatorId:simulatorId bundleIdentifier:bundleIdentifier allowed:enabled];
+}
+
++ (BOOL)isSimulatorReadyForPersmissions:(NSString *)simulatorId
+{
+	NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
+	
+	return [tccURL checkResourceIsReachableAndReturnError:NULL];
 }
 
 @end

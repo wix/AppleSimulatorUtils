@@ -13,11 +13,11 @@ brew install --HEAD applesimutils
 ## Usage
 
 ```shell
-Usage: applesimutils --simulator <simulator identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission1>, ..."
-       applesimutils --simulator <simulator identifier> --restartSB
+Usage: applesimutils --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission1>, ..."
+       applesimutils --simulator <simulator name/identifier> --restartSB
 
 Options:
-    --simulator        The simulator identifier
+    --simulator        The simulator identifier or simulator name
     --bundle           The app bundle identifier
     --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect
     --restartSB        Restarts SpringBoard
