@@ -67,11 +67,11 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--bundle com.LeoNatan.LNPopupControllerExample-"
+            argument = "--bundle &quot;com.wix.GidonRegionTestApp&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES&quot;"
+            argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES,location=inuse&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

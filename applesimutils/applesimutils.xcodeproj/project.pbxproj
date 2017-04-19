@@ -16,6 +16,8 @@
 		391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF301E911CAA0009AACD /* SetServicePermission.m */; };
 		391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */; };
 		391EBF381E91212B0009AACD /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 391EBF371E91212B0009AACD /* libsqlite3.tbd */; };
+		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
+		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +51,10 @@
 		391EBF331E91211F0009AACD /* JPSimulatorHacksDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPSimulatorHacksDB.h; sourceTree = "<group>"; };
 		391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPSimulatorHacksDB.m; sourceTree = "<group>"; };
 		391EBF371E91212B0009AACD /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		395046D31EA725FF00557294 /* SetLocationPermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLocationPermission.h; sourceTree = "<group>"; };
+		395046D41EA725FF00557294 /* SetLocationPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLocationPermission.m; sourceTree = "<group>"; };
+		395046D61EA72F1000557294 /* SimUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimUtils.h; sourceTree = "<group>"; };
+		395046D71EA72F1000557294 /* SimUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimUtils.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,11 +115,15 @@
 		391596FF1E8CDD0500FDD6F5 /* PermissionSetters */ = {
 			isa = PBXGroup;
 			children = (
+				391EBF321E9121150009AACD /* JP */,
+				395046D61EA72F1000557294 /* SimUtils.h */,
+				395046D71EA72F1000557294 /* SimUtils.m */,
 				391597001E8CDD1D00FDD6F5 /* SetNotificationsPermission.h */,
 				391597011E8CDD1D00FDD6F5 /* SetNotificationsPermission.m */,
-				391EBF321E9121150009AACD /* JP */,
 				391EBF2F1E911CAA0009AACD /* SetServicePermission.h */,
 				391EBF301E911CAA0009AACD /* SetServicePermission.m */,
+				395046D31EA725FF00557294 /* SetLocationPermission.h */,
+				395046D41EA725FF00557294 /* SetLocationPermission.m */,
 			);
 			name = PermissionSetters;
 			sourceTree = "<group>";
@@ -192,12 +202,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */,
 				391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */,
 				391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */,
 				391596FC1E8CCA8C00FDD6F5 /* GBPrint.m in Sources */,
 				391596FD1E8CCA8C00FDD6F5 /* GBSettings.m in Sources */,
 				391596FA1E8CCA8C00FDD6F5 /* GBCommandLineParser.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,
+				395046D81EA72F1000557294 /* SimUtils.m in Sources */,
 				391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */,
 				391596FB1E8CCA8C00FDD6F5 /* GBOptionsHelper.m in Sources */,
 			);

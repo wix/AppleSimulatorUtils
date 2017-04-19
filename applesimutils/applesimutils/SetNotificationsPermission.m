@@ -7,6 +7,7 @@
 //
 
 #import "SetNotificationsPermission.h"
+#import "SimUtils.h"
 
 @implementation SetNotificationsPermission
 
@@ -31,19 +32,6 @@
 //	return rootURL;
 //}
 
-+ (NSURL *)_libraryURLForSimulatorId:(NSString*)simulatorId
-{
-	static NSURL* userLibraryURL;
- 
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		userLibraryURL = [NSURL URLWithString:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject];
-		userLibraryURL = [[[userLibraryURL URLByAppendingPathComponent:@"/Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId] URLByAppendingPathComponent:@"data/Library/"];
-	});
-	
-	return userLibraryURL;
-}
-
 + (void)setNotificationsEnabled:(BOOL)enabled forBundleIdentifier:(NSString*)bundleIdentifier displayName:(NSString*)displayName simulatorIdentifier:(NSString*)simulatorId
 {
 	//TODO: Find a different way!
@@ -59,7 +47,7 @@
 	
 	NSData* sectionInfoData = CFBridgingRelease(CFPropertyListCreateData(NULL, (__bridge CFTypeRef)propList, kCFPropertyListBinaryFormat_v1_0, 0, NULL));
 
-	NSURL* simulatorLibraryURL = [self _libraryURLForSimulatorId:simulatorId];
+	NSURL* simulatorLibraryURL = [SimUtils libraryURLForSimulatorId:simulatorId];
 	
 	NSMutableDictionary* bulletinSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:[simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"]];
 	bulletinSectionInfo[bundleIdentifier] = sectionInfoData;

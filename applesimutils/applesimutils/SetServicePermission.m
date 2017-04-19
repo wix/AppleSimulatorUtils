@@ -8,6 +8,7 @@
 
 #import "SetServicePermission.h"
 #import "JPSimulatorHacksDB.h"
+#import "SimUtils.h"
 
 static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 
@@ -15,20 +16,7 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 
 + (NSURL *)_tccPathForSimulatorId:(NSString*)simulatorId
 {
-	return [[self _libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"TCC/TCC.db"];
-}
-
-+ (NSURL *)_libraryURLForSimulatorId:(NSString*)simulatorId
-{
-	static NSURL* userLibraryURL;
- 
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		userLibraryURL = [NSURL fileURLWithPath:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject];
-		userLibraryURL = [[[userLibraryURL URLByAppendingPathComponent:@"/Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId] URLByAppendingPathComponent:@"data/Library/"];
-	});
-	
-	return userLibraryURL;
+	return [[SimUtils libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"TCC/TCC.db"];
 }
 
 #pragma mark - Helper

@@ -10,6 +10,7 @@
 #import "GBCli.h"
 #import "SetNotificationsPermission.h"
 #import "SetServicePermission.h"
+#import "SetLocationPermission.h"
 
 static void LNLog(NSString* format, ...) NS_FORMAT_FUNCTION(1,2);
 
@@ -32,13 +33,13 @@ static void printUsage(NSString* prependMessage)
 		LNLog(@"%@\n", prependMessage);
 	}
 	
-	LNLog(@"Usage: %@ --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission1>, ...\"", utilName);
+	LNLog(@"Usage: %@ --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"", utilName);
 	LNLog(@"       %@ --simulator <simulator name/identifier> --restartSB", utilName);
 	LNLog(@"");
 	LNLog(@"Options:");
-	LNLog(@"    --simulator        The simulator identifier or simulator name");
+	LNLog(@"    --simulator        The simulator identifier or simulator name & operating system version (\"iPhone 6S Plus,OS=10.3\"");
 	LNLog(@"    --bundle           The app bundle identifier");
-	LNLog(@"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect");
+	LNLog(@"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect (the application must be installed on device for setting some permissions)");
 	LNLog(@"    --restartSB        Restarts SpringBoard");
 	LNLog(@"    --help, -h         Prints usage");
 	LNLog(@"");
@@ -48,6 +49,7 @@ static void printUsage(NSString* prependMessage)
 	LNLog(@"    contacts=YES|NO");
 	LNLog(@"    health=YES|NO");
 	LNLog(@"    homekit=YES|NO");
+	LNLog(@"    location=always|inuse|never");
 	LNLog(@"    medialibrary=YES|NO");
 	LNLog(@"    microphone=YES|NO");
 	LNLog(@"    motion=YES|NO");
@@ -162,6 +164,21 @@ static NSArray* simulatorDevicesList()
  ?kTCCServiceCalls
  */
 
+static void assertStringInArrayValues(NSString* str, NSArray* values, int errorCode, NSString* failureMessage)
+{
+	if([[values valueForKey:@"lowercaseString"] containsObject:str.lowercaseString] == NO)
+	{
+		printUsage(failureMessage);
+		
+		exit(errorCode);
+	}
+}
+
+static void assertStringBoolValue(NSString* str, int errorCode, NSString* failureMessage)
+{
+	assertStringInArrayValues(str, @[@"YES", @"NO"], errorCode, failureMessage);
+}
+
 static void performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier)
 {
 	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{@"calendar": @"kTCCServiceCalendar",
@@ -182,7 +199,7 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		NSArray* split = [argument componentsSeparatedByString:@"="];
 		if(split.count != 2)
 		{
-			LNLog(@"Error: Permission argument cannot be parsed: %@", argument);
+			printUsage([NSString stringWithFormat:@"Error: Permission argument cannot be parsed: “%@”", argument]);
 			exit(-10);
 		}
 		
@@ -191,14 +208,24 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		
 		if([permission isEqualToString:@"notifications"])
 		{
+			assertStringBoolValue(value, -10, [NSString stringWithFormat:@"Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			
 			[SetNotificationsPermission setNotificationsEnabled:value.boolValue forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier];
+		}
+		else if([permission isEqualToString:@"location"])
+		{
+			assertStringInArrayValues(value, @[@"never", @"always", @"inuse"], -10, [NSString stringWithFormat:@"Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			
+			[SetLocationPermission setLocationPermission:value forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier];
 		}
 		else
 		{
+			assertStringBoolValue(value, -10, [NSString stringWithFormat:@"Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			
 			NSString* appleService = argumentToAppleService[permission];
 			if(appleService == nil)
 			{
-				LNLog(@"Warning: Unknown permission %@; ignoring", permission);
+				LNLog(@"Warning: Unknown permission “%@”; ignoring", permission);
 				return;
 			}
 			
@@ -259,9 +286,9 @@ int main(int argc, char** argv) {
 			
 			if(range.location != NSNotFound)
 			{
-				NSString* simName = [simulatorFilterRequest substringToIndex:range.location];
+				NSString* simName = [[simulatorFilterRequest substringToIndex:range.location] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 				//Add 4 for the length of ",OS="
-				NSString* osVer = [simulatorFilterRequest substringFromIndex:range.location + 4];
+				NSString* osVer = [[simulatorFilterRequest substringFromIndex:range.location + 4] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 				
 				filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@ && os.version ==[cd] %@", simName, osVer];
 			}
@@ -276,7 +303,7 @@ int main(int argc, char** argv) {
 			
 			if(simulatorId.length == 0)
 			{
-				printUsage([NSString stringWithFormat:@"Error: No simulator found matching \"%@\"", simulatorFilterRequest]);
+				printUsage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", simulatorFilterRequest]);
 				
 				return -1;
 			}
@@ -285,7 +312,7 @@ int main(int argc, char** argv) {
 		NSDictionary* simulator = [[simulatorDevices filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"udid == %@", simulatorId]] firstObject];
 		if(simulator == nil)
 		{
-			printUsage([NSString stringWithFormat:@"Error: Simulator with identifier \"%@\" not found", simulatorId]);
+			printUsage([NSString stringWithFormat:@"Error: Simulator with identifier “%@” not found", simulatorId]);
 			
 			return -1;
 		}
