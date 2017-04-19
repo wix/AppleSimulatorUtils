@@ -39,7 +39,7 @@ static void printUsage(NSString* prependMessage)
 	LNLog(@"Options:");
 	LNLog(@"    --simulator        The simulator identifier or simulator name & operating system version (\"iPhone 6S Plus,OS=10.3\"");
 	LNLog(@"    --bundle           The app bundle identifier");
-	LNLog(@"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect (the application must be installed on device for setting some permissions)");
+	LNLog(@"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect (the application must be installed on device for some permissions to take effect)");
 	LNLog(@"    --restartSB        Restarts SpringBoard");
 	LNLog(@"    --help, -h         Prints usage");
 	LNLog(@"");

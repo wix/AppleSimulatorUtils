@@ -13,13 +13,13 @@ brew install --HEAD applesimutils
 ## Usage
 
 ```shell
-Usage: applesimutils --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission1>, ..."
+Usage: applesimutils --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
        applesimutils --simulator <simulator name/identifier> --restartSB
 
 Options:
-    --simulator        The simulator identifier or simulator name
+    --simulator        The simulator identifier or simulator name & operating system version ("iPhone 6S Plus,OS=10.3"
     --bundle           The app bundle identifier
-    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect
+    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect (the application must be installed on device for some permissions to take effect)
     --restartSB        Restarts SpringBoard
     --help, -h         Prints usage
 
@@ -29,6 +29,7 @@ Available permissions:
     contacts=YES|NO
     health=YES|NO
     homekit=YES|NO
+    location=always|inuse|never
     medialibrary=YES|NO
     microphone=YES|NO
     motion=YES|NO
