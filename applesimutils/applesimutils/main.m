@@ -37,9 +37,9 @@ static void printUsage(NSString* prependMessage)
 	LNLog(@"       %@ --simulator <simulator name/identifier> --restartSB", utilName);
 	LNLog(@"");
 	LNLog(@"Options:");
-	LNLog(@"    --simulator        The simulator identifier or simulator name & operating system version (\"iPhone 6S Plus,OS=10.3\"");
+	LNLog(@"    --simulator        The simulator identifier or simulator name & operating system version (e.g. \"iPhone 7 Plus, OS = 10.3\")");
 	LNLog(@"    --bundle           The app bundle identifier");
-	LNLog(@"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect (the application must be installed on device for some permissions to take effect)");
+	LNLog(@"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect");
 	LNLog(@"    --restartSB        Restarts SpringBoard");
 	LNLog(@"    --help, -h         Prints usage");
 	LNLog(@"");
@@ -281,25 +281,40 @@ int main(int argc, char** argv) {
 				return -1;
 			}
 			
-			NSRange range = [simulatorFilterRequest rangeOfString:@",OS=" options:NSBackwardsSearch];
-			NSPredicate* filterPredicate;
+			NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(\\d{1,2}\\.\\d{1,2})\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
+			NSArray<NSTextCheckingResult *> * matches = [expr matchesInString:simulatorFilterRequest options:0 range:NSMakeRange(0, simulatorFilterRequest.length)];
 			
-			if(range.location != NSNotFound)
+			NSPredicate* filterPredicate = nil;
+			
+			if(matches.count > 0 && matches.firstObject.numberOfRanges == 3)
 			{
-				NSString* simName = [[simulatorFilterRequest substringToIndex:range.location] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-				//Add 4 for the length of ",OS="
-				NSString* osVer = [[simulatorFilterRequest substringFromIndex:range.location + 4] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+				NSString* simName = [simulatorFilterRequest substringWithRange:[matches.firstObject rangeAtIndex:1]];
+				NSRange osRange = [matches.firstObject rangeAtIndex:2];
+				if(osRange.location != NSNotFound)
+				{
+					NSString* osVer = [simulatorFilterRequest substringWithRange:osRange];
+					filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@ && os.version ==[cd] %@", simName, osVer];
+				}
+				else
+				{
+					filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", simName];
+				}
 				
-				filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@ && os.version ==[cd] %@", simName, osVer];
-			}
-			else
-			{
-				NSString* simName = simulatorId;
-				
-				filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", simName];
+				NSTextCheckingResult* result = matches.firstObject;
+				for(NSUInteger i = 0; i < result.numberOfRanges; i++)
+				{
+					NSRange range = [result rangeAtIndex:i];
+					if(range.location != NSNotFound)
+					{
+						NSLog(@"%@", [simulatorFilterRequest substringWithRange:range]);
+					}
+				}
 			}
 			
-			simulatorId = [[simulatorDevices filteredArrayUsingPredicate:filterPredicate] lastObject][@"udid"];
+			if(filterPredicate != nil)
+			{
+				simulatorId = [[simulatorDevices filteredArrayUsingPredicate:filterPredicate] lastObject][@"udid"];
+			}
 			
 			if(simulatorId.length == 0)
 			{

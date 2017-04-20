@@ -63,7 +63,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--simulator &quot;iPhone 6s Plus&quot;"
+            argument = "--simulator &quot;iPhone 6s Plus, OS=10.3&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

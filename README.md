@@ -17,7 +17,7 @@ Usage: applesimutils --simulator <simulator name/identifier> --bundle <bundle id
        applesimutils --simulator <simulator name/identifier> --restartSB
 
 Options:
-    --simulator        The simulator identifier or simulator name & operating system version ("iPhone 6S Plus,OS=10.3"
+    --simulator        The simulator identifier or simulator name & operating system version (e.g. "iPhone 7 Plus, OS = 10.3")
     --bundle           The app bundle identifier
     --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect
     --restartSB        Restarts SpringBoard
