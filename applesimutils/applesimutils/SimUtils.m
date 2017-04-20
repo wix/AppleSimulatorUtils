@@ -63,8 +63,10 @@
 	getBundlePathTask.launchPath = @"/usr/bin/xcrun";
 	getBundlePathTask.arguments = @[@"simctl", @"get_app_container", simulatorId, bundleId, @"app"];
 	
-	NSPipe * out = [NSPipe pipe];
+	NSPipe* out = [NSPipe pipe];
+	NSPipe* err = [NSPipe pipe];
 	[getBundlePathTask setStandardOutput:out];
+	[getBundlePathTask setStandardError:err];
 	
 	[getBundlePathTask launch];
 	[getBundlePathTask waitUntilExit];

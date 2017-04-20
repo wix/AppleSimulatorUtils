@@ -42,18 +42,16 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 	bundlePermissions[@"Whitelisted"] = @0;
 	
 	NSURL* binaryURL = [SimUtils binaryURLForBundleId:bundleIdentifier simulatorId:simulatorId];
+	NSString* path = binaryURL != nil ? binaryURL.path : @"";
 	
-	bundlePermissions[@"Executable"] = binaryURL.path;
-	bundlePermissions[@"Registered"] = binaryURL.path;
+	bundlePermissions[@"Executable"] = path;
+	bundlePermissions[@"Registered"] = path;
 	
 	locationClients[bundleIdentifier] = bundlePermissions;
 	
 	locationdCtl(simulatorId, YES);
 	
-	for(int i = 0; i < 100; i++)
-	{
-		[[NSPropertyListSerialization dataWithPropertyList:locationClients format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL] writeToURL:plistURL atomically:YES];
-	}
+	[[NSPropertyListSerialization dataWithPropertyList:locationClients format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL] writeToURL:plistURL atomically:YES];
 	
 	locationdCtl(simulatorId, NO);
 }
