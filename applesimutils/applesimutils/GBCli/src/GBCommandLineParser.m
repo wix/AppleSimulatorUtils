@@ -6,9 +6,9 @@
 //  Copyright (c) 2012 Tomaz Kragelj. All rights reserved.
 //
 
-#import "GBPrint.h"
 #import "GBSettings.h"
 #import "GBCommandLineParser.h"
+#import "LNLog.h"
 
 static NSString * const GBCommandLineLongOptionKey = @"long";
 static NSString * const GBCommandLineShortOptionKey = @"short";
@@ -139,13 +139,13 @@ static NSString * const GBCommandLineEndOfOptionsKey = @"end-of-options"; // thi
 	return ^(GBParseFlags flags, NSString *argument, id value, BOOL *stop) {
 		switch (flags) {
 			case GBParseFlagUnknownOption:
-				gbfprintln(stderr, @"Unknown command line option %@, try --help!", argument);
+				LNLog(LNLogLevelError, @"Unknown command line option %@, try --help!", argument);
 				break;
 			case GBParseFlagMissingValue:
-				gbfprintln(stderr, @"Missing value for command line option %@, try --help!", argument);
+				LNLog(LNLogLevelError, @"Missing value for command line option %@, try --help!", argument);
 				break;
 			case GBParseFlagWrongGroup:
-				gbfprintln(stderr, @"Invalid option %@ for group %@!", argument, self.currentOptionsGroupName);
+				LNLog(LNLogLevelError, @"Invalid option %@ for group %@!", argument, self.currentOptionsGroupName);
 				break;
 			case GBParseFlagArgument:
 				[self.settings addArgument:value];

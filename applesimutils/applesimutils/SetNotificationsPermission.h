@@ -10,6 +10,6 @@
 
 @interface SetNotificationsPermission : NSObject
 
-+ (void)setNotificationsEnabled:(BOOL)enabled forBundleIdentifier:(NSString*)bundleIdentifier displayName:(NSString*)displayName simulatorIdentifier:(NSString*)simulatorId;
++ (BOOL)setNotificationsEnabled:(BOOL)enabled forBundleIdentifier:(NSString*)bundleIdentifier displayName:(NSString*)displayName simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error;
 
 @end

@@ -22,11 +22,26 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 
 @implementation SetLocationPermission
 
-+ (void)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId
++ (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
 {
 	NSURL* plistURL = [[SimUtils libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"Caches/locationd/clients.plist"];
-	NSError* err;
-	NSMutableDictionary* locationClients = [NSPropertyListSerialization propertyListWithData:[NSData dataWithContentsOfURL:plistURL] options:NSPropertyListMutableContainers format:nil error:&err];
+	
+	NSData* plistData = [NSData dataWithContentsOfURL:plistURL];
+	NSMutableDictionary* locationClients;
+	if(plistData == nil)
+	{
+		locationClients = [NSMutableDictionary new];
+	}
+	else
+	{
+		locationClients = [NSPropertyListSerialization propertyListWithData:plistData options:NSPropertyListMutableContainers format:nil error:error];
+	}
+	
+	if(locationClients == nil)
+	{
+		*error = [NSError errorWithDomain:@"SetLocationPermissionsError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unable to parse clients.plist"}];
+		return NO;
+	}
 	
 	NSMutableDictionary* bundlePermissions = locationClients[bundleIdentifier];
 	if(bundlePermissions == nil)
@@ -54,6 +69,8 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 	[[NSPropertyListSerialization dataWithPropertyList:locationClients format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL] writeToURL:plistURL atomically:YES];
 	
 	locationdCtl(simulatorId, NO);
+	
+	return YES;
 }
 
 @end

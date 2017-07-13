@@ -10,12 +10,12 @@
 		391596E01E8CBAA900FDD6F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596DF1E8CBAA900FDD6F5 /* main.m */; };
 		391596FA1E8CCA8C00FDD6F5 /* GBCommandLineParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F01E8CCA8C00FDD6F5 /* GBCommandLineParser.m */; };
 		391596FB1E8CCA8C00FDD6F5 /* GBOptionsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F21E8CCA8C00FDD6F5 /* GBOptionsHelper.m */; };
-		391596FC1E8CCA8C00FDD6F5 /* GBPrint.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F41E8CCA8C00FDD6F5 /* GBPrint.m */; };
 		391596FD1E8CCA8C00FDD6F5 /* GBSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F61E8CCA8C00FDD6F5 /* GBSettings.m */; };
 		391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391597011E8CDD1D00FDD6F5 /* SetNotificationsPermission.m */; };
 		391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF301E911CAA0009AACD /* SetServicePermission.m */; };
 		391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */; };
 		391EBF381E91212B0009AACD /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 391EBF371E91212B0009AACD /* libsqlite3.tbd */; };
+		3925D6F31F17A1F9001AED8D /* LNLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3925D6F21F17A1F9001AED8D /* LNLog.m */; };
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 /* End PBXBuildFile section */
@@ -40,8 +40,6 @@
 		391596F01E8CCA8C00FDD6F5 /* GBCommandLineParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBCommandLineParser.m; path = src/GBCommandLineParser.m; sourceTree = "<group>"; };
 		391596F11E8CCA8C00FDD6F5 /* GBOptionsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBOptionsHelper.h; path = src/GBOptionsHelper.h; sourceTree = "<group>"; };
 		391596F21E8CCA8C00FDD6F5 /* GBOptionsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBOptionsHelper.m; path = src/GBOptionsHelper.m; sourceTree = "<group>"; };
-		391596F31E8CCA8C00FDD6F5 /* GBPrint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBPrint.h; path = src/GBPrint.h; sourceTree = "<group>"; };
-		391596F41E8CCA8C00FDD6F5 /* GBPrint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBPrint.m; path = src/GBPrint.m; sourceTree = "<group>"; };
 		391596F51E8CCA8C00FDD6F5 /* GBSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBSettings.h; path = src/GBSettings.h; sourceTree = "<group>"; };
 		391596F61E8CCA8C00FDD6F5 /* GBSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBSettings.m; path = src/GBSettings.m; sourceTree = "<group>"; };
 		391597001E8CDD1D00FDD6F5 /* SetNotificationsPermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetNotificationsPermission.h; sourceTree = "<group>"; };
@@ -51,6 +49,8 @@
 		391EBF331E91211F0009AACD /* JPSimulatorHacksDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPSimulatorHacksDB.h; sourceTree = "<group>"; };
 		391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPSimulatorHacksDB.m; sourceTree = "<group>"; };
 		391EBF371E91212B0009AACD /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		3925D6F11F17A1F9001AED8D /* LNLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNLog.h; sourceTree = "<group>"; };
+		3925D6F21F17A1F9001AED8D /* LNLog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNLog.m; sourceTree = "<group>"; };
 		395046D31EA725FF00557294 /* SetLocationPermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLocationPermission.h; sourceTree = "<group>"; };
 		395046D41EA725FF00557294 /* SetLocationPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLocationPermission.m; sourceTree = "<group>"; };
 		395046D61EA72F1000557294 /* SimUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimUtils.h; sourceTree = "<group>"; };
@@ -91,6 +91,8 @@
 			children = (
 				391596FF1E8CDD0500FDD6F5 /* PermissionSetters */,
 				391596E71E8CCA8C00FDD6F5 /* GBCli */,
+				3925D6F11F17A1F9001AED8D /* LNLog.h */,
+				3925D6F21F17A1F9001AED8D /* LNLog.m */,
 				391596DF1E8CBAA900FDD6F5 /* main.m */,
 			);
 			path = applesimutils;
@@ -104,8 +106,6 @@
 				391596F01E8CCA8C00FDD6F5 /* GBCommandLineParser.m */,
 				391596F11E8CCA8C00FDD6F5 /* GBOptionsHelper.h */,
 				391596F21E8CCA8C00FDD6F5 /* GBOptionsHelper.m */,
-				391596F31E8CCA8C00FDD6F5 /* GBPrint.h */,
-				391596F41E8CCA8C00FDD6F5 /* GBPrint.m */,
 				391596F51E8CCA8C00FDD6F5 /* GBSettings.h */,
 				391596F61E8CCA8C00FDD6F5 /* GBSettings.m */,
 			);
@@ -171,7 +171,7 @@
 		391596D41E8CBAA900FDD6F5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = Wix;
 				TargetAttributes = {
 					391596DB1E8CBAA900FDD6F5 = {
@@ -205,7 +205,7 @@
 				395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */,
 				391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */,
 				391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */,
-				391596FC1E8CCA8C00FDD6F5 /* GBPrint.m in Sources */,
+				3925D6F31F17A1F9001AED8D /* LNLog.m in Sources */,
 				391596FD1E8CCA8C00FDD6F5 /* GBSettings.m in Sources */,
 				391596FA1E8CCA8C00FDD6F5 /* GBCommandLineParser.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,
@@ -228,7 +228,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -236,7 +238,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -276,7 +282,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -284,7 +292,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;

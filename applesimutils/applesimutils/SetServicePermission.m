@@ -25,6 +25,7 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 				  simulatorId:(NSString*)simulatorId
 			 bundleIdentifier:(NSString*)bundleIdentifier
 					  allowed:(BOOL)allowed
+						 error:(NSError**)error
 {	
 	BOOL success = NO;
 	NSDate *start = [NSDate date];
@@ -35,8 +36,7 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 		
 		NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
 		
-		NSError* err;
-		if ([tccURL checkResourceIsReachableAndReturnError:&err] == NO)
+		if ([tccURL checkResourceIsReachableAndReturnError:error] == NO)
 		{
 			continue;
 		}
@@ -51,19 +51,29 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 		}
 		else {
 			[db close];
-			NSLog(@"JPSimulatorHacks ERROR: %@", [db lastErrorMessage]);
+			if(error)
+			{
+				*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [db lastErrorMessage]}];
+				//On error, stop retries.
+				return NO;
+			}
 		}
 		
 		[db close];
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 	}
 	
+	if(success == NO && error && *error == nil)
+	{
+		*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unknown set service permission error"}];
+	}
+	
 	return success;
 }
 
-+ (void)setPermisionEnabled:(BOOL)enabled forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId
++ (BOOL)setPermisionEnabled:(BOOL)enabled forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
 {
-	[self _changeAccessToService:service simulatorId:simulatorId bundleIdentifier:bundleIdentifier allowed:enabled];
+	return [self _changeAccessToService:service simulatorId:simulatorId bundleIdentifier:bundleIdentifier allowed:enabled error:error];
 }
 
 + (BOOL)isSimulatorReadyForPersmissions:(NSString *)simulatorId
