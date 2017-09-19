@@ -65,16 +65,20 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--simulator &quot;iPhone 6s Plus, OS=10.3&quot;"
-            isEnabled = "YES">
+            argument = "--simulator &quot;iPhone 8 Plus, OS=11.0&quot;"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--bundle &quot;com.wix.GidonRegionTestApp&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES,location=inuse&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--list &quot;iPhone&quot; --maxResults 2"
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"
@@ -82,7 +86,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>

@@ -24,12 +24,15 @@ static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
 	
 	LNLog(LNLogLevelStdOut, @"Usage: %@ --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"", utilName);
 	LNLog(LNLogLevelStdOut, @"       %@ --simulator <simulator name/identifier> --restartSB", utilName);
+	LNLog(LNLogLevelStdOut, @"       %@ --list [\"<simulator name>[, OS=<version>]\"] [--maxResults <int>]", utilName);
 	LNLog(LNLogLevelStdOut, @"");
 	LNLog(LNLogLevelStdOut, @"Options:");
 	LNLog(LNLogLevelStdOut, @"    --simulator        The simulator identifier or simulator name & operating system version (e.g. \"iPhone 7 Plus, OS = 10.3\")");
 	LNLog(LNLogLevelStdOut, @"    --bundle           The app bundle identifier");
 	LNLog(LNLogLevelStdOut, @"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect");
 	LNLog(LNLogLevelStdOut, @"    --restartSB        Restarts SpringBoard");
+	LNLog(LNLogLevelStdOut, @"    --list       		 Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional");
+	LNLog(LNLogLevelStdOut, @"    --maxResults       Limits the number of results returned from --list");
 	LNLog(LNLogLevelStdOut, @"    --help, -h         Prints usage");
 	LNLog(LNLogLevelStdOut, @"");
 	LNLog(LNLogLevelStdOut, @"Available permissions:");
@@ -119,9 +122,59 @@ static NSArray* simulatorDevicesList()
 		[allDevices addObjectsFromArray:runtimeDevices];
 	}];
 	
-	return [allDevices sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"os.name" ascending:YES comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+	return [allDevices sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"os.version" ascending:NO comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
 		return [obj1 compare:obj2 options:NSNumericSearch];
-	}]]];
+	}], [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+}
+
+static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSString* simulatorFilterRequest)
+{
+	if(simulatorDevices == nil)
+	{
+		return nil;
+	}
+	
+	if(simulatorFilterRequest == nil)
+	{
+		return simulatorDevices;
+	}
+	
+	NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(\\d{1,2}\\.\\d{1,2})\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
+	NSArray<NSTextCheckingResult *> * matches = [expr matchesInString:simulatorFilterRequest options:0 range:NSMakeRange(0, simulatorFilterRequest.length)];
+	
+	NSPredicate* filterPredicate = nil;
+	
+	if(matches.count > 0 && matches.firstObject.numberOfRanges == 3)
+	{
+		NSString* simName = [simulatorFilterRequest substringWithRange:[matches.firstObject rangeAtIndex:1]];
+		NSRange osRange = [matches.firstObject rangeAtIndex:2];
+		if(osRange.location != NSNotFound)
+		{
+			NSString* osVer = [simulatorFilterRequest substringWithRange:osRange];
+			filterPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ && os.version ==[cd] %@", simName, osVer];
+		}
+		else
+		{
+			filterPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", simName];
+		}
+		
+		NSTextCheckingResult* result = matches.firstObject;
+		for(NSUInteger i = 0; i < result.numberOfRanges; i++)
+		{
+			NSRange range = [result rangeAtIndex:i];
+			if(range.location != NSNotFound)
+			{
+				//						NSLog(@"%@", [simulatorFilterRequest substringWithRange:range]);
+			}
+		}
+	}
+	
+	if(filterPredicate != nil)
+	{
+		return [simulatorDevices filteredArrayUsingPredicate:filterPredicate];
+	}
+	
+	return nil;
 }
 
 
@@ -251,11 +304,9 @@ int main(int argc, char** argv) {
 		[parser registerOption:@"restartSB" requirement:GBValueNone];
 		[parser registerOption:@"help" shortcut:'h' requirement:GBValueNone];
 		[parser registerOption:@"simulator" requirement:GBValueRequired];
+		[parser registerOption:@"list" requirement:GBValueOptional];
+		[parser registerOption:@"maxResults" requirement:GBValueRequired];
 		[parser registerOption:@"bundle" requirement:GBValueRequired];
-		
-//		[parser registerOption:@"photos" requirement:GBValueRequired];
-//		[parser registerOption:@"notifications" requirement:GBValueRequired];
-//		[parser registerOption:@"simulator" requirement:GBValueRequired];
 		
 		GBSettings *settings = [GBSettings settingsWithName:@"CLI" parent:nil];
 		
@@ -264,10 +315,50 @@ int main(int argc, char** argv) {
 		
 		if([settings boolForKey:@"help"] ||
 		   (![settings objectForKey:@"setPermissions"] &&
-			![settings boolForKey:@"restartSB"]))
+			![settings boolForKey:@"restartSB"] &&
+		    ![settings objectForKey:@"list"]))
 		{
 			printUsage(nil, LNLogLevelStdOut);
 			return [settings boolForKey:@"help"] ? 0 : -1;
+		}
+		
+		NSArray* simulatorDevices = simulatorDevicesList();
+		
+		if([settings objectForKey:@"list"] != nil)
+		{
+			id value = [settings objectForKey:@"list"];
+			NSString* simulatorFilterRequest;
+			
+			if([value isKindOfClass:[NSString class]])
+			{
+				simulatorFilterRequest = value;
+			}
+			
+			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, simulatorFilterRequest);
+			if(filteredSimulators == nil)
+			{
+				printUsage(@"Error: Unable to list simulators", LNLogLevelError);
+			}
+			
+			NSUInteger maxResults = NSUIntegerMax;
+			if([settings objectForKey:@"maxResults"])
+			{
+				maxResults = [settings unsignedIntegerForKey:@"maxResults"];
+			}
+			
+			if(maxResults < 1)
+			{
+				printUsage(@"Error: Invalid value for --maxResults", LNLogLevelError);
+			}
+			
+			if(maxResults != NSUIntegerMax)
+			{
+				filteredSimulators = [filteredSimulators subarrayWithRange:NSMakeRange(0, MIN(filteredSimulators.count, maxResults))];
+			}
+			
+			LNLog(LNLogLevelStdOut, @"%@", [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:filteredSimulators options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding]);
+			
+			return 0;
 		}
 		
 		NSString* simulatorId = [settings objectForKey:@"simulator"];
@@ -278,50 +369,15 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 		
-		NSArray* simulatorDevices = simulatorDevicesList();
-		
 		if([[NSUUID alloc] initWithUUIDString:simulatorId] == nil)
 		{
 			NSString* simulatorFilterRequest = simulatorId;
 			
-			if(simulatorDevices == nil)
+			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, simulatorFilterRequest);
+			
+			if(filteredSimulators != nil)
 			{
-				return -1;
-			}
-			
-			NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(\\d{1,2}\\.\\d{1,2})\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
-			NSArray<NSTextCheckingResult *> * matches = [expr matchesInString:simulatorFilterRequest options:0 range:NSMakeRange(0, simulatorFilterRequest.length)];
-			
-			NSPredicate* filterPredicate = nil;
-			
-			if(matches.count > 0 && matches.firstObject.numberOfRanges == 3)
-			{
-				NSString* simName = [simulatorFilterRequest substringWithRange:[matches.firstObject rangeAtIndex:1]];
-				NSRange osRange = [matches.firstObject rangeAtIndex:2];
-				if(osRange.location != NSNotFound)
-				{
-					NSString* osVer = [simulatorFilterRequest substringWithRange:osRange];
-					filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@ && os.version ==[cd] %@", simName, osVer];
-				}
-				else
-				{
-					filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", simName];
-				}
-				
-				NSTextCheckingResult* result = matches.firstObject;
-				for(NSUInteger i = 0; i < result.numberOfRanges; i++)
-				{
-					NSRange range = [result rangeAtIndex:i];
-					if(range.location != NSNotFound)
-					{
-//						NSLog(@"%@", [simulatorFilterRequest substringWithRange:range]);
-					}
-				}
-			}
-			
-			if(filterPredicate != nil)
-			{
-				simulatorId = [[simulatorDevices filteredArrayUsingPredicate:filterPredicate] lastObject][@"udid"];
+				simulatorId = filteredSimulators.firstObject[@"udid"];
 			}
 			
 			if(simulatorId.length == 0)
