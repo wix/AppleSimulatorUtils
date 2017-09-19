@@ -139,33 +139,23 @@ static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSString* simulato
 		return simulatorDevices;
 	}
 	
-	NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(\\d{1,2}\\.\\d{1,2})\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
+	NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(.*)\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
 	NSArray<NSTextCheckingResult *> * matches = [expr matchesInString:simulatorFilterRequest options:0 range:NSMakeRange(0, simulatorFilterRequest.length)];
 	
 	NSPredicate* filterPredicate = nil;
 	
-	if(matches.count > 0 && matches.firstObject.numberOfRanges == 3)
+	if(matches.count > 0 && matches.firstObject.numberOfRanges >= 3)
 	{
 		NSString* simName = [simulatorFilterRequest substringWithRange:[matches.firstObject rangeAtIndex:1]];
 		NSRange osRange = [matches.firstObject rangeAtIndex:2];
 		if(osRange.location != NSNotFound)
 		{
 			NSString* osVer = [simulatorFilterRequest substringWithRange:osRange];
-			filterPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@ && os.version ==[cd] %@", simName, osVer];
+			filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@ && (os.version == %@ || os.name == %@)", simName, osVer, osVer];
 		}
 		else
 		{
-			filterPredicate = [NSPredicate predicateWithFormat:@"name CONTAINS[cd] %@", simName];
-		}
-		
-		NSTextCheckingResult* result = matches.firstObject;
-		for(NSUInteger i = 0; i < result.numberOfRanges; i++)
-		{
-			NSRange range = [result rangeAtIndex:i];
-			if(range.location != NSNotFound)
-			{
-				//						NSLog(@"%@", [simulatorFilterRequest substringWithRange:range]);
-			}
+			filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", simName];
 		}
 	}
 	
@@ -324,6 +314,11 @@ int main(int argc, char** argv) {
 		
 		NSArray* simulatorDevices = simulatorDevicesList();
 		
+		if(simulatorDevices == nil)
+		{
+			printUsage(@"Error: Unable to obtain a list of simulators", LNLogLevelError);
+		}
+		
 		if([settings objectForKey:@"list"] != nil)
 		{
 			id value = [settings objectForKey:@"list"];
@@ -337,7 +332,7 @@ int main(int argc, char** argv) {
 			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, simulatorFilterRequest);
 			if(filteredSimulators == nil)
 			{
-				printUsage(@"Error: Unable to list simulators", LNLogLevelError);
+				printUsage(@"Error: Unable to filter simulators", LNLogLevelError);
 			}
 			
 			NSUInteger maxResults = NSUIntegerMax;

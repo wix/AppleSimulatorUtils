@@ -77,8 +77,8 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--list &quot;iPhone&quot; --maxResults 2"
-            isEnabled = "NO">
+            argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"
@@ -86,7 +86,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
       <AdditionalOptions>
