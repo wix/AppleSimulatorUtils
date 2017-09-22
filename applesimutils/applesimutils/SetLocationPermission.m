@@ -13,16 +13,15 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //New Simulator Runtime location for Xcode 9
-    NSString *plistPath = @"/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist";
+    NSURL *devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
     
-    if (![fileManager fileExistsAtPath:plistPath]){
-        NSURL* devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
-        plistPath = devTools.path;
+    if (![fileManager fileExistsAtPath:devTools.path]){
+        devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
     }
 	
 	NSTask* rebootTask = [NSTask new];
 	rebootTask.launchPath = @"/usr/bin/xcrun";
-	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", plistPath];
+	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", devTools.path];
 	[rebootTask launch];
 	[rebootTask waitUntilExit];
 }
