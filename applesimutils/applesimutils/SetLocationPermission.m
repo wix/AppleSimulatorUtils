@@ -11,7 +11,13 @@
 
 static void locationdCtl(NSString* simulatorId, BOOL stop)
 {
-	NSURL* devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    //New Simulator Runtime location for Xcode 9
+    NSURL *devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
+    
+    if (![fileManager fileExistsAtPath:devTools.path]){
+        devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
+    }
 	
 	NSTask* rebootTask = [NSTask new];
 	rebootTask.launchPath = @"/usr/bin/xcrun";
