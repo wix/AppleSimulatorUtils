@@ -44,6 +44,6 @@ sed -i '' -e 's/url .*/url '"'https:\/\/raw.githubusercontent.com\/wix\/homebrew
 sed -i '' -e 's/sha256 .*/sha256 '"'"$(shasum -b -a 256 AppleSimulatorUtils-$1.tar.gz | awk '{ print $1 }')"'"'/g' applesimutils.rb
 git add -A
 git commit -m $1
-git push origin --tags
+git push
 
 # version.h
