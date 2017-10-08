@@ -78,6 +78,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--list"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
