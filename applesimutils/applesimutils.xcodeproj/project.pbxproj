@@ -55,6 +55,7 @@
 		395046D41EA725FF00557294 /* SetLocationPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLocationPermission.m; sourceTree = "<group>"; };
 		395046D61EA72F1000557294 /* SimUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimUtils.h; sourceTree = "<group>"; };
 		395046D71EA72F1000557294 /* SimUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimUtils.m; sourceTree = "<group>"; };
+		39FE99C31F8A6B17006DF8EF /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -94,6 +95,7 @@
 				3925D6F11F17A1F9001AED8D /* LNLog.h */,
 				3925D6F21F17A1F9001AED8D /* LNLog.m */,
 				391596DF1E8CBAA900FDD6F5 /* main.m */,
+				39FE99C31F8A6B17006DF8EF /* version.h */,
 			);
 			path = applesimutils;
 			sourceTree = "<group>";

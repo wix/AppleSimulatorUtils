@@ -82,7 +82,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"
@@ -90,6 +90,10 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--version"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>

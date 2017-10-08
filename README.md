@@ -24,6 +24,7 @@ Options:
     --restartSB        Restarts SpringBoard
     --list       		 Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional
     --maxResults       Limits the number of results returned from --list
+    --version, -v      Prints version
     --help, -h         Prints usage
 
 Available permissions:

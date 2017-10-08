@@ -13,6 +13,10 @@
 #import "SetLocationPermission.h"
 #import "LNLog.h"
 
+static char* const __version =
+#include "version.h"
+;
+
 static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
 {
 	NSString* utilName = NSProcessInfo.processInfo.arguments.firstObject.lastPathComponent;
@@ -33,6 +37,7 @@ static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
 	LNLog(LNLogLevelStdOut, @"    --restartSB        Restarts SpringBoard");
 	LNLog(LNLogLevelStdOut, @"    --list       		 Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional");
 	LNLog(LNLogLevelStdOut, @"    --maxResults       Limits the number of results returned from --list");
+	LNLog(LNLogLevelStdOut, @"    --version, -v      Prints version");
 	LNLog(LNLogLevelStdOut, @"    --help, -h         Prints usage");
 	LNLog(LNLogLevelStdOut, @"");
 	LNLog(LNLogLevelStdOut, @"Available permissions:");
@@ -293,6 +298,7 @@ int main(int argc, char** argv) {
 		[parser registerOption:@"setPermissions" requirement:GBValueRequired];
 		[parser registerOption:@"restartSB" requirement:GBValueNone];
 		[parser registerOption:@"help" shortcut:'h' requirement:GBValueNone];
+		[parser registerOption:@"version" shortcut:'v' requirement:GBValueNone];
 		[parser registerOption:@"simulator" requirement:GBValueRequired];
 		[parser registerOption:@"list" requirement:GBValueOptional];
 		[parser registerOption:@"maxResults" requirement:GBValueRequired];
@@ -304,12 +310,19 @@ int main(int argc, char** argv) {
 		[parser parseOptionsWithArguments:argv count:argc];
 		
 		if([settings boolForKey:@"help"] ||
-		   (![settings objectForKey:@"setPermissions"] &&
+		   (![settings boolForKey:@"version"] &&
+			![settings objectForKey:@"setPermissions"] &&
 			![settings boolForKey:@"restartSB"] &&
 		    ![settings objectForKey:@"list"]))
 		{
 			printUsage(nil, LNLogLevelStdOut);
 			return [settings boolForKey:@"help"] ? 0 : -1;
+		}
+		
+		if([settings boolForKey:@"version"])
+		{
+			LNLog(LNLogLevelStdOut, @"%@ version %s", NSProcessInfo.processInfo.arguments.firstObject.lastPathComponent, __version);
+			return 0;
 		}
 		
 		NSArray* simulatorDevices = simulatorDevicesList();
