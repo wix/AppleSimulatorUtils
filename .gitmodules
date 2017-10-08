@@ -1,0 +1,3 @@
+[submodule "homebrew-brew"]
+	path = homebrew-brew
+	url = https://github.com/wix/homebrew-brew
