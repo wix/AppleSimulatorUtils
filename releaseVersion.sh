@@ -22,10 +22,6 @@ fi
 echo "Creating commit for version"
 
 echo "\"$1\"" > applesimutils/applesimutils/version.h
-git add -A
-git commit -m $1
-git tag $1
-git push origin --tags
 
 echo "Cleaning up"
 
@@ -45,5 +41,14 @@ sed -i '' -e 's/sha256 .*/sha256 '"'"$(shasum -b -a 256 AppleSimulatorUtils-$1.t
 git add -A
 git commit -m $1
 git push
+
+echo "Pushing submodule change"
+
+cd ..
+
+git add -A
+git commit -m $1
+git tag $1
+git push origin --tags
 
 # version.h
