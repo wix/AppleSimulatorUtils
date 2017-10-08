@@ -49,11 +49,29 @@
 
 	NSURL* simulatorLibraryURL = [SimUtils libraryURLForSimulatorId:simulatorId];
 	
-	NSMutableDictionary* bulletinSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:[simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"]];
-	bulletinSectionInfo[bundleIdentifier] = sectionInfoData;
-	[bulletinSectionInfo writeToFile:[simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"] atomically:YES];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSString* sectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"];
+    if([fileManager fileExistsAtPath:sectionInfoPath])
+    {
+        NSMutableDictionary* bulletinSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:sectionInfoPath];
+        bulletinSectionInfo[bundleIdentifier] = sectionInfoData;
+        [bulletinSectionInfo writeToFile:sectionInfoPath atomically:YES];
+        
+        return YES;
+    }
+    
+    //Xcode 9 support
+    NSString* versionedSectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/VersionedSectionInfo.plist"];
+    if([fileManager fileExistsAtPath:versionedSectionInfoPath])
+    {
+        NSMutableDictionary* bulletinVersionedSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:versionedSectionInfoPath];
+        bulletinVersionedSectionInfo[@"sectionInfo"][bundleIdentifier] = sectionInfoData;
+        [bulletinVersionedSectionInfo writeToFile:versionedSectionInfoPath atomically:YES];
+        
+        return YES;
+    }
 	
-	return YES;
+	return NO;
 }
 
 @end
