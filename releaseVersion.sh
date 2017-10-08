@@ -49,6 +49,7 @@ cd ..
 git add -A
 git commit -m $1
 git tag $1
-git push origin --tags
+git push
+git push --tags
 
 # version.h
