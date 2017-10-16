@@ -35,6 +35,8 @@ echo "Updating brew repository with latest tarball and update applesimutils.rb"
 
 cd homebrew-brew
 
+git fetch
+git checkout master
 mv ../AppleSimulatorUtils-$1.tar.gz .
 sed -i '' -e 's/url .*/url '"'https:\/\/raw.githubusercontent.com\/wix\/homebrew-brew\/master\/AppleSimulatorUtils-$1.tar.gz'"'/g' applesimutils.rb
 sed -i '' -e 's/sha256 .*/sha256 '"'"$(shasum -b -a 256 AppleSimulatorUtils-$1.tar.gz | awk '{ print $1 }')"'"'/g' applesimutils.rb

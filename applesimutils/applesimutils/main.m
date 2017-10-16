@@ -11,6 +11,7 @@
 #import "SetNotificationsPermission.h"
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
+#import "ClearKeychain.h"
 #import "LNLog.h"
 
 static char* const __version =
@@ -34,6 +35,7 @@ static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
 	LNLog(LNLogLevelStdOut, @"    --simulator        The simulator identifier or simulator name & operating system version (e.g. \"iPhone 7 Plus, OS = 10.3\")");
 	LNLog(LNLogLevelStdOut, @"    --bundle           The app bundle identifier");
 	LNLog(LNLogLevelStdOut, @"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect");
+	LNLog(LNLogLevelStdOut, @"    --clearKeychain    Clears the simulator's keychain");
 	LNLog(LNLogLevelStdOut, @"    --restartSB        Restarts SpringBoard");
 	LNLog(LNLogLevelStdOut, @"    --list       		 Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional");
 	LNLog(LNLogLevelStdOut, @"    --maxResults       Limits the number of results returned from --list");
@@ -297,6 +299,7 @@ int main(int argc, char** argv) {
 		
 		[parser registerOption:@"setPermissions" requirement:GBValueRequired];
 		[parser registerOption:@"restartSB" requirement:GBValueNone];
+		[parser registerOption:@"clearKeychain" requirement:GBValueNone];
 		[parser registerOption:@"help" shortcut:'h' requirement:GBValueNone];
 		[parser registerOption:@"version" shortcut:'v' requirement:GBValueNone];
 		[parser registerOption:@"simulator" requirement:GBValueRequired];
@@ -313,6 +316,7 @@ int main(int argc, char** argv) {
 		   (![settings boolForKey:@"version"] &&
 			![settings objectForKey:@"setPermissions"] &&
 			![settings boolForKey:@"restartSB"] &&
+			![settings boolForKey:@"clearKeychain"] &&
 		    ![settings objectForKey:@"list"]))
 		{
 			printUsage(nil, LNLogLevelStdOut);
@@ -430,6 +434,13 @@ int main(int argc, char** argv) {
 			needsSpringBoardRestart = YES;
 		}
 
+		if([settings boolForKey:@"clearKeychain"])
+		{
+			performClearKeychainPass(simulatorId);
+			
+			needsSpringBoardRestart = YES;
+		}
+		
 		if([settings boolForKey:@"restartSB"])
 		{
 			needsSpringBoardRestart = YES;

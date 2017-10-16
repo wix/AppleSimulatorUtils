@@ -18,6 +18,7 @@
 		3925D6F31F17A1F9001AED8D /* LNLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3925D6F21F17A1F9001AED8D /* LNLog.m */; };
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
+		39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 39676AD51F94BE4100018548 /* ClearKeychain.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +56,8 @@
 		395046D41EA725FF00557294 /* SetLocationPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLocationPermission.m; sourceTree = "<group>"; };
 		395046D61EA72F1000557294 /* SimUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimUtils.h; sourceTree = "<group>"; };
 		395046D71EA72F1000557294 /* SimUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimUtils.m; sourceTree = "<group>"; };
+		39676AD41F94BE4100018548 /* ClearKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClearKeychain.h; sourceTree = "<group>"; };
+		39676AD51F94BE4100018548 /* ClearKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClearKeychain.m; sourceTree = "<group>"; };
 		39FE99C31F8A6B17006DF8EF /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -90,7 +93,7 @@
 		391596DE1E8CBAA900FDD6F5 /* applesimutils */ = {
 			isa = PBXGroup;
 			children = (
-				391596FF1E8CDD0500FDD6F5 /* PermissionSetters */,
+				391596FF1E8CDD0500FDD6F5 /* Handlers */,
 				391596E71E8CCA8C00FDD6F5 /* GBCli */,
 				3925D6F11F17A1F9001AED8D /* LNLog.h */,
 				3925D6F21F17A1F9001AED8D /* LNLog.m */,
@@ -114,7 +117,7 @@
 			path = GBCli;
 			sourceTree = "<group>";
 		};
-		391596FF1E8CDD0500FDD6F5 /* PermissionSetters */ = {
+		391596FF1E8CDD0500FDD6F5 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
 				391EBF321E9121150009AACD /* JP */,
@@ -126,8 +129,10 @@
 				391EBF301E911CAA0009AACD /* SetServicePermission.m */,
 				395046D31EA725FF00557294 /* SetLocationPermission.h */,
 				395046D41EA725FF00557294 /* SetLocationPermission.m */,
+				39676AD41F94BE4100018548 /* ClearKeychain.h */,
+				39676AD51F94BE4100018548 /* ClearKeychain.m */,
 			);
-			name = PermissionSetters;
+			name = Handlers;
 			sourceTree = "<group>";
 		};
 		391EBF321E9121150009AACD /* JP */ = {
@@ -208,6 +213,7 @@
 				391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */,
 				391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */,
 				3925D6F31F17A1F9001AED8D /* LNLog.m in Sources */,
+				39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */,
 				391596FD1E8CCA8C00FDD6F5 /* GBSettings.m in Sources */,
 				391596FA1E8CCA8C00FDD6F5 /* GBCommandLineParser.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,

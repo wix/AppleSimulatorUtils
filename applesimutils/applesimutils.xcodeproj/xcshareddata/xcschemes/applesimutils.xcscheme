@@ -65,16 +65,20 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--simulator &quot;iPhone 8 Plus, OS=11.0&quot;"
-            isEnabled = "NO">
+            argument = "--simulator &quot;iPhone 8 Plus, OS=11.1&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--bundle &quot;com.wix.GidonRegionTestApp&quot;"
+            argument = "--bundle &quot;com.wix.Tst&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--clearKeychain"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES,location=inuse&quot;"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
@@ -90,7 +94,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--version"
