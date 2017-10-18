@@ -1,5 +1,9 @@
 ##Changelog For AppleSimulatorUtils
 
+##### 18-Oct-2017 13:41
+
+* Add environment variable in build script to disable Xcode codesigning requirement
+
 ##### 16-Oct-2017 13:41
 
 * Add support for clearing keychain
