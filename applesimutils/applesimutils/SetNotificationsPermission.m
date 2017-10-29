@@ -71,6 +71,11 @@
         return YES;
     }
 	
+	if(error)
+	{
+		*error = [NSError errorWithDomain:@"SetNotificationsPermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"BulletinBoard property list not found."}];
+	}
+	
 	return NO;
 }
 

@@ -1,5 +1,10 @@
 ##Changelog For AppleSimulatorUtils
 
+##### 29-Oct-2017 14:52
+
+* Improve handling of devices that need to be booted for the first time.
+* Improve error handling in certain cases. 
+
 ##### 18-Oct-2017 13:41
 
 * Add environment variable in build script to disable Xcode codesigning requirement

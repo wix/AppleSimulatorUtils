@@ -53,7 +53,7 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 			[db close];
 			if(error)
 			{
-				*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [db lastErrorMessage]}];
+				*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ (db)", [db lastErrorMessage]]}];
 				//On error, stop retries.
 				return NO;
 			}

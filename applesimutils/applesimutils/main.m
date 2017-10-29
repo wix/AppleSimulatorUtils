@@ -66,44 +66,56 @@ static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
 
 static void bootSimulator(NSString* simulatorId)
 {
-	NSTask* rebootTask = [NSTask new];
-	rebootTask.launchPath = @"/usr/bin/xcrun";
-	rebootTask.arguments = @[@"simctl", @"boot", simulatorId];
-	[rebootTask launch];
-	[rebootTask waitUntilExit];
+	NSTask* bootTask = [NSTask new];
+	bootTask.launchPath = @"/usr/bin/xcrun";
+	bootTask.arguments = @[@"simctl", @"boot", simulatorId];
+	[bootTask launch];
+	
+	NSTask* bootStatusTask = [NSTask new];
+	bootStatusTask.launchPath = @"/usr/bin/xcrun";
+	bootStatusTask.arguments = @[@"simctl", @"bootstatus", simulatorId];
+	
+	NSPipe* devNullPipe = [NSPipe new];
+	bootStatusTask.standardOutput = devNullPipe;
+	bootStatusTask.standardError = devNullPipe;
+	
+	[bootStatusTask launch];
+	[bootStatusTask waitUntilExit];
+	
+	[bootTask waitUntilExit];
 }
 
 static void shutdownSimulator(NSString* simulatorId)
 {
-	NSTask* rebootTask = [NSTask new];
-	rebootTask.launchPath = @"/usr/bin/xcrun";
-	rebootTask.arguments = @[@"simctl", @"shutdown", simulatorId];
-	[rebootTask launch];
-	[rebootTask waitUntilExit];
+	NSTask* shutdownTask = [NSTask new];
+	shutdownTask.launchPath = @"/usr/bin/xcrun";
+	shutdownTask.arguments = @[@"simctl", @"shutdown", simulatorId];
+	[shutdownTask launch];
+	[shutdownTask waitUntilExit];
 }
 
 static void restartSpringBoard(NSString* simulatorId)
 {
-	NSTask* rebootTask = [NSTask new];
-	rebootTask.launchPath = @"/usr/bin/xcrun";
-	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", @"stop", @"com.apple.SpringBoard"];
-	[rebootTask launch];
-	[rebootTask waitUntilExit];
+	NSTask* respringTask = [NSTask new];
+	respringTask.launchPath = @"/usr/bin/xcrun";
+	respringTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", @"stop", @"com.apple.SpringBoard"];
+	[respringTask launch];
+	[respringTask waitUntilExit];
 }
 
 static NSArray* simulatorDevicesList()
 {
-	NSTask* rebootTask = [NSTask new];
-	rebootTask.launchPath = @"/usr/bin/xcrun";
-	rebootTask.arguments = @[@"simctl", @"list", @"--json"];
+	NSTask* listTask = [NSTask new];
+	listTask.launchPath = @"/usr/bin/xcrun";
+	listTask.arguments = @[@"simctl", @"list", @"--json"];
 	
-	NSPipe * out = [NSPipe pipe];
-	[rebootTask setStandardOutput:out];
+	NSPipe* outPipe = [NSPipe pipe];
+	[listTask setStandardOutput:outPipe];
 	
-	[rebootTask launch];
-	[rebootTask waitUntilExit];
+	[listTask launch];
+	[listTask waitUntilExit];
 	
-	NSFileHandle* readFileHandle = [out fileHandleForReading];
+	NSFileHandle* readFileHandle = [outPipe fileHandleForReading];
 	NSData* jsonData = [readFileHandle readDataToEndOfFile];
 	
 	NSError* error;
@@ -117,7 +129,6 @@ static NSArray* simulatorDevicesList()
 	}
 	
 	NSArray* runtimes = [list[@"runtimes"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"availability == \"(available)\""]];
-//	NSArray* deviceTypes = list[@"devicetypes"];
 	NSDictionary* devices = list[@"devices"];
 	
 	NSMutableArray* allDevices = [NSMutableArray new];
