@@ -27,6 +27,10 @@ echo "Cleaning up"
 
 git clean -xdf
 
+echo "Updating CHANGELOG"
+
+github_changelog_generator --future-release "$1" --bugs-label "**Fixed Bugs**" --enhancement-label "**Enhancements**" --issues-label "**Closed Issues**" --pr-label "**Merged Pull Requests**" --no-verbose
+
 echo "Creating a compressed tarball of the source"
 
 tar --exclude=".git" --exclude=".github" --exclude="homebrew-brew" -cvzf "AppleSimulatorUtils-$1.tar.gz" .
@@ -37,11 +41,11 @@ cd homebrew-brew
 
 git fetch
 git checkout master
-mv ../AppleSimulatorUtils-$1.tar.gz .
+mv "../AppleSimulatorUtils-$1.tar.gz" .
 sed -i '' -e 's/url .*/url '"'https:\/\/raw.githubusercontent.com\/wix\/homebrew-brew\/master\/AppleSimulatorUtils-$1.tar.gz'"'/g' applesimutils.rb
 sed -i '' -e 's/sha256 .*/sha256 '"'"$(shasum -b -a 256 AppleSimulatorUtils-$1.tar.gz | awk '{ print $1 }')"'"'/g' applesimutils.rb
 git add -A
-git commit -m $1
+git commit -m "$1"
 git push
 
 echo "Pushing submodule change"
@@ -49,8 +53,9 @@ echo "Pushing submodule change"
 cd ..
 
 git add -A
-git commit -m $1
-git tag $1
+git commit -m "$1"
+git tag "$1"
+
 git push
 git push --tags
 
