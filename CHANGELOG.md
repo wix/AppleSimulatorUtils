@@ -1,85 +1,96 @@
-##Changelog For AppleSimulatorUtils
+# Change Log
 
-##### 29-Oct-2017 14:52
+## [0.5.15](https://github.com/wix/AppleSimulatorUtils/tree/0.5.15) (2017-11-14)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.14...0.5.15)
 
-* Improve handling of devices that need to be booted for the first time.
-* Improve error handling in certain cases. 
+**Closed Issues**
 
-##### 18-Oct-2017 13:41
+- Build fails due to code-signing issue [\#11](https://github.com/wix/AppleSimulatorUtils/issues/11)
 
-* Add environment variable in build script to disable Xcode codesigning requirement
+## [0.5.14](https://github.com/wix/AppleSimulatorUtils/tree/0.5.14) (2017-10-29)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.13...0.5.14)
 
-##### 16-Oct-2017 13:41
+**Fixed Bugs**
 
-* Add support for clearing keychain
-* Update version release script to better support submodule
+- "Error: Unknown permission pass error" on CI \(Jenkins\) [\#15](https://github.com/wix/AppleSimulatorUtils/issues/15)
 
-##### Sun Oct 8 20:01:38 2017 +0300
+## [0.5.13](https://github.com/wix/AppleSimulatorUtils/tree/0.5.13) (2017-10-18)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.12...0.5.13)
 
-* **0.5.11**
+**Enhancements**
 
-##### Sun Oct 8 20:01:17 2017 +0300
+- A way to clear the keychain?  [\#14](https://github.com/wix/AppleSimulatorUtils/issues/14)
 
-* Update release script to push commits as well as tags
+## [0.5.12](https://github.com/wix/AppleSimulatorUtils/tree/0.5.12) (2017-10-16)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.11...0.5.12)
 
-##### Sun Oct 8 19:58:46 2017 +0300
+## [0.5.11](https://github.com/wix/AppleSimulatorUtils/tree/0.5.11) (2017-10-08)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.10...0.5.11)
 
-* **0.5.10**
+## [0.5.10](https://github.com/wix/AppleSimulatorUtils/tree/0.5.10) (2017-10-08)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.9...0.5.10)
 
-##### Sun Oct 8 19:58:38 2017 +0300
+## [0.5.9](https://github.com/wix/AppleSimulatorUtils/tree/0.5.9) (2017-10-08)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.8...0.5.9)
 
-* Update release script to include the submodule change in commit.
+## [0.5.8](https://github.com/wix/AppleSimulatorUtils/tree/0.5.8) (2017-10-08)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.7...0.5.8)
 
-##### Sun Oct 8 19:52:49 2017 +0300
+**Fixed Bugs**
 
-* **0.5.9**
+- iOS 11 Support [\#10](https://github.com/wix/AppleSimulatorUtils/issues/10)
 
-##### Sun Oct 8 19:50:42 2017 +0300
+**Merged Pull Requests**
 
-* Update version release script
+- fix notifications permission on Xcode 9 [\#13](https://github.com/wix/AppleSimulatorUtils/pull/13) ([erezrokah](https://github.com/erezrokah))
+- Fix location permission on Xcode 9 [\#12](https://github.com/wix/AppleSimulatorUtils/pull/12) ([erezrokah](https://github.com/erezrokah))
 
-##### Sun Oct 8 19:48:38 2017 +0300
+## [0.5.7](https://github.com/wix/AppleSimulatorUtils/tree/0.5.7) (2017-09-19)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.6...0.5.7)
 
-* **0.5.8**
+## [0.5.6](https://github.com/wix/AppleSimulatorUtils/tree/0.5.6) (2017-09-19)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.5...0.5.6)
 
-##### Sun Oct 8 19:46:28 2017 +0300
+**Fixed Bugs**
 
-* Add script for convenient version releasing
+- NSException when setting location on buddybuild VM [\#7](https://github.com/wix/AppleSimulatorUtils/issues/7)
 
-##### Sun Oct 8 17:42:01 2017 +0300
+## [0.5.5](https://github.com/wix/AppleSimulatorUtils/tree/0.5.5) (2017-07-13)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.4...0.5.5)
 
-* Add support for version output
+**Closed Issues**
 
-##### Sun Oct 8 17:11:42 2017 +0300
+- Can not find simulators after upgrade Xcode from 8.3.3 [\#6](https://github.com/wix/AppleSimulatorUtils/issues/6)
 
-* Add the tap repo for convenience
+## [0.5.4](https://github.com/wix/AppleSimulatorUtils/tree/0.5.4) (2017-04-20)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.3...0.5.4)
 
-##### Sun Oct 8 17:04:10 2017 +0300
+**Fixed Bugs**
 
-* Add `--list` to scheme for testing
-    
-##### Sun Oct 8 17:03:44 2017 +0300
+- New location permission generates error [\#5](https://github.com/wix/AppleSimulatorUtils/issues/5)
 
-* Add `BUILD_DIR` override in attempt to fix build issues for some people
+## [0.5.3](https://github.com/wix/AppleSimulatorUtils/tree/0.5.3) (2017-04-19)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.2...0.5.3)
 
-##### Sun Oct 8 16:05:18 2017 +0300
+**Enhancements**
 
-Fix notifications permission on Xcode 9 (PR)
+- Add support for location permissions [\#1](https://github.com/wix/AppleSimulatorUtils/issues/1)
 
-##### Tue Sep 26 04:38:04 2017 +0300
+## [0.5.2](https://github.com/wix/AppleSimulatorUtils/tree/0.5.2) (2017-04-18)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.1...0.5.2)
 
-* Print to stdout when LNLogLevelStdOut is passed as category
+**Enhancements**
 
-##### Fri Sep 22 19:26:46 2017 +0300
+- Add support for providing simulator by name [\#4](https://github.com/wix/AppleSimulatorUtils/issues/4)
 
-* Fix location permission on Xcode 9 (PR)
+**Closed Issues**
 
-##### 19-Sept-2017 16:38
+- Setting permission not working [\#3](https://github.com/wix/AppleSimulatorUtils/issues/3)
 
-* Improve filtering logic
+## [0.5.1](https://github.com/wix/AppleSimulatorUtils/tree/0.5.1) (2017-04-02)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5...0.5.1)
 
-##### 19-Sept-2017 14:58
+## [0.5](https://github.com/wix/AppleSimulatorUtils/tree/0.5) (2017-04-02)
 
-* Add `--list` option to utils, with optional filter
-* Sort devices by OS version (descending) then by name (ascending)
 
+\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
