@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.5.16](https://github.com/wix/AppleSimulatorUtils/tree/0.5.16) (2017-11-16)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.15...0.5.16)
+
+**Enhancements**
+
+- Unsetting an already set permission [\#8](https://github.com/wix/AppleSimulatorUtils/issues/8)
+
 ## [0.5.15](https://github.com/wix/AppleSimulatorUtils/tree/0.5.15) (2017-11-14)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.14...0.5.15)
 
