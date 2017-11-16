@@ -43,19 +43,19 @@ static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
 	LNLog(LNLogLevelStdOut, @"    --help, -h         Prints usage");
 	LNLog(LNLogLevelStdOut, @"");
 	LNLog(LNLogLevelStdOut, @"Available permissions:");
-	LNLog(LNLogLevelStdOut, @"    calendar=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    camera=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    contacts=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    health=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    homekit=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    location=always|inuse|never");
-	LNLog(LNLogLevelStdOut, @"    medialibrary=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    microphone=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    motion=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    notifications=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    photos=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    reminders=YES|NO");
-	LNLog(LNLogLevelStdOut, @"    siri=YES|NO");
+	LNLog(LNLogLevelStdOut, @"    calendar=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    camera=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    contacts=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    health=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    homekit=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    location=always|inuse|never|unset");
+	LNLog(LNLogLevelStdOut, @"    medialibrary=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    microphone=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    motion=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    notifications=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    photos=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    reminders=YES|NO|unset");
+	LNLog(LNLogLevelStdOut, @"    siri=YES|NO|unset");
 	LNLog(LNLogLevelStdOut, @"");
 	LNLog(LNLogLevelStdOut, @"");
 	LNLog(LNLogLevelStdOut, @"For more features, open an issue at https://github.com/wix/AppleSimulatorUtils");
@@ -224,11 +224,6 @@ static void assertStringInArrayValues(NSString* str, NSArray* values, int errorC
 	}
 }
 
-static void assertStringBoolValue(NSString* str, int errorCode, NSString* failureMessage)
-{
-	assertStringInArrayValues(str, @[@"YES", @"NO"], errorCode, failureMessage);
-}
-
 static void performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier)
 {
 	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{@"calendar": @"kTCCServiceCalendar",
@@ -262,19 +257,19 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		
 		if([permission isEqualToString:@"notifications"])
 		{
-			assertStringBoolValue(value, -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
 			
-			success = [SetNotificationsPermission setNotificationsEnabled:value.boolValue forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			success = [SetNotificationsPermission setNotificationsStatus:value forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
 		}
 		else if([permission isEqualToString:@"location"])
 		{
-			assertStringInArrayValues(value, @[@"never", @"always", @"inuse"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
 			
 			success = [SetLocationPermission setLocationPermission:value forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
 		}
 		else
 		{
-			assertStringBoolValue(value, -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
 			
 			NSString* appleService = argumentToAppleService[permission];
 			if(appleService == nil)
@@ -283,7 +278,7 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 				return;
 			}
 			
-			success = [SetServicePermission setPermisionEnabled:value.boolValue forService:appleService bundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			success = [SetServicePermission setPermisionStatus:value forService:appleService bundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
 		}
 		
 		if(success == NO)

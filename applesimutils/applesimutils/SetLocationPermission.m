@@ -49,26 +49,33 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 		return NO;
 	}
 	
-	NSMutableDictionary* bundlePermissions = locationClients[bundleIdentifier];
-	if(bundlePermissions == nil)
+	if([permission isEqualToString:@"unset"])
 	{
-		bundlePermissions = [NSMutableDictionary new];
+		[locationClients removeObjectForKey:bundleIdentifier];
 	}
-	
-	NSDictionary* permissionMapping = @{@"never": @1, @"inuse": @2, @"always": @4};
-	
-	bundlePermissions[@"SupportedAuthorizationMask"] = @7;
-	bundlePermissions[@"Authorization"] = permissionMapping[permission];
-	bundlePermissions[@"BundleId"] = bundleIdentifier;
-	bundlePermissions[@"Whitelisted"] = @0;
-	
-	NSURL* binaryURL = [SimUtils binaryURLForBundleId:bundleIdentifier simulatorId:simulatorId];
-	NSString* path = binaryURL != nil ? binaryURL.path : @"";
-	
-	bundlePermissions[@"Executable"] = path;
-	bundlePermissions[@"Registered"] = path;
-	
-	locationClients[bundleIdentifier] = bundlePermissions;
+	else
+	{
+		NSMutableDictionary* bundlePermissions = locationClients[bundleIdentifier];
+		if(bundlePermissions == nil)
+		{
+			bundlePermissions = [NSMutableDictionary new];
+		}
+		
+		NSDictionary* permissionMapping = @{@"never": @1, @"inuse": @2, @"always": @4};
+		
+		bundlePermissions[@"SupportedAuthorizationMask"] = @7;
+		bundlePermissions[@"Authorization"] = permissionMapping[permission];
+		bundlePermissions[@"BundleId"] = bundleIdentifier;
+		bundlePermissions[@"Whitelisted"] = @0;
+		
+		NSURL* binaryURL = [SimUtils binaryURLForBundleId:bundleIdentifier simulatorId:simulatorId];
+		NSString* path = binaryURL != nil ? binaryURL.path : @"";
+		
+		bundlePermissions[@"Executable"] = path;
+		bundlePermissions[@"Registered"] = path;
+		
+		locationClients[bundleIdentifier] = bundlePermissions;
+	}
 	
 	locationdCtl(simulatorId, YES);
 	

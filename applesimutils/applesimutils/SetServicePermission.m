@@ -24,7 +24,7 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 + (BOOL)_changeAccessToService:(NSString*)service
 				  simulatorId:(NSString*)simulatorId
 			 bundleIdentifier:(NSString*)bundleIdentifier
-					  allowed:(BOOL)allowed
+					  status:(NSString*)status
 						 error:(NSError**)error
 {	
 	BOOL success = NO;
@@ -44,8 +44,21 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 		JPSimulatorHacksDB *db = [JPSimulatorHacksDB databaseWithURL:tccURL];
 		if (![db open]) continue;
 		
-		NSString *query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
-		NSArray *parameters = @[service, bundleIdentifier, @"0", [@(allowed) stringValue], @"1"];
+		NSString *query;
+		NSArray *parameters;
+		
+		if([status isEqualToString:@"unset"] == NO)
+		{
+			BOOL allowed = [status boolValue];
+			query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
+			parameters = @[service, bundleIdentifier, @"0", [@(allowed) stringValue], @"1"];
+		}
+		else
+		{
+			query = @"DELETE FROM access WHERE service = ? AND client = ? AND client_type = ?";
+			parameters = @[service, bundleIdentifier, @"0"];
+		}
+		
 		if ([db executeUpdate:query withArgumentsInArray:parameters]) {
 			success = YES;
 		}
@@ -71,9 +84,9 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 	return success;
 }
 
-+ (BOOL)setPermisionEnabled:(BOOL)enabled forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
++ (BOOL)setPermisionStatus:(NSString*)status forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error;
 {
-	return [self _changeAccessToService:service simulatorId:simulatorId bundleIdentifier:bundleIdentifier allowed:enabled error:error];
+	return [self _changeAccessToService:service simulatorId:simulatorId bundleIdentifier:bundleIdentifier status:status error:error];
 }
 
 + (BOOL)isSimulatorReadyForPersmissions:(NSString *)simulatorId

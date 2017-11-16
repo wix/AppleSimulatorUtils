@@ -29,17 +29,17 @@ Options:
     --help, -h         Prints usage
 
 Available permissions:
-    calendar=YES|NO
-    camera=YES|NO
-    contacts=YES|NO
-    health=YES|NO
-    homekit=YES|NO
-    location=always|inuse|never
-    medialibrary=YES|NO
-    microphone=YES|NO
-    motion=YES|NO
-    notifications=YES|NO
-    photos=YES|NO
-    reminders=YES|NO
-    siri=YES|NO
+    calendar=YES|NO|unset
+    camera=YES|NO|unset
+    contacts=YES|NO|unset
+    health=YES|NO|unset
+    homekit=YES|NO|unset
+    location=always|inuse|never|unset
+    medialibrary=YES|NO|unset
+    microphone=YES|NO|unset
+    motion=YES|NO|unset
+    notifications=YES|NO|unset
+    photos=YES|NO|unset
+    reminders=YES|NO|unset
+    siri=YES|NO|unset
 ```
