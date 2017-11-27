@@ -1,3 +1,6 @@
 [submodule "homebrew-brew"]
 	path = homebrew-brew
 	url = https://github.com/wix/homebrew-brew
+[submodule "ObjCCLIInfra"]
+	path = ObjCCLIInfra
+	url = https://github.com/wix/ObjCCLIInfra.git

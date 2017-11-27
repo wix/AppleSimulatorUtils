@@ -8,14 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		391596E01E8CBAA900FDD6F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596DF1E8CBAA900FDD6F5 /* main.m */; };
-		391596FA1E8CCA8C00FDD6F5 /* GBCommandLineParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F01E8CCA8C00FDD6F5 /* GBCommandLineParser.m */; };
-		391596FB1E8CCA8C00FDD6F5 /* GBOptionsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F21E8CCA8C00FDD6F5 /* GBOptionsHelper.m */; };
-		391596FD1E8CCA8C00FDD6F5 /* GBSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596F61E8CCA8C00FDD6F5 /* GBSettings.m */; };
 		391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391597011E8CDD1D00FDD6F5 /* SetNotificationsPermission.m */; };
 		391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF301E911CAA0009AACD /* SetServicePermission.m */; };
 		391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */; };
 		391EBF381E91212B0009AACD /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 391EBF371E91212B0009AACD /* libsqlite3.tbd */; };
-		3925D6F31F17A1F9001AED8D /* LNLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3925D6F21F17A1F9001AED8D /* LNLog.m */; };
+		393510391FCB9972001FB466 /* LNOptionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510361FCB9972001FB466 /* LNOptionsParser.m */; };
+		3935103A1FCB9972001FB466 /* LNLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510381FCB9972001FB466 /* LNLog.m */; };
+		393510451FCB9A1E001FB466 /* GBSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 3935103E1FCB9A1E001FB466 /* GBSettings.m */; };
+		393510461FCB9A1E001FB466 /* GBOptionsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3935103F1FCB9A1E001FB466 /* GBOptionsHelper.m */; };
+		393510471FCB9A1E001FB466 /* GBCommandLineParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510401FCB9A1E001FB466 /* GBCommandLineParser.m */; };
+		393510481FCB9A1E001FB466 /* GBPrint.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510431FCB9A1E001FB466 /* GBPrint.m */; };
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 		39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 39676AD51F94BE4100018548 /* ClearKeychain.m */; };
@@ -36,13 +38,6 @@
 /* Begin PBXFileReference section */
 		391596DC1E8CBAA900FDD6F5 /* applesimutils */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = applesimutils; sourceTree = BUILT_PRODUCTS_DIR; };
 		391596DF1E8CBAA900FDD6F5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		391596EE1E8CCA8C00FDD6F5 /* GBCli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBCli.h; path = src/GBCli.h; sourceTree = "<group>"; };
-		391596EF1E8CCA8C00FDD6F5 /* GBCommandLineParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBCommandLineParser.h; path = src/GBCommandLineParser.h; sourceTree = "<group>"; };
-		391596F01E8CCA8C00FDD6F5 /* GBCommandLineParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBCommandLineParser.m; path = src/GBCommandLineParser.m; sourceTree = "<group>"; };
-		391596F11E8CCA8C00FDD6F5 /* GBOptionsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBOptionsHelper.h; path = src/GBOptionsHelper.h; sourceTree = "<group>"; };
-		391596F21E8CCA8C00FDD6F5 /* GBOptionsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBOptionsHelper.m; path = src/GBOptionsHelper.m; sourceTree = "<group>"; };
-		391596F51E8CCA8C00FDD6F5 /* GBSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBSettings.h; path = src/GBSettings.h; sourceTree = "<group>"; };
-		391596F61E8CCA8C00FDD6F5 /* GBSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBSettings.m; path = src/GBSettings.m; sourceTree = "<group>"; };
 		391597001E8CDD1D00FDD6F5 /* SetNotificationsPermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetNotificationsPermission.h; sourceTree = "<group>"; };
 		391597011E8CDD1D00FDD6F5 /* SetNotificationsPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetNotificationsPermission.m; sourceTree = "<group>"; };
 		391EBF2F1E911CAA0009AACD /* SetServicePermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetServicePermission.h; sourceTree = "<group>"; };
@@ -50,8 +45,19 @@
 		391EBF331E91211F0009AACD /* JPSimulatorHacksDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPSimulatorHacksDB.h; sourceTree = "<group>"; };
 		391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPSimulatorHacksDB.m; sourceTree = "<group>"; };
 		391EBF371E91212B0009AACD /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		3925D6F11F17A1F9001AED8D /* LNLog.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LNLog.h; sourceTree = "<group>"; };
-		3925D6F21F17A1F9001AED8D /* LNLog.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LNLog.m; sourceTree = "<group>"; };
+		393510351FCB9972001FB466 /* LNOptionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LNOptionsParser.h; path = ../../ObjCCLIInfra/LNOptionsParser.h; sourceTree = "<group>"; };
+		393510361FCB9972001FB466 /* LNOptionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LNOptionsParser.m; path = ../../ObjCCLIInfra/LNOptionsParser.m; sourceTree = "<group>"; };
+		393510371FCB9972001FB466 /* LNLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LNLog.h; path = ../../ObjCCLIInfra/LNLog.h; sourceTree = "<group>"; };
+		393510381FCB9972001FB466 /* LNLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LNLog.m; path = ../../ObjCCLIInfra/LNLog.m; sourceTree = "<group>"; };
+		3935103C1FCB9A1E001FB466 /* GBPrint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBPrint.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBPrint.h; sourceTree = "<group>"; };
+		3935103D1FCB9A1E001FB466 /* GBCommandLineParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBCommandLineParser.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBCommandLineParser.h; sourceTree = "<group>"; };
+		3935103E1FCB9A1E001FB466 /* GBSettings.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBSettings.m; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBSettings.m; sourceTree = "<group>"; };
+		3935103F1FCB9A1E001FB466 /* GBOptionsHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBOptionsHelper.m; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBOptionsHelper.m; sourceTree = "<group>"; };
+		393510401FCB9A1E001FB466 /* GBCommandLineParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBCommandLineParser.m; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBCommandLineParser.m; sourceTree = "<group>"; };
+		393510411FCB9A1E001FB466 /* GBCli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBCli.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBCli.h; sourceTree = "<group>"; };
+		393510421FCB9A1E001FB466 /* GBOptionsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBOptionsHelper.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBOptionsHelper.h; sourceTree = "<group>"; };
+		393510431FCB9A1E001FB466 /* GBPrint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBPrint.m; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBPrint.m; sourceTree = "<group>"; };
+		393510441FCB9A1E001FB466 /* GBSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBSettings.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBSettings.h; sourceTree = "<group>"; };
 		395046D31EA725FF00557294 /* SetLocationPermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLocationPermission.h; sourceTree = "<group>"; };
 		395046D41EA725FF00557294 /* SetLocationPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLocationPermission.m; sourceTree = "<group>"; };
 		395046D61EA72F1000557294 /* SimUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimUtils.h; sourceTree = "<group>"; };
@@ -94,27 +100,15 @@
 			isa = PBXGroup;
 			children = (
 				391596FF1E8CDD0500FDD6F5 /* Handlers */,
-				391596E71E8CCA8C00FDD6F5 /* GBCli */,
-				3925D6F11F17A1F9001AED8D /* LNLog.h */,
-				3925D6F21F17A1F9001AED8D /* LNLog.m */,
+				3935103B1FCB9A0D001FB466 /* GBCli */,
+				393510371FCB9972001FB466 /* LNLog.h */,
+				393510381FCB9972001FB466 /* LNLog.m */,
+				393510351FCB9972001FB466 /* LNOptionsParser.h */,
+				393510361FCB9972001FB466 /* LNOptionsParser.m */,
 				391596DF1E8CBAA900FDD6F5 /* main.m */,
 				39FE99C31F8A6B17006DF8EF /* version.h */,
 			);
 			path = applesimutils;
-			sourceTree = "<group>";
-		};
-		391596E71E8CCA8C00FDD6F5 /* GBCli */ = {
-			isa = PBXGroup;
-			children = (
-				391596EE1E8CCA8C00FDD6F5 /* GBCli.h */,
-				391596EF1E8CCA8C00FDD6F5 /* GBCommandLineParser.h */,
-				391596F01E8CCA8C00FDD6F5 /* GBCommandLineParser.m */,
-				391596F11E8CCA8C00FDD6F5 /* GBOptionsHelper.h */,
-				391596F21E8CCA8C00FDD6F5 /* GBOptionsHelper.m */,
-				391596F51E8CCA8C00FDD6F5 /* GBSettings.h */,
-				391596F61E8CCA8C00FDD6F5 /* GBSettings.m */,
-			);
-			path = GBCli;
 			sourceTree = "<group>";
 		};
 		391596FF1E8CDD0500FDD6F5 /* Handlers */ = {
@@ -150,6 +144,22 @@
 				391EBF371E91212B0009AACD /* libsqlite3.tbd */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3935103B1FCB9A0D001FB466 /* GBCli */ = {
+			isa = PBXGroup;
+			children = (
+				393510411FCB9A1E001FB466 /* GBCli.h */,
+				3935103D1FCB9A1E001FB466 /* GBCommandLineParser.h */,
+				393510401FCB9A1E001FB466 /* GBCommandLineParser.m */,
+				393510421FCB9A1E001FB466 /* GBOptionsHelper.h */,
+				3935103F1FCB9A1E001FB466 /* GBOptionsHelper.m */,
+				3935103C1FCB9A1E001FB466 /* GBPrint.h */,
+				393510431FCB9A1E001FB466 /* GBPrint.m */,
+				393510441FCB9A1E001FB466 /* GBSettings.h */,
+				3935103E1FCB9A1E001FB466 /* GBSettings.m */,
+			);
+			name = GBCli;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,17 +219,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3935103A1FCB9972001FB466 /* LNLog.m in Sources */,
+				393510471FCB9A1E001FB466 /* GBCommandLineParser.m in Sources */,
+				393510451FCB9A1E001FB466 /* GBSettings.m in Sources */,
 				395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */,
+				393510461FCB9A1E001FB466 /* GBOptionsHelper.m in Sources */,
 				391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */,
+				393510481FCB9A1E001FB466 /* GBPrint.m in Sources */,
 				391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */,
-				3925D6F31F17A1F9001AED8D /* LNLog.m in Sources */,
 				39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */,
-				391596FD1E8CCA8C00FDD6F5 /* GBSettings.m in Sources */,
-				391596FA1E8CCA8C00FDD6F5 /* GBCommandLineParser.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,
 				395046D81EA72F1000557294 /* SimUtils.m in Sources */,
 				391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */,
-				391596FB1E8CCA8C00FDD6F5 /* GBOptionsHelper.m in Sources */,
+				393510391FCB9972001FB466 /* LNOptionsParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

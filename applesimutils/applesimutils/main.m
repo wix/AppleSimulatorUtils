@@ -7,62 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "GBCli.h"
 #import "SetNotificationsPermission.h"
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
 #import "ClearKeychain.h"
-#import "LNLog.h"
+#import "LNOptionsParser.h"
 
 static char* const __version =
 #include "version.h"
 ;
-
-static void printUsage(NSString* prependMessage, LNLogLevel logLevel)
-{
-	NSString* utilName = NSProcessInfo.processInfo.arguments.firstObject.lastPathComponent;
-	
-	if(prependMessage.length > 0)
-	{
-		LNLog(logLevel, @"%@\n", prependMessage);
-	}
-	
-	LNLog(LNLogLevelStdOut, @"Usage: %@ --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"", utilName);
-	LNLog(LNLogLevelStdOut, @"       %@ --simulator <simulator name/identifier> --restartSB", utilName);
-	LNLog(LNLogLevelStdOut, @"       %@ --list [\"<simulator name>[, OS=<version>]\"] [--maxResults <int>]", utilName);
-	LNLog(LNLogLevelStdOut, @"");
-	LNLog(LNLogLevelStdOut, @"Options:");
-	LNLog(LNLogLevelStdOut, @"    --simulator        The simulator identifier or simulator name & operating system version (e.g. \"iPhone 7 Plus, OS = 10.3\")");
-	LNLog(LNLogLevelStdOut, @"    --bundle           The app bundle identifier");
-	LNLog(LNLogLevelStdOut, @"    --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect");
-	LNLog(LNLogLevelStdOut, @"    --clearKeychain    Clears the simulator's keychain");
-	LNLog(LNLogLevelStdOut, @"    --restartSB        Restarts SpringBoard");
-	LNLog(LNLogLevelStdOut, @"    --list       		 Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional");
-	LNLog(LNLogLevelStdOut, @"    --maxResults       Limits the number of results returned from --list");
-	LNLog(LNLogLevelStdOut, @"    --version, -v      Prints version");
-	LNLog(LNLogLevelStdOut, @"    --help, -h         Prints usage");
-	LNLog(LNLogLevelStdOut, @"");
-	LNLog(LNLogLevelStdOut, @"Available permissions:");
-	LNLog(LNLogLevelStdOut, @"    calendar=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    camera=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    contacts=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    health=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    homekit=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    location=always|inuse|never|unset");
-	LNLog(LNLogLevelStdOut, @"    medialibrary=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    microphone=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    motion=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    notifications=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    photos=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    reminders=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"    siri=YES|NO|unset");
-	LNLog(LNLogLevelStdOut, @"");
-	LNLog(LNLogLevelStdOut, @"");
-	LNLog(LNLogLevelStdOut, @"For more features, open an issue at https://github.com/wix/AppleSimulatorUtils");
-	LNLog(LNLogLevelStdOut, @"Pull-requests are always welcome!");
-}
-
-
 
 static void bootSimulator(NSString* simulatorId)
 {
@@ -123,7 +76,7 @@ static NSArray* simulatorDevicesList()
 	
 	if(list == nil)
 	{
-		printUsage([NSString stringWithFormat:@"Error: %@", error.localizedDescription], LNLogLevelError);
+		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@", error.localizedDescription], LNLogLevelError);
 		
 		return nil;
 	}
@@ -218,7 +171,7 @@ static void assertStringInArrayValues(NSString* str, NSArray* values, int errorC
 {
 	if([[values valueForKey:@"lowercaseString"] containsObject:str.lowercaseString] == NO)
 	{
-		printUsage(failureMessage, LNLogLevelError);
+		LNUsagePrintMessage(failureMessage, LNLogLevelError);
 		
 		exit(errorCode);
 	}
@@ -248,7 +201,7 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		NSArray* split = [argument componentsSeparatedByString:@"="];
 		if(split.count != 2)
 		{
-			printUsage([NSString stringWithFormat:@"Error: Permission argument cannot be parsed: “%@”", argument], LNLogLevelError);
+			LNUsagePrintMessage([NSString stringWithFormat:@"Error: Permission argument cannot be parsed: “%@”", argument], LNLogLevelError);
 			exit(-10);
 		}
 		
@@ -294,39 +247,67 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 			err = [NSError errorWithDomain:@"AppleSimUtilsError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unknown permission pass error"}];
 		}
 		
-		printUsage([NSString stringWithFormat:@"Error: %@", err.localizedDescription], LNLogLevelError);
+		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@", err.localizedDescription], LNLogLevelError);
 		exit(-3);
 	}
 }
 
-int main(int argc, char** argv) {
+int main(int argc, const char* argv[]) {
 	@autoreleasepool {
-		GBCommandLineParser *parser = [GBCommandLineParser new];
+		LNUsageSetIntroStrings(@[@"A collection of utils for Apple simulators."]);
 		
-		[parser registerOption:@"setPermissions" requirement:GBValueRequired];
-		[parser registerOption:@"restartSB" requirement:GBValueNone];
-		[parser registerOption:@"clearKeychain" requirement:GBValueNone];
-		[parser registerOption:@"help" shortcut:'h' requirement:GBValueNone];
-		[parser registerOption:@"version" shortcut:'v' requirement:GBValueNone];
-		[parser registerOption:@"simulator" requirement:GBValueRequired];
-		[parser registerOption:@"list" requirement:GBValueOptional];
-		[parser registerOption:@"maxResults" requirement:GBValueRequired];
-		[parser registerOption:@"bundle" requirement:GBValueRequired];
+		LNUsageSetExampleStrings(@[
+								   @"%@ --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+								   @"%@ --simulator <simulator name/identifier> --restartSB",
+								   @"%@ --list [\"<simulator name>[, OS=<version>]\"] [--maxResults <int>]"
+								   ]);
 		
-		GBSettings *settings = [GBSettings settingsWithName:@"CLI" parent:nil];
+		LNUsageSetOptions(@[
+							[LNUsageOption optionWithName:@"simulator" valueRequirement:GBValueRequired description:@"The simulator identifier or simulator name & operating system version (e.g. \"iPhone 7 Plus, OS = 10.3\")"],
+							[LNUsageOption optionWithName:@"bundle" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
+							[LNUsageOption optionWithName:@"setPermissions" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
+							[LNUsageOption optionWithName:@"clearKeychain" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
+							[LNUsageOption optionWithName:@"restartSB" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
+							[LNUsageOption optionWithName:@"list" valueRequirement:GBValueOptional description:@"Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional"],
+							[LNUsageOption optionWithName:@"maxResults" valueRequirement:GBValueRequired description:@"Limits the number of results returned from --list"],
+							[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:GBValueNone description:@"Prints version"],
+							]);
 		
-		[parser registerSettings:settings];
-		[parser parseOptionsWithArguments:argv count:argc];
+		LNUsageSetAdditionalTopics(@[@{
+										 @"Available Permissions":
+											 @[
+												 @"calendar=YES|NO|unset",
+												 @"camera=YES|NO|unset",
+												 @"contacts=YES|NO|unset",
+												 @"health=YES|NO|unset",
+												 @"homekit=YES|NO|unset",
+												 @"location=always|inuse|never|unset",
+												 @"medialibrary=YES|NO|unset",
+												 @"microphone=YES|NO|unset",
+												 @"motion=YES|NO|unset",
+												 @"notifications=YES|NO|unset",
+												 @"photos=YES|NO|unset",
+												 @"reminders=YES|NO|unset",
+												 @"siri=YES|NO|unset",
+												 ]
+										 }]);
 		
-		if([settings boolForKey:@"help"] ||
-		   (![settings boolForKey:@"version"] &&
-			![settings objectForKey:@"setPermissions"] &&
-			![settings boolForKey:@"restartSB"] &&
-			![settings boolForKey:@"clearKeychain"] &&
-		    ![settings objectForKey:@"list"]))
+		LNUsageSetAdditionalStrings(@[
+									  @"",
+									  @"For more features, open an issue at https://github.com/wix/AppleSimulatorUtils",
+									  @"Pull-requests are always welcome!"
+									  ]);
+		
+		GBSettings* settings = LNUsageParseArguments(argc, argv);
+		
+		if(![settings boolForKey:@"version"] &&
+		   ![settings objectForKey:@"setPermissions"] &&
+		   ![settings boolForKey:@"restartSB"] &&
+		   ![settings boolForKey:@"clearKeychain"] &&
+		   ![settings objectForKey:@"list"])
 		{
-			printUsage(nil, LNLogLevelStdOut);
-			return [settings boolForKey:@"help"] ? 0 : -1;
+			LNUsagePrintMessage(nil, LNLogLevelStdOut);
+			return -1;
 		}
 		
 		if([settings boolForKey:@"version"])
@@ -339,7 +320,7 @@ int main(int argc, char** argv) {
 		
 		if(simulatorDevices == nil)
 		{
-			printUsage(@"Error: Unable to obtain a list of simulators", LNLogLevelError);
+			LNUsagePrintMessage(@"Error: Unable to obtain a list of simulators", LNLogLevelError);
 		}
 		
 		if([settings objectForKey:@"list"] != nil)
@@ -355,7 +336,7 @@ int main(int argc, char** argv) {
 			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, simulatorFilterRequest);
 			if(filteredSimulators == nil)
 			{
-				printUsage(@"Error: Unable to filter simulators", LNLogLevelError);
+				LNUsagePrintMessage(@"Error: Unable to filter simulators", LNLogLevelError);
 			}
 			
 			NSUInteger maxResults = NSUIntegerMax;
@@ -366,7 +347,7 @@ int main(int argc, char** argv) {
 			
 			if(maxResults < 1)
 			{
-				printUsage(@"Error: Invalid value for --maxResults", LNLogLevelError);
+				LNUsagePrintMessage(@"Error: Invalid value for --maxResults", LNLogLevelError);
 			}
 			
 			if(maxResults != NSUIntegerMax)
@@ -382,7 +363,7 @@ int main(int argc, char** argv) {
 		NSString* simulatorId = [settings objectForKey:@"simulator"];
 		if(simulatorId.length == 0)
 		{
-			printUsage(@"Error: No simulator information provided", LNLogLevelError);
+			LNUsagePrintMessage(@"Error: No simulator information provided", LNLogLevelError);
 			
 			return -1;
 		}
@@ -400,7 +381,7 @@ int main(int argc, char** argv) {
 			
 			if(simulatorId.length == 0)
 			{
-				printUsage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", simulatorFilterRequest], LNLogLevelError);
+				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", simulatorFilterRequest], LNLogLevelError);
 				
 				return -1;
 			}
@@ -409,7 +390,7 @@ int main(int argc, char** argv) {
 		NSDictionary* simulator = [[simulatorDevices filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"udid == %@", simulatorId]] firstObject];
 		if(simulator == nil)
 		{
-			printUsage([NSString stringWithFormat:@"Error: Simulator with identifier “%@” not found", simulatorId], LNLogLevelError);
+			LNUsagePrintMessage([NSString stringWithFormat:@"Error: Simulator with identifier “%@” not found", simulatorId], LNLogLevelError);
 			
 			return -1;
 		}
@@ -430,7 +411,7 @@ int main(int argc, char** argv) {
 			NSString* bundleId = [settings objectForKey:@"bundle"];
 			if(bundleId.length == 0)
 			{
-				printUsage(@"Error: No app bundle identifier provided", LNLogLevelError);
+				LNUsagePrintMessage(@"Error: No app bundle identifier provided", LNLogLevelError);
 				
 				return -2;
 			}
