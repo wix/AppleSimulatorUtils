@@ -32,29 +32,19 @@
 	return devToolsURL;
 }
 
-+ (NSURL*)_urlForSimulatorId:(NSString*)simulatorId
++ (NSURL*)URLForSimulatorId:(NSString*)simulatorId
 {
-	static NSURL* simulatorURL;
- 
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		simulatorURL = [NSURL fileURLWithPath:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject];
-		simulatorURL = [[[simulatorURL URLByAppendingPathComponent:@"/Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId] URLByAppendingPathComponent:@"data/"];
-	});
-	
-	return simulatorURL;
+	return [[[NSURL fileURLWithPath:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject] URLByAppendingPathComponent:@"/Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId];
+}
+
++ (NSURL*)_dataURLForSimulatorId:(NSString*)simulatorId
+{
+	return [[self URLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"data/"];
 }
 
 + (NSURL *)libraryURLForSimulatorId:(NSString*)simulatorId
 {
-	static NSURL* userLibraryURL;
- 
-	static dispatch_once_t onceToken;
-	dispatch_once(&onceToken, ^{
-		userLibraryURL = [[self _urlForSimulatorId:simulatorId] URLByAppendingPathComponent:@"Library/"];
-	});
-	
-	return userLibraryURL;
+	return [[self _dataURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"Library/"];
 }
 
 + (NSURL *)binaryURLForBundleId:(NSString*)bundleId simulatorId:(NSString*)simulatorId

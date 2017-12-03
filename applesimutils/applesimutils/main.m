@@ -12,6 +12,7 @@
 #import "SetLocationPermission.h"
 #import "ClearKeychain.h"
 #import "LNOptionsParser.h"
+#import "SimUtils.h"
 
 static char* const __version =
 #include "version.h"
@@ -81,10 +82,16 @@ static NSArray* simulatorDevicesList()
 		return nil;
 	}
 	
+	NSArray<NSDictionary<NSString*, NSString*>*>* deviceTypes = list[@"devicetypes"];
+	NSMutableDictionary<NSString*, NSDictionary*>* deviceTypeMaps = [NSMutableDictionary new];
+	[deviceTypes enumerateObjectsUsingBlock:^(NSDictionary<NSString *,NSString *> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		deviceTypeMaps[obj[@"identifier"]] = obj;
+	}];
+	
 	NSArray* runtimes = [list[@"runtimes"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"availability == \"(available)\""]];
 	NSDictionary* devices = list[@"devices"];
 	
-	NSMutableArray* allDevices = [NSMutableArray new];
+	NSMutableArray<NSMutableDictionary<NSString*, id>*>* allDevices = [NSMutableArray new];
 	
 	[runtimes enumerateObjectsUsingBlock:^(NSDictionary<NSString*, id>* _Nonnull runtime, NSUInteger idx, BOOL * _Nonnull stop) {
 		NSString* runtimeName = runtime[@"name"];
@@ -93,21 +100,44 @@ static NSArray* simulatorDevicesList()
 		[allDevices addObjectsFromArray:runtimeDevices];
 	}];
 	
-	return [allDevices sortedArrayUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"os.version" ascending:NO comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+	[allDevices sortUsingDescriptors:@[[NSSortDescriptor sortDescriptorWithKey:@"os.version" ascending:NO comparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
 		return [obj1 compare:obj2 options:NSNumericSearch];
 	}], [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+	
+	[allDevices enumerateObjectsUsingBlock:^(NSMutableDictionary<NSString *, id> * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		NSURL* url = [[SimUtils URLForSimulatorId:obj[@"udid"]] URLByAppendingPathComponent:@"device.plist"];
+		NSMutableDictionary* metadata = [[NSMutableDictionary alloc] initWithContentsOfURL:url];
+		obj[@"deviceType"] = deviceTypeMaps[metadata[@"deviceType"]];
+	}];
+	
+	return allDevices;
 }
 
-static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSString* simulatorFilterRequest)
+static NSPredicate* predicateByName(NSString* simName)
 {
-	if(simulatorDevices == nil)
-	{
-		return nil;
-	}
-	
+	return [NSPredicate predicateWithFormat:@"name ==[cd] %@", simName];
+}
+
+static NSPredicate* predicateByOS(NSString* osVer)
+{
+	return [NSPredicate predicateWithFormat:@"(os.version == %@ || os.name == %@)", osVer, osVer];
+}
+
+static NSPredicate* predicateById(NSString* simId)
+{
+	return [NSPredicate predicateWithFormat:@"udid == %@", simId];
+}
+
+static NSPredicate* predicateByType(NSString* deviceType)
+{
+	return [NSPredicate predicateWithFormat:@"(deviceType.identifier == %@ || deviceType.name == %@)", deviceType, deviceType];
+}
+
+static NSPredicate* predicateByLegacyFilterRequest(NSString* simulatorFilterRequest)
+{
 	if(simulatorFilterRequest == nil)
 	{
-		return simulatorDevices;
+		return nil;
 	}
 	
 	NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(.*)\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
@@ -130,12 +160,22 @@ static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSString* simulato
 		}
 	}
 	
+	return filterPredicate;
+}
+
+static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSPredicate* filterPredicate)
+{
+	if(simulatorDevices == nil)
+	{
+		return nil;
+	}
+	
 	if(filterPredicate != nil)
 	{
 		return [simulatorDevices filteredArrayUsingPredicate:filterPredicate];
 	}
 	
-	return nil;
+	return simulatorDevices;
 }
 
 
@@ -252,26 +292,53 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 	}
 }
 
+static NSPredicate* predicateByAppendingOrCreatingPredicate(NSPredicate* orig, NSPredicate* append)
+{
+	if(append == nil)
+	{
+		return orig;
+	}
+	
+	if(orig == nil)
+	{
+		return append;
+	}
+	
+	return [NSCompoundPredicate andPredicateWithSubpredicates:@[orig, append]];
+}
+
 int main(int argc, const char* argv[]) {
 	@autoreleasepool {
 		LNUsageSetIntroStrings(@[@"A collection of utils for Apple simulators."]);
 		
 		LNUsageSetExampleStrings(@[
-								   @"%@ --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+								   @"%@ --byId <simulator identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+								   @"%@ --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 								   @"%@ --simulator <simulator name/identifier> --restartSB",
-								   @"%@ --list [\"<simulator name>[, OS=<version>]\"] [--maxResults <int>]"
+								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]"
 								   ]);
 		
 		LNUsageSetOptions(@[
-							[LNUsageOption optionWithName:@"simulator" valueRequirement:GBValueRequired description:@"The simulator identifier or simulator name & operating system version (e.g. \"iPhone 7 Plus, OS = 10.3\")"],
-							[LNUsageOption optionWithName:@"bundle" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
+							[LNUsageOption optionWithName:@"byId" valueRequirement:GBValueRequired description:@"Filters simulators by identifier"],
+							[LNUsageOption optionWithName:@"byName" valueRequirement:GBValueRequired description:@"Filters simulators by name"],
+							[LNUsageOption optionWithName:@"byType" valueRequirement:GBValueRequired description:@"Filters simulators by device type"],
+							[LNUsageOption optionWithName:@"byOS" valueRequirement:GBValueRequired description:@"Filters simulators by operating system"],
+							
+							[LNUsageOption optionWithName:@"list" valueRequirement:GBValueOptional description:@"Lists available simulators"],
 							[LNUsageOption optionWithName:@"setPermissions" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
 							[LNUsageOption optionWithName:@"clearKeychain" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
 							[LNUsageOption optionWithName:@"restartSB" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
-							[LNUsageOption optionWithName:@"list" valueRequirement:GBValueOptional description:@"Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional"],
+							
+							[LNUsageOption optionWithName:@"bundle" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
+							
 							[LNUsageOption optionWithName:@"maxResults" valueRequirement:GBValueRequired description:@"Limits the number of results returned from --list"],
+							
 							[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:GBValueNone description:@"Prints version"],
 							]);
+		
+		LNUsageSetHiddenOptions(@[
+								  [LNUsageOption optionWithName:@"simulator" valueRequirement:GBValueRequired description:@""],
+								  ]);
 		
 		LNUsageSetAdditionalTopics(@[@{
 										 @"Available Permissions":
@@ -323,17 +390,44 @@ int main(int argc, const char* argv[]) {
 			LNUsagePrintMessage(@"Error: Unable to obtain a list of simulators", LNLogLevelError);
 		}
 		
+		NSPredicate* filter = nil;
+		
+		if([settings objectForKey:@"byId"])
+		{
+			NSString* fStr = [settings objectForKey:@"byId"];
+			NSPredicate* predicate = predicateById(fStr);
+			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+		}
+		if([settings objectForKey:@"byName"])
+		{
+			NSString* fStr = [settings objectForKey:@"byName"];
+			NSPredicate* predicate = predicateByName(fStr);
+			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+		}
+		if([settings objectForKey:@"byType"])
+		{
+			NSString* fStr = [settings objectForKey:@"byType"];
+			NSPredicate* predicate = predicateByType(fStr);
+			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+		}
+		if([settings objectForKey:@"byOS"])
+		{
+			NSString* fStr = [settings objectForKey:@"byOS"];
+			NSPredicate* predicate = predicateByOS(fStr);
+			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+		}
+		
 		if([settings objectForKey:@"list"] != nil)
 		{
 			id value = [settings objectForKey:@"list"];
-			NSString* simulatorFilterRequest;
 			
-			if([value isKindOfClass:[NSString class]])
+			if(filter == nil && [value isKindOfClass:[NSString class]])
 			{
-				simulatorFilterRequest = value;
+				NSString* simulatorFilterRequest = value;
+				filter = predicateByLegacyFilterRequest(simulatorFilterRequest);
 			}
 			
-			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, simulatorFilterRequest);
+			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
 			if(filteredSimulators == nil)
 			{
 				LNUsagePrintMessage(@"Error: Unable to filter simulators", LNLogLevelError);
@@ -360,88 +454,87 @@ int main(int argc, const char* argv[]) {
 			return 0;
 		}
 		
-		NSString* simulatorId = [settings objectForKey:@"simulator"];
-		if(simulatorId.length == 0)
+		__block NSString* simulatorId = [settings objectForKey:@"simulator"];
+		if(filter == nil && simulatorId.length > 0)
 		{
-			LNUsagePrintMessage(@"Error: No simulator information provided", LNLogLevelError);
+			if([[NSUUID alloc] initWithUUIDString:simulatorId] == nil)
+			{
+				NSString* simulatorFilterRequest = simulatorId;
+				filter = predicateByLegacyFilterRequest(simulatorFilterRequest);
+			}
+			else
+			{
+				filter = predicateById(simulatorId);
+			}
+		}
+		
+		NSArray<NSDictionary*>* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
+		
+		if(filteredSimulators.count == 0)
+		{
+			if(filter == nil)
+			{
+				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found"], LNLogLevelError);
+			}
+			else
+			{
+				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", filter], LNLogLevelError);
+			}
 			
 			return -1;
 		}
 		
-		if([[NSUUID alloc] initWithUUIDString:simulatorId] == nil)
-		{
-			NSString* simulatorFilterRequest = simulatorId;
+		[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
+			simulatorId = simulator[@"udid"];
 			
-			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, simulatorFilterRequest);
-			
-			if(filteredSimulators != nil)
+			BOOL needsSimShutdown = NO;
+			if([simulator[@"state"] isEqualToString:@"Shutdown"] && [SetServicePermission isSimulatorReadyForPersmissions:simulatorId] == NO)
 			{
-				simulatorId = filteredSimulators.firstObject[@"udid"];
-			}
-			
-			if(simulatorId.length == 0)
-			{
-				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", simulatorFilterRequest], LNLogLevelError);
+				needsSimShutdown = YES;
 				
-				return -1;
+				bootSimulator(simulatorId);
 			}
-		}
-		
-		NSDictionary* simulator = [[simulatorDevices filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"udid == %@", simulatorId]] firstObject];
-		if(simulator == nil)
-		{
-			LNUsagePrintMessage([NSString stringWithFormat:@"Error: Simulator with identifier “%@” not found", simulatorId], LNLogLevelError);
 			
-			return -1;
-		}
-		
-		BOOL needsSimShutdown = NO;
-		if([simulator[@"state"] isEqualToString:@"Shutdown"] && [SetServicePermission isSimulatorReadyForPersmissions:simulatorId] == NO)
-		{
-			needsSimShutdown = YES;
+			BOOL needsSpringBoardRestart = NO;
 			
-			bootSimulator(simulatorId);
-		}
-
-		BOOL needsSpringBoardRestart = NO;
-
-		NSString* permissions = [settings objectForKey:@"setPermissions"];
-		if(permissions != nil)
-		{
-			NSString* bundleId = [settings objectForKey:@"bundle"];
-			if(bundleId.length == 0)
+			NSString* permissions = [settings objectForKey:@"setPermissions"];
+			if(permissions != nil)
 			{
-				LNUsagePrintMessage(@"Error: No app bundle identifier provided", LNLogLevelError);
+				NSString* bundleId = [settings objectForKey:@"bundle"];
+				if(bundleId.length == 0)
+				{
+					LNUsagePrintMessage(@"Error: No app bundle identifier provided", LNLogLevelError);
+					
+					exit(-2);
+				}
 				
-				return -2;
+				performPermissionsPass(permissions, simulatorId, bundleId);
+				
+				needsSpringBoardRestart = YES;
 			}
 			
-			performPermissionsPass(permissions, simulatorId, bundleId);
+			if([settings boolForKey:@"clearKeychain"])
+			{
+				performClearKeychainPass(simulatorId);
+				
+				needsSpringBoardRestart = YES;
+			}
 			
-			needsSpringBoardRestart = YES;
-		}
-
-		if([settings boolForKey:@"clearKeychain"])
-		{
-			performClearKeychainPass(simulatorId);
+			if([settings boolForKey:@"restartSB"])
+			{
+				needsSpringBoardRestart = YES;
+			}
 			
-			needsSpringBoardRestart = YES;
-		}
-		
-		if([settings boolForKey:@"restartSB"])
-		{
-			needsSpringBoardRestart = YES;
-		}
-		
-		if(needsSpringBoardRestart)
-		{
-			restartSpringBoard(simulatorId);
-		}
-		
-		if(needsSimShutdown)
-		{
-			shutdownSimulator(simulatorId);
-		}
+			if(needsSpringBoardRestart)
+			{
+				restartSpringBoard(simulatorId);
+			}
+			
+			if(needsSimShutdown)
+			{
+				shutdownSimulator(simulatorId);
+			}
+		}];
 	}
 	return 0;
 }

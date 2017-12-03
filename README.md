@@ -13,22 +13,27 @@ brew install wix/brew/applesimutils
 ## Usage
 
 ```shell
-Usage: applesimutils --simulator <simulator name/identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
-       applesimutils --simulator <simulator name/identifier> --restartSB
-       applesimutils --list ["<simulator name>[, OS=<version>]"] [--maxResults <int>]
+Usage:
+    applesimutils --byId <simulator identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
+    applesimutils --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
+    applesimutils --simulator <simulator name/identifier> --restartSB
+    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]
 
 Options:
-    --simulator        The simulator identifier or simulator name & operating system version (e.g. "iPhone 7 Plus, OS = 10.3")
-    --bundle           The app bundle identifier
+    --byId             Filters simulators by identifier
+    --byName           Filters simulators by name
+    --byType           Filters simulators by device type
+    --byOS             Filters simulators by operating system
+    --list             Lists available simulators
     --setPermissions   Sets the specified permissions and restarts SpringBoard for the changes to take effect
     --clearKeychain    Clears the simulator's keychain
     --restartSB        Restarts SpringBoard
-    --list       		 Lists available simulators; an optional filter can be provided: simulator name is required, os version is optional
+    --bundle           The app bundle identifier
     --maxResults       Limits the number of results returned from --list
     --version, -v      Prints version
     --help, -h         Prints usage
 
-Available permissions:
+Available Permissions:
     calendar=YES|NO|unset
     camera=YES|NO|unset
     contacts=YES|NO|unset

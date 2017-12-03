@@ -11,6 +11,7 @@
 @interface SimUtils : NSObject
 
 + (NSURL*)developerURL;
++ (NSURL*)URLForSimulatorId:(NSString*)simulatorId;
 + (NSURL*)libraryURLForSimulatorId:(NSString*)simulatorId;
 + (NSURL*)binaryURLForBundleId:(NSString*)bundleId simulatorId:(NSString*)simulatorId;
 
