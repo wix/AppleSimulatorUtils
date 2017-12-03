@@ -19,6 +19,11 @@ if [[ -n $(git tag --contains $(git rev-parse --verify HEAD)) ]]; then
 	exit -3
 fi
 
+if [[ -n $(git log --branches --not --remotes) ]]; then
+	echo "Pushing commits to git"
+	git push
+fi
+
 echo "Creating commit for version"
 
 echo "\"$1\"" > applesimutils/applesimutils/version.h
