@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.5.18](https://github.com/wix/AppleSimulatorUtils/tree/0.5.18) (2017-12-03)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.17...0.5.18)
+
+**Fixed Bugs**
+
+- Changelog is generated incorrectly if a commit that is supposed to close an issue is not pushed before calling release script [\#18](https://github.com/wix/AppleSimulatorUtils/issues/18)
+
 ## [0.5.17](https://github.com/wix/AppleSimulatorUtils/tree/0.5.17) (2017-12-03)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.16...0.5.17)
 
