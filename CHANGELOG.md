@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.5.17](https://github.com/wix/AppleSimulatorUtils/tree/0.5.17) (2017-12-03)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.16...0.5.17)
+
+**Closed Issues**
+
+- Move useful functionality to ObjCCLIInfra, use that in this repo [\#16](https://github.com/wix/AppleSimulatorUtils/issues/16)
+
 ## [0.5.16](https://github.com/wix/AppleSimulatorUtils/tree/0.5.16) (2017-11-16)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.15...0.5.16)
 
