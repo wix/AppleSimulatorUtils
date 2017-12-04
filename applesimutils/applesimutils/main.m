@@ -230,6 +230,7 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 																   @"motion": @"kTCCServiceMotion",
 																   @"health": @"kTCCServiceMSO",
 																   @"siri": @"kTCCServiceSiri",
+																   @"speech": @"kTCCServiceSpeechRecognition",
 																   };
 	
 	NSArray<NSString*>* parsedArguments = [permissionsArgument componentsSeparatedByString:@","];
