@@ -47,4 +47,5 @@ Available Permissions:
     photos=YES|NO|unset
     reminders=YES|NO|unset
     siri=YES|NO|unset
+    speech=YES|NO|unset
 ```
