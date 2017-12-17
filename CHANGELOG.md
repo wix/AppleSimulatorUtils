@@ -1,5 +1,13 @@
 # Change Log
 
+## [0.5.19](https://github.com/wix/AppleSimulatorUtils/tree/0.5.19) (2017-12-17)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.18...0.5.19)
+
+**Enhancements**
+
+- Support speech recognition permission [\#19](https://github.com/wix/AppleSimulatorUtils/issues/19)
+- Support speech recognition permission [\#20](https://github.com/wix/AppleSimulatorUtils/pull/20) ([ghsdh3409](https://github.com/ghsdh3409))
+
 ## [0.5.18](https://github.com/wix/AppleSimulatorUtils/tree/0.5.18) (2017-12-03)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.17...0.5.18)
 
