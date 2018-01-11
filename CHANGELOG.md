@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.5.21](https://github.com/wix/AppleSimulatorUtils/tree/0.5.21) (2018-01-11)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.20...0.5.21)
+
+**Fixed Bugs**
+
+- applesimutils --list hangs but sudo applesimutils --list works? [\#23](https://github.com/wix/AppleSimulatorUtils/issues/23)
+
 ## [0.5.20](https://github.com/wix/AppleSimulatorUtils/tree/0.5.20) (2018-01-11)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.19...0.5.20)
 
