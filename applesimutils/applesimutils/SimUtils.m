@@ -22,12 +22,13 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 	[developerToolsPrintTask setStandardOutput:out];
 	
 	[developerToolsPrintTask launch];
-	[developerToolsPrintTask waitUntilExit];
 	
 	NSFileHandle* readFileHandle = [out fileHandleForReading];
 	
 	NSString* devToolsPath = [[[NSString alloc] initWithData:[readFileHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 	NSURL* devToolsURL = [NSURL fileURLWithPath:devToolsPath];
+	
+	[developerToolsPrintTask waitUntilExit];
 
 	return devToolsURL;
 }
@@ -59,12 +60,13 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 	[getBundlePathTask setStandardError:err];
 	
 	[getBundlePathTask launch];
-	[getBundlePathTask waitUntilExit];
 	
 	NSFileHandle* readFileHandle = [out fileHandleForReading];
 	
 	NSString* bundlePath = [[[NSString alloc] initWithData:[readFileHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 	NSURL* bundleURL = [NSURL fileURLWithPath:bundlePath];
+	
+	[getBundlePathTask waitUntilExit];
 	
 	if(bundleURL == nil || [bundleURL checkResourceIsReachableAndReturnError:NULL] == NO)
 	{

@@ -67,10 +67,11 @@ static NSArray* simulatorDevicesList()
 	[listTask setStandardOutput:outPipe];
 	
 	[listTask launch];
-	[listTask waitUntilExit];
 	
 	NSFileHandle* readFileHandle = [outPipe fileHandleForReading];
 	NSData* jsonData = [readFileHandle readDataToEndOfFile];
+	
+	[listTask waitUntilExit];
 	
 	NSError* error;
 	NSDictionary* list = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
