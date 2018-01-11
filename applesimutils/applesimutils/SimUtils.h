@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern const NSTimeInterval AppleSimUtilsRetryTimeout;
+
 @interface SimUtils : NSObject
 
 + (NSURL*)developerURL;

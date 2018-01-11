@@ -39,41 +39,53 @@
 {
 	NSURL* simulatorLibraryURL = [SimUtils libraryURLForSimulatorId:simulatorId];
 	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSString* sectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"];
-	if([fileManager fileExistsAtPath:sectionInfoPath])
-	{
-		NSMutableDictionary* bulletinSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:sectionInfoPath];
-		if(sectionInfoData == nil)
-		{
-			[bulletinSectionInfo removeObjectForKey:bundleIdentifier];
-		}
-		else
-		{
-			bulletinSectionInfo[bundleIdentifier] = sectionInfoData;
-		}
-		[bulletinSectionInfo writeToFile:sectionInfoPath atomically:YES];
-		
-		return YES;
-	}
+	BOOL success = NO;
+	NSDate *start = [NSDate date];
 	
-	//Xcode 9 support
-	NSString* versionedSectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/VersionedSectionInfo.plist"];
-	if([fileManager fileExistsAtPath:versionedSectionInfoPath])
+	while (!success)
 	{
-		NSMutableDictionary* bulletinVersionedSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:versionedSectionInfoPath];
-		if(sectionInfoData == nil)
-		{
-			[bulletinVersionedSectionInfo[@"sectionInfo"] removeObjectForKey:bundleIdentifier];
-		}
-		else
-		{
-			bulletinVersionedSectionInfo[@"sectionInfo"][bundleIdentifier] = sectionInfoData;
-		}
-	
-		[bulletinVersionedSectionInfo writeToFile:versionedSectionInfoPath atomically:YES];
+		NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
+		if (elapsed > AppleSimUtilsRetryTimeout) break;
 		
-		return YES;
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSString* sectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"];
+		if([fileManager fileExistsAtPath:sectionInfoPath])
+		{
+			NSMutableDictionary* bulletinSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:sectionInfoPath];
+			if(sectionInfoData == nil)
+			{
+				[bulletinSectionInfo removeObjectForKey:bundleIdentifier];
+			}
+			else
+			{
+				bulletinSectionInfo[bundleIdentifier] = sectionInfoData;
+			}
+			[bulletinSectionInfo writeToFile:sectionInfoPath atomically:YES];
+			
+			return YES;
+		}
+		
+		//Xcode 9 support
+		NSString* versionedSectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/VersionedSectionInfo.plist"];
+		if([fileManager fileExistsAtPath:versionedSectionInfoPath])
+		{
+			NSMutableDictionary* bulletinVersionedSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:versionedSectionInfoPath];
+			if(sectionInfoData == nil)
+			{
+				[bulletinVersionedSectionInfo[@"sectionInfo"] removeObjectForKey:bundleIdentifier];
+			}
+			else
+			{
+				bulletinVersionedSectionInfo[@"sectionInfo"][bundleIdentifier] = sectionInfoData;
+			}
+			
+			[bulletinVersionedSectionInfo writeToFile:versionedSectionInfoPath atomically:YES];
+			
+			return YES;
+		}
+		
+		//Add a retry mechanism to be able to cope with a device which is in the process of booting while this runs.
+		[NSThread sleepForTimeInterval:1];
 	}
 	
 	if(error)

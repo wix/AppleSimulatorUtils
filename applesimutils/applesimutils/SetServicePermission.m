@@ -10,8 +10,6 @@
 #import "JPSimulatorHacksDB.h"
 #import "SimUtils.h"
 
-static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
-
 @implementation SetServicePermission
 
 + (NSURL *)_tccPathForSimulatorId:(NSString*)simulatorId
@@ -30,9 +28,10 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 	BOOL success = NO;
 	NSDate *start = [NSDate date];
 	
-	while (!success) {
+	while (!success)
+	{
 		NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
-		if (elapsed > JPSimulatorHacksTimeout) break;
+		if (elapsed > AppleSimUtilsRetryTimeout) break;
 		
 		NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
 		
@@ -59,10 +58,12 @@ static const NSTimeInterval JPSimulatorHacksTimeout = 15.0f;
 			parameters = @[service, bundleIdentifier, @"0"];
 		}
 		
-		if ([db executeUpdate:query withArgumentsInArray:parameters]) {
+		if ([db executeUpdate:query withArgumentsInArray:parameters])
+		{
 			success = YES;
 		}
-		else {
+		else
+		{
 			[db close];
 			if(error)
 			{

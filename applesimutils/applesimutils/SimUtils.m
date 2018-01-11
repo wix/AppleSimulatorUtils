@@ -8,9 +8,9 @@
 
 #import "SimUtils.h"
 
-@implementation SimUtils
+const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 
-//xcode-select -p
+@implementation SimUtils
 
 + (NSURL*)developerURL
 {
