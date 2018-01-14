@@ -20,7 +20,7 @@ static void securitydCtl(NSString* simulatorId, BOOL stop)
 	}
 	
 	NSTask* rebootTask = [NSTask new];
-	rebootTask.launchPath = @"/usr/bin/xcrun";
+	rebootTask.launchPath = [SimUtils xcrunURL].path;
 	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", devTools.path];
 	[rebootTask launch];
 	[rebootTask waitUntilExit];

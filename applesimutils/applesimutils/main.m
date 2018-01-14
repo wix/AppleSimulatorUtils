@@ -21,12 +21,12 @@ static char* const __version =
 static void bootSimulator(NSString* simulatorId)
 {
 	NSTask* bootTask = [NSTask new];
-	bootTask.launchPath = @"/usr/bin/xcrun";
+	bootTask.launchPath = [SimUtils xcrunURL].path;
 	bootTask.arguments = @[@"simctl", @"boot", simulatorId];
 	[bootTask launch];
 	
 	NSTask* bootStatusTask = [NSTask new];
-	bootStatusTask.launchPath = @"/usr/bin/xcrun";
+	bootStatusTask.launchPath = [SimUtils xcrunURL].path;
 	bootStatusTask.arguments = @[@"simctl", @"bootstatus", simulatorId];
 	
 	NSPipe* devNullPipe = [NSPipe new];
@@ -42,7 +42,7 @@ static void bootSimulator(NSString* simulatorId)
 static void shutdownSimulator(NSString* simulatorId)
 {
 	NSTask* shutdownTask = [NSTask new];
-	shutdownTask.launchPath = @"/usr/bin/xcrun";
+	shutdownTask.launchPath = [SimUtils xcrunURL].path;
 	shutdownTask.arguments = @[@"simctl", @"shutdown", simulatorId];
 	[shutdownTask launch];
 	[shutdownTask waitUntilExit];
@@ -51,7 +51,7 @@ static void shutdownSimulator(NSString* simulatorId)
 static void restartSpringBoard(NSString* simulatorId)
 {
 	NSTask* respringTask = [NSTask new];
-	respringTask.launchPath = @"/usr/bin/xcrun";
+	respringTask.launchPath = [SimUtils xcrunURL].path;
 	respringTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", @"stop", @"com.apple.SpringBoard"];
 	[respringTask launch];
 	[respringTask waitUntilExit];
@@ -60,7 +60,7 @@ static void restartSpringBoard(NSString* simulatorId)
 static NSArray* simulatorDevicesList()
 {
 	NSTask* listTask = [NSTask new];
-	listTask.launchPath = @"/usr/bin/xcrun";
+	listTask.launchPath = [SimUtils xcrunURL].path;
 	listTask.arguments = @[@"simctl", @"list", @"--json"];
 	
 	NSPipe* outPipe = [NSPipe pipe];

@@ -12,6 +12,7 @@ extern const NSTimeInterval AppleSimUtilsRetryTimeout;
 
 @interface SimUtils : NSObject
 
++ (NSURL*)xcrunURL;
 + (NSURL*)developerURL;
 + (NSURL*)URLForSimulatorId:(NSString*)simulatorId;
 + (NSURL*)libraryURLForSimulatorId:(NSString*)simulatorId;

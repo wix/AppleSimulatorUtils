@@ -12,13 +12,57 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 
 @implementation SimUtils
 
++ (NSURL*)_whichURLForBinaryName:(NSString*)binaryName
+{
+	NSParameterAssert(binaryName != nil);
+	
+	NSTask* whichTask = [NSTask new];
+	whichTask.launchPath = @"/usr/bin/which";
+	whichTask.arguments = @[binaryName];
+	
+	NSPipe* out = [NSPipe pipe];
+	[whichTask setStandardOutput:out];
+	
+	[whichTask launch];
+	
+	NSFileHandle* readFileHandle = [out fileHandleForReading];
+	
+	NSString* whichResponse = [[[NSString alloc] initWithData:[readFileHandle readDataToEndOfFile] encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+	
+	[whichTask waitUntilExit];
+	
+	return [NSURL fileURLWithPath:whichResponse];
+}
+
++ (NSURL*)xcrunURL
+{
+	static NSURL* xcrunURL;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		xcrunURL = [self _whichURLForBinaryName:@"xcrun"];
+	});
+	
+	return xcrunURL;
+}
+
++ (NSURL*)xcodeSelectURL
+{
+	static NSURL* xcodeSelectURL;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		xcodeSelectURL = [self _whichURLForBinaryName:@"xcode-select"];
+	});
+	
+	return xcodeSelectURL;
+}
+
 + (NSURL*)developerURL
 {
 	NSTask* developerToolsPrintTask = [NSTask new];
-	developerToolsPrintTask.launchPath = @"/usr/bin/xcode-select";
+	developerToolsPrintTask.launchPath = [self xcodeSelectURL].path;
 	developerToolsPrintTask.arguments = @[@"-p"];
 	
-	NSPipe * out = [NSPipe pipe];
+	NSPipe* out = [NSPipe pipe];
 	[developerToolsPrintTask setStandardOutput:out];
 	
 	[developerToolsPrintTask launch];
@@ -51,7 +95,7 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 + (NSURL *)binaryURLForBundleId:(NSString*)bundleId simulatorId:(NSString*)simulatorId
 {
 	NSTask* getBundlePathTask = [NSTask new];
-	getBundlePathTask.launchPath = @"/usr/bin/xcrun";
+	getBundlePathTask.launchPath = [self xcrunURL].path;
 	getBundlePathTask.arguments = @[@"simctl", @"get_app_container", simulatorId, bundleId, @"app"];
 	
 	NSPipe* out = [NSPipe pipe];
