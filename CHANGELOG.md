@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.5.22](https://github.com/wix/AppleSimulatorUtils/tree/0.5.22) (2018-01-14)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.21...0.5.22)
+
+**Enhancements**
+
+- Support xcenv [\#24](https://github.com/wix/AppleSimulatorUtils/issues/24)
+
 ## [0.5.21](https://github.com/wix/AppleSimulatorUtils/tree/0.5.21) (2018-01-11)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.20...0.5.21)
 
@@ -9,10 +16,6 @@
 
 ## [0.5.20](https://github.com/wix/AppleSimulatorUtils/tree/0.5.20) (2018-01-11)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.19...0.5.20)
-
-**Fixed Bugs**
-
-- Handle booting devices better when attempting to set a notification permission [\#22](https://github.com/wix/AppleSimulatorUtils/issues/22)
 
 ## [0.5.19](https://github.com/wix/AppleSimulatorUtils/tree/0.5.19) (2017-12-17)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.18...0.5.19)
