@@ -9,6 +9,8 @@ Install [brew](https://brew.sh), then:
 brew tap wix/brew
 brew install wix/brew/applesimutils
 ```
+(If xcode-select: error: tool 'xcodebuild' requires Xcode)
+try ```sudo xcode-select -s /Applications/Xcode.app/Contents/Developer```
 
 ## Usage
 
