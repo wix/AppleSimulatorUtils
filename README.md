@@ -10,6 +10,8 @@ brew tap wix/brew
 brew install wix/brew/applesimutils
 ```
 
+*Note:* In case your installation fails, make sure to update your command line tools in the system update of your Mac.
+
 ## Usage
 
 ```shell
