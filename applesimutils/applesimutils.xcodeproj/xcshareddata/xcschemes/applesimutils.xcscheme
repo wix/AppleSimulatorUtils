@@ -26,7 +26,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -46,7 +45,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -77,16 +75,16 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--byOS &quot;11.2&quot;"
-            isEnabled = "NO">
+            argument = "--byOS &quot;12.0&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--byName &quot;iPhone 8 Plus&quot;"
-            isEnabled = "NO">
+            argument = "--byName &quot;iPhone SE&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--bundle &quot;com.wix.Tst&quot;"
-            isEnabled = "NO">
+            argument = "--bundle &quot;com.rav.TestAccessApplication&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
@@ -94,7 +92,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES,location=inuse&quot;"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
@@ -110,7 +108,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--version"
