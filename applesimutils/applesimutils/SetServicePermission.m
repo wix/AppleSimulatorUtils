@@ -17,6 +17,14 @@
 	return [[SimUtils libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"TCC/TCC.db"];
 }
 
+
++ (void)_deleteSettingForService:(NSString*)service bundleID:(NSString*)bundleId inDataBase:(JPSimulatorHacksDB*)db
+{
+	NSString* deleteRequest = @"DELETE FROM access WHERE service == ? AND client == ? AND client_type = ?";
+	NSArray<NSString*>* parametres = @[service, bundleId, @"0"];
+	[db executeUpdate:deleteRequest withArgumentsInArray:parametres];
+}
+
 #pragma mark - Helper
 
 + (BOOL)_changeAccessToService:(NSString*)service
@@ -34,6 +42,7 @@
 		if (elapsed > AppleSimUtilsRetryTimeout) break;
 		
 		NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
+		NSLog(@"tcc path : %@", tccURL.path);
 		
 		if ([tccURL checkResourceIsReachableAndReturnError:error] == NO)
 		{
@@ -44,12 +53,15 @@
 		if (![db open]) continue;
 		
 		NSString *query;
-		NSArray *parameters;
+		NSArray<NSString*> *parameters;
 		
 		if([status isEqualToString:@"unset"] == NO)
 		{
 			BOOL allowed = [status boolValue];
-			query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
+			
+			[self _deleteSettingForService:service bundleID:bundleIdentifier inDataBase:db];
+		
+			query = @"INSERT INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
 			parameters = @[service, bundleIdentifier, @"0", [@(allowed) stringValue], @"1"];
 		}
 		else

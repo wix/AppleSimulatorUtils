@@ -90,7 +90,7 @@
     return YES;
 }
 
-- (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arrayArgs
+- (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray<NSString*> *)arrayArgs
 {
     if (!_db) {
         return NO;
@@ -105,7 +105,7 @@
         return NO;
     }
 
-    id obj;
+    NSString* obj;
     int idx = 0;
     int queryCount = sqlite3_bind_parameter_count(pStmt);
     while (idx < queryCount) {
@@ -116,7 +116,7 @@
             break;
         }
         idx++;
-        sqlite3_bind_text(pStmt, idx, [[obj description] UTF8String], -1, SQLITE_STATIC);
+        sqlite3_bind_text(pStmt, idx, [obj UTF8String], -1, SQLITE_STATIC);
     }
 
     if (idx != queryCount) {
