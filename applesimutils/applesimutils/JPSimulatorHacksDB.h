@@ -30,7 +30,7 @@
 
 + (instancetype)databaseWithURL:(NSURL*)url;
 - (BOOL)close;
-- (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray *)arguments;
+- (BOOL)executeUpdate:(NSString*)sql withArgumentsInArray:(NSArray<NSString*> *)arguments;
 - (NSString *)lastErrorMessage;
 - (BOOL)open;
 
