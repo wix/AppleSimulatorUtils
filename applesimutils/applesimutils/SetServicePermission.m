@@ -46,35 +46,35 @@
 		NSString *query;
 		NSArray *parameters;
 		
-		if([status isEqualToString:@"unset"] == NO)
-		{
-			BOOL allowed = [status boolValue];
-			query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
-			parameters = @[service, bundleIdentifier, @"0", [@(allowed) stringValue], @"1"];
-		}
-		else
-		{
-			query = @"DELETE FROM access WHERE service = ? AND client = ? AND client_type = ?";
-			parameters = @[service, bundleIdentifier, @"0"];
-		}
+		query = @"DELETE FROM access WHERE service = ? AND client = ? AND client_type = ?";
+		parameters = @[service, bundleIdentifier, @"0"];
 		
 		if ([db executeUpdate:query withArgumentsInArray:parameters])
 		{
 			success = YES;
-		}
-		else
-		{
-			[db close];
-			if(error)
+			
+			if([status isEqualToString:@"unset"] == NO)
 			{
-				*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ (db)", [db lastErrorMessage]]}];
-				//On error, stop retries.
-				return NO;
+				BOOL allowed = [status boolValue];
+				query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
+				parameters = @[service, bundleIdentifier, @"0", [@(allowed) stringValue], @"1"];
+				
+				if ([db executeUpdate:query withArgumentsInArray:parameters] == NO)
+				{
+					success = NO;
+				}
 			}
 		}
 		
 		[db close];
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
+		
+		if(error)
+		{
+			*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ (db)", [db lastErrorMessage]]}];
+			//On error, stop retries.
+			break;
+		}
 	}
 	
 	if(success == NO && error && *error == nil)
