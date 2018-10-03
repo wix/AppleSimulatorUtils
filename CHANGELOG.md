@@ -1,5 +1,12 @@
 # Change Log
 
+## [0.6.0](https://github.com/wix/AppleSimulatorUtils/tree/0.6.0) (2018-10-03)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.23...0.6.0)
+
+**Closed Issues**
+
+- Support TouchID functionality  [\#32](https://github.com/wix/AppleSimulatorUtils/issues/32)
+
 ## [0.5.23](https://github.com/wix/AppleSimulatorUtils/tree/0.5.23) (2018-10-03)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.22...0.5.23)
 
