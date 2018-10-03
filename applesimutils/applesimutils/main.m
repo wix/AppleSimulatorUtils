@@ -377,13 +377,13 @@ int main(int argc, const char* argv[]) {
 		   ![settings objectForKey:@"list"])
 		{
 			LNUsagePrintMessage(nil, LNLogLevelStdOut);
-			return -1;
+			exit(-1);
 		}
 		
 		if([settings boolForKey:@"version"])
 		{
 			LNLog(LNLogLevelStdOut, @"%@ version %s", NSProcessInfo.processInfo.arguments.firstObject.lastPathComponent, __version);
-			return 0;
+			exit(0);
 		}
 		
 		NSArray* simulatorDevices = simulatorDevicesList();
@@ -391,6 +391,7 @@ int main(int argc, const char* argv[]) {
 		if(simulatorDevices == nil)
 		{
 			LNUsagePrintMessage(@"Error: Unable to obtain a list of simulators", LNLogLevelError);
+			exit(-1);
 		}
 		
 		NSPredicate* filter = nil;
@@ -454,7 +455,7 @@ int main(int argc, const char* argv[]) {
 			
 			LNLog(LNLogLevelStdOut, @"%@", [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:filteredSimulators options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding]);
 			
-			return 0;
+			exit(0);
 		}
 		
 		__block NSString* simulatorId = [settings objectForKey:@"simulator"];
@@ -484,7 +485,7 @@ int main(int argc, const char* argv[]) {
 				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", filter], LNLogLevelError);
 			}
 			
-			return -1;
+			exit(-1);
 		}
 		
 		[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
@@ -539,5 +540,5 @@ int main(int argc, const char* argv[]) {
 			}
 		}];
 	}
-	return 0;
+	exit(0);
 }
