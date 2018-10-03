@@ -1,5 +1,22 @@
 # Change Log
 
+## [0.5.23](https://github.com/wix/AppleSimulatorUtils/tree/0.5.23) (2018-10-03)
+[Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.22...0.5.23)
+
+**Enhancements**
+
+- Support user login permission  [\#27](https://github.com/wix/AppleSimulatorUtils/issues/27)
+
+**Fixed Bugs**
+
+- Handle booting devices better when attempting to set a notification permission [\#22](https://github.com/wix/AppleSimulatorUtils/issues/22)
+
+**Closed Issues**
+
+- applesimutils adds same records into TCC.db [\#34](https://github.com/wix/AppleSimulatorUtils/issues/34)
+- Can't install applesimutils 0.5.2 for XCode10 ? [\#31](https://github.com/wix/AppleSimulatorUtils/issues/31)
+- Install fails on CircleCI  [\#30](https://github.com/wix/AppleSimulatorUtils/issues/30)
+
 ## [0.5.22](https://github.com/wix/AppleSimulatorUtils/tree/0.5.22) (2018-01-14)
 [Full Changelog](https://github.com/wix/AppleSimulatorUtils/compare/0.5.21...0.5.22)
 
