@@ -204,7 +204,7 @@ static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSPredicate* filte
  ?kTCCServiceKeyboardNetwork
  +kTCCServiceWillow
  +kTCCServiceMediaLibrary
- ?kTCCServiceSpeechRecognition
+ +kTCCServiceSpeechRecognition
  +kTCCServiceMSO
  +kTCCServiceSiri
  ?kTCCServiceCalls
@@ -311,6 +311,66 @@ static NSPredicate* predicateByAppendingOrCreatingPredicate(NSPredicate* orig, N
 	return [NSCompoundPredicate andPredicateWithSubpredicates:@[orig, append]];
 }
 
+/*
+ com.apple.BiometricKit.enrollmentChanged
+ */
+static void setBiometricEnrollment(NSString* simulatorId, BOOL enrolled)
+{
+	NSTask* setNotifyValueTask = [NSTask new];
+	setNotifyValueTask.launchPath = [SimUtils xcrunURL].path;
+	setNotifyValueTask.arguments = @[@"simctl", @"spawn", simulatorId, @"notifyutil", @"-s", @"com.apple.BiometricKit.enrollmentChanged", enrolled ? @"1" : @"0"];
+	[setNotifyValueTask launch];
+	[setNotifyValueTask waitUntilExit];
+	
+	NSTask* postNotifyTask = [NSTask new];
+	postNotifyTask.launchPath = [SimUtils xcrunURL].path;
+	postNotifyTask.arguments = @[@"simctl", @"spawn", simulatorId, @"notifyutil", @"-p", @"com.apple.BiometricKit.enrollmentChanged"];
+	[postNotifyTask launch];
+	[postNotifyTask waitUntilExit];
+}
+
+typedef NS_ENUM(NSUInteger, ASUBiometricType) {
+	ASUBiometricTypeFinger,
+	ASUBiometricTypeFace,
+};
+
+/*
+ com.apple.BiometricKit_Sim.fingerTouch.match
+ com.apple.BiometricKit_Sim.fingerTouch.nomatch
+ com.apple.BiometricKit_Sim.pearl.match
+ com.apple.BiometricKit_Sim.pearl.nomatch
+ */
+static void sendBiometricMatch(NSString* simulatorId, ASUBiometricType biometricType, BOOL matching)
+{
+	NSMutableString* keyName = [@"com.apple.BiometricKit_Sim." mutableCopy];
+	switch (biometricType) {
+		case ASUBiometricTypeFinger:
+			[keyName appendString:@"fingerTouch."];
+			break;
+		case ASUBiometricTypeFace:
+			[keyName appendString:@"pearl."];
+			break;
+		default:
+			exit(-666);
+			break;
+	}
+	
+	if(matching)
+	{
+		[keyName appendString:@"match"];
+	}
+	else
+	{
+		[keyName appendString:@"nomatch"];
+	}
+	
+	NSTask* postNotifyTask = [NSTask new];
+	postNotifyTask.launchPath = [SimUtils xcrunURL].path;
+	postNotifyTask.arguments = @[@"simctl", @"spawn", simulatorId, @"notifyutil", @"-p", keyName];
+	[postNotifyTask launch];
+	[postNotifyTask waitUntilExit];
+}
+
 int main(int argc, const char* argv[]) {
 	@autoreleasepool {
 		LNUsageSetIntroStrings(@[@"A collection of utils for Apple simulators."]);
@@ -319,7 +379,9 @@ int main(int argc, const char* argv[]) {
 								   @"%@ --byId <simulator identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 								   @"%@ --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 								   @"%@ --simulator <simulator name/identifier> --restartSB",
-								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]"
+								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]",
+								   @"%@ --byId <simulator identifier> --biometricEnrollment <YES/NO>",
+								   @"%@ --byId <simulator identifier> --matchFace"
 								   ]);
 		
 		LNUsageSetOptions(@[
@@ -332,6 +394,12 @@ int main(int argc, const char* argv[]) {
 							[LNUsageOption optionWithName:@"setPermissions" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
 							[LNUsageOption optionWithName:@"clearKeychain" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
 							[LNUsageOption optionWithName:@"restartSB" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
+							
+							[LNUsageOption optionWithName:@"biometricEnrollment" valueRequirement:GBValueRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
+							[LNUsageOption optionWithName:@"matchFace" valueRequirement:GBValueNone description:@"Approves Face ID authentication request with a matching face"],
+							[LNUsageOption optionWithName:@"unmatchFace" valueRequirement:GBValueNone description:@"Fails Face ID authentication request with a non-matching face"],
+							[LNUsageOption optionWithName:@"matchFinger" valueRequirement:GBValueNone description:@"Approves Touch ID authentication request with a matching finger"],
+							[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:GBValueNone description:@"Fails Touch ID authentication request with a non-matching finger"],
 							
 							[LNUsageOption optionWithName:@"bundle" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
 							
@@ -376,7 +444,13 @@ int main(int argc, const char* argv[]) {
 		   ![settings objectForKey:@"setPermissions"] &&
 		   ![settings boolForKey:@"restartSB"] &&
 		   ![settings boolForKey:@"clearKeychain"] &&
-		   ![settings objectForKey:@"list"])
+		   ![settings objectForKey:@"list"] &&
+		   ![settings objectForKey:@"biometricEnrollment"] &&
+		   ![settings boolForKey:@"matchFace"] &&
+		   ![settings boolForKey:@"unmatchFace"] &&
+		   ![settings boolForKey:@"matchFinger"] &&
+		   ![settings boolForKey:@"unmatchFinger"]
+		   )
 		{
 			LNUsagePrintMessage(nil, LNLogLevelStdOut);
 			exit(-1);
@@ -529,6 +603,31 @@ int main(int argc, const char* argv[]) {
 			if([settings boolForKey:@"restartSB"])
 			{
 				needsSpringBoardRestart = YES;
+			}
+			
+			NSString* biometricEnrollment = [settings objectForKey:@"biometricEnrollment"];
+			if(biometricEnrollment)
+			{
+				assertStringInArrayValues(biometricEnrollment, @[@"YES", @"NO"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for biometricEnrollment; expected YES|NO", biometricEnrollment]);
+				
+				setBiometricEnrollment(simulatorId, [biometricEnrollment boolValue]);
+			}
+			
+			if([settings boolForKey:@"matchFace"])
+			{
+				sendBiometricMatch(simulatorId, ASUBiometricTypeFace, YES);
+			}
+			if([settings boolForKey:@"unmatchFace"])
+			{
+				sendBiometricMatch(simulatorId, ASUBiometricTypeFace, NO);
+			}
+			if([settings boolForKey:@"matchFinger"])
+			{
+				sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, YES);
+			}
+			if([settings boolForKey:@"unmatchFinger"])
+			{
+				sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, NO);
 			}
 			
 			if(needsSpringBoardRestart)
