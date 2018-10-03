@@ -89,14 +89,16 @@ static NSArray* simulatorDevicesList()
 		deviceTypeMaps[obj[@"identifier"]] = obj;
 	}];
 	
-	NSArray* runtimes = [list[@"runtimes"] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"availability == \"(available)\""]];
+	NSPredicate* availabilityPredicate = [NSPredicate predicateWithFormat:@"availability == \"(available)\" OR isAvailable == \"YES\""];
+	
+	NSArray* runtimes = [list[@"runtimes"] filteredArrayUsingPredicate:availabilityPredicate];
 	NSDictionary* devices = list[@"devices"];
 	
 	NSMutableArray<NSMutableDictionary<NSString*, id>*>* allDevices = [NSMutableArray new];
 	
 	[runtimes enumerateObjectsUsingBlock:^(NSDictionary<NSString*, id>* _Nonnull runtime, NSUInteger idx, BOOL * _Nonnull stop) {
 		NSString* runtimeName = runtime[@"name"];
-		NSArray* runtimeDevices = [devices[runtimeName] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"availability == \"(available)\""]];
+		NSArray* runtimeDevices = [devices[runtimeName] filteredArrayUsingPredicate:availabilityPredicate];
 		[runtimeDevices setValue:runtime forKey:@"os"];
 		[allDevices addObjectsFromArray:runtimeDevices];
 	}];
