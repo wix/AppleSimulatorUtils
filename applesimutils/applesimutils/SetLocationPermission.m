@@ -63,16 +63,18 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 		
 		NSDictionary* permissionMapping = @{@"never": @1, @"inuse": @2, @"always": @4};
 		
+		bundlePermissions[@"AuthorizationUpgradeAvailable"] = @NO;
 		bundlePermissions[@"SupportedAuthorizationMask"] = @7;
 		bundlePermissions[@"Authorization"] = permissionMapping[permission];
 		bundlePermissions[@"BundleId"] = bundleIdentifier;
-		bundlePermissions[@"Whitelisted"] = @0;
+		bundlePermissions[@"Whitelisted"] = @NO;
 		
 		NSURL* binaryURL = [SimUtils binaryURLForBundleId:bundleIdentifier simulatorId:simulatorId];
 		NSString* path = binaryURL != nil ? binaryURL.path : @"";
 		
 		bundlePermissions[@"Executable"] = path;
 		bundlePermissions[@"Registered"] = path;
+		bundlePermissions[@"TrialPeriodBegin"] = @([NSDate.date timeIntervalSinceReferenceDate]);
 		
 		locationClients[bundleIdentifier] = bundlePermissions;
 	}
