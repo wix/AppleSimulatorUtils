@@ -98,8 +98,12 @@ static NSArray* simulatorDevicesList()
 	
 	[runtimes enumerateObjectsUsingBlock:^(NSDictionary<NSString*, id>* _Nonnull runtime, NSUInteger idx, BOOL * _Nonnull stop) {
 		NSString* runtimeName = runtime[@"name"];
-		NSArray* runtimeDevices = [devices[runtimeName] filteredArrayUsingPredicate:availabilityPredicate];
-		[runtimeDevices setValue:runtime forKey:@"os"];
+        NSString* runtimeIdentifier = runtime[@"identifier"];
+        NSArray* nameDevices = devices[runtimeName] ?: @[];
+        NSArray* identifierDevices = devices[runtimeIdentifier] ?: @[];
+		NSArray* runtimeDevices = [nameDevices arrayByAddingObjectsFromArray:identifierDevices];
+        NSArray* filteredDevices = [runtimeDevices filteredArrayUsingPredicate:availabilityPredicate];
+		[filteredDevices setValue:runtime forKey:@"os"];
 		[allDevices addObjectsFromArray:runtimeDevices];
 	}];
 	
