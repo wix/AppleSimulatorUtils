@@ -398,6 +398,7 @@ int main(int argc, const char* argv[]) {
 							[LNUsageOption optionWithName:@"setPermissions" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
 							[LNUsageOption optionWithName:@"clearKeychain" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
 							[LNUsageOption optionWithName:@"restartSB" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
+							[LNUsageOption optionWithName:@"skipRestartSB" valueRequirement:GBValueNone description:@"Skip Restarting SpringBoard"],
 							
 							[LNUsageOption optionWithName:@"biometricEnrollment" valueRequirement:GBValueRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
 							[LNUsageOption optionWithName:@"matchFace" valueRequirement:GBValueNone description:@"Approves Face ID authentication request with a matching face"],
@@ -607,6 +608,11 @@ int main(int argc, const char* argv[]) {
 			if([settings boolForKey:@"restartSB"])
 			{
 				needsSpringBoardRestart = YES;
+			}
+
+			if([settings boolForKey:@"skipRestartSB"])
+			{
+				needsSpringBoardRestart = NO;
 			}
 			
 			NSString* biometricEnrollment = [settings objectForKey:@"biometricEnrollment"];

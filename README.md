@@ -32,6 +32,7 @@ Options:
     --setPermissions        Sets the specified permissions and restarts SpringBoard for the changes to take effect
     --clearKeychain         Clears the simulator's keychain
     --restartSB             Restarts SpringBoard
+    --skipRestartSB         Skip Restarting SpringBoard
     --biometricEnrollment   Enables or disables biometric (Face ID/Touch ID) enrollment.
     --matchFace             Approves Face ID authentication request with a matching face
     --unmatchFace           Fails Face ID authentication request with a non-matching face
