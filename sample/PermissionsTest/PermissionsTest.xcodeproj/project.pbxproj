@@ -154,7 +154,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = "/bin/sh -e";
-			shellScript = "applesimutils --byId \"${TARGET_DEVICE_IDENTIFIER}\" --setPermissions \"calendar=YES,location=inuse,notifications=YES\" --bundle com.wix.PermissionsTest\n";
+			shellScript = "# applesimutils --byId \"${TARGET_DEVICE_IDENTIFIER}\" --setPermissions \"calendar=YES,location=inuse,notifications=YES\" --bundle com.wix.PermissionsTest\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

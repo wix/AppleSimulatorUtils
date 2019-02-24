@@ -68,31 +68,35 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byId &quot;81D58764-BF68-4B18-BECD-BE407B921693&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--byType &quot;iPhone Xs Max&quot;"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--byType &quot;iPhone X&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--byOS &quot;11.2&quot;"
-            isEnabled = "NO">
+            argument = "--byOS &quot;12.2&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byName &quot;iPhone 8 Plus&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--bundle &quot;com.wix.Tst&quot;"
-            isEnabled = "NO">
+            argument = "--bundle &quot;com.wix.PermissionsTest&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES,location=inuse&quot;"
+            argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES, location=inuse&quot;"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--setPermissions &quot;location=never, notifications=YES&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
@@ -120,7 +124,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--version"

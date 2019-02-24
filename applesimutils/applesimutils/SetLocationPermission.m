@@ -9,13 +9,14 @@
 #import "SetLocationPermission.h"
 #import "SimUtils.h"
 
-static void locationdCtl(NSString* simulatorId, BOOL stop)
+static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 {
     NSFileManager *fileManager = [NSFileManager defaultManager];
     //New Simulator Runtime location for Xcode 9
     NSURL *devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
     
-    if (![fileManager fileExistsAtPath:devTools.path]){
+    if ([fileManager fileExistsAtPath:devTools.path] == NO)
+	{
         devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
     }
 	
@@ -79,11 +80,11 @@ static void locationdCtl(NSString* simulatorId, BOOL stop)
 		locationClients[bundleIdentifier] = bundlePermissions;
 	}
 	
-	locationdCtl(simulatorId, YES);
+	startStopLocationdCtl(simulatorId, YES);
 	
 	[[NSPropertyListSerialization dataWithPropertyList:locationClients format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL] writeToURL:plistURL atomically:YES];
 	
-	locationdCtl(simulatorId, NO);
+	startStopLocationdCtl(simulatorId, NO);
 	
 	return YES;
 }

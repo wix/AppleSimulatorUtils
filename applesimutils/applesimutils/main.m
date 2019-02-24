@@ -224,7 +224,7 @@ static void assertStringInArrayValues(NSString* str, NSArray* values, int errorC
 	}
 }
 
-static void performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier)
+static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier)
 {
 	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{@"calendar": @"kTCCServiceCalendar",
 																   @"camera": @"kTCCServiceCamera",
@@ -245,6 +245,8 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 	__block NSError* err;
 	__block BOOL success = YES;
 	
+	__block BOOL needsSpringBoardRestart = NO;
+	
 	[parsedArguments enumerateObjectsUsingBlock:^(NSString * _Nonnull argument, NSUInteger idx, BOOL * _Nonnull stop) {
 		NSArray* split = [argument componentsSeparatedByString:@"="];
 		if(split.count != 2)
@@ -258,19 +260,23 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		
 		if([permission isEqualToString:@"notifications"])
 		{
-			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
 			
 			success = [SetNotificationsPermission setNotificationsStatus:value forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			
+			needsSpringBoardRestart |= YES;
 		}
 		else if([permission isEqualToString:@"location"])
 		{
-			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
 			
 			success = [SetLocationPermission setLocationPermission:value forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			
+			needsSpringBoardRestart |= NO;
 		}
 		else
 		{
-			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
 			
 			NSString* appleService = argumentToAppleService[permission];
 			if(appleService == nil)
@@ -280,6 +286,8 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 			}
 			
 			success = [SetServicePermission setPermisionStatus:value forService:appleService bundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			
+			needsSpringBoardRestart |= NO;
 		}
 		
 		if(success == NO)
@@ -298,6 +306,8 @@ static void performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@", err.localizedDescription], LNLogLevelError);
 		exit(-3);
 	}
+	
+	return needsSpringBoardRestart;
 }
 
 static NSPredicate* predicateByAppendingOrCreatingPredicate(NSPredicate* orig, NSPredicate* append)
@@ -592,9 +602,7 @@ int main(int argc, const char* argv[]) {
 					exit(-2);
 				}
 				
-				performPermissionsPass(permissions, simulatorId, bundleId);
-				
-				needsSpringBoardRestart = YES;
+				needsSpringBoardRestart = performPermissionsPass(permissions, simulatorId, bundleId);
 			}
 			
 			if([settings boolForKey:@"clearKeychain"])
