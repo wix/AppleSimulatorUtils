@@ -26,7 +26,7 @@ fi
 
 echo -e "\033[1;34mCreating release notes\033[0m"
 
-RELEASE_NOTES_FILE=._tmp_release_notes.md
+RELEASE_NOTES_FILE=_tmp_release_notes.md
 
 touch "${RELEASE_NOTES_FILE}"
 open -Wn "${RELEASE_NOTES_FILE}"
@@ -52,7 +52,7 @@ echo -e "\033[1;34mCreating a compressed tarball of the source\033[0m"
 SRC_TGZ_FILE="AppleSimulatorUtils-${VERSION}.tar.gz"
 
 mkdir -p build
-tar --exclude="releaseVersion.sh" --exclude=".git" --exclude="build" --exclude="bottle" --exclude "._tmp_release_notes.md" --exclude=".github" --exclude="homebrew-brew" -cvzf "build/${SRC_TGZ_FILE}" .
+tar --exclude="releaseVersion.sh" --exclude=".git" --exclude="build" --exclude="bottle" --exclude "_tmp_release_notes.md" --exclude=".github" --exclude="homebrew-brew" -cvzf "build/${SRC_TGZ_FILE}" .
 
 echo -e "\033[1;34mCreating a homebrew bottle"
 
