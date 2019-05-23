@@ -41,7 +41,7 @@ echo -e "\033[1;34mCreating commit for version\033[0m"
 
 VERSION="$1"
 
-echo "\"$VERSION\"" > applesimutils/applesimutils/version.h
+echo "\"${VERSION}\"" > applesimutils/applesimutils/version.h
 
 echo -e "\033[1;34mCreating a compressed tarball of the source\033[0m"
 
@@ -72,10 +72,10 @@ git fetch
 git pull --rebase
 sed -i '' -e 's/^\ \ url .*/\ \ url '"'https:\/\/github.com\/wix\/AppleSimulatorUtils\/releases\/download\/${VERSION}\/${SRC_TGZ_FILE}'"'/g' applesimutils.rb
 sed -i '' -e 's/^\ \ \ \ root\_url .*/\ \ \ \ root\_url '"'https:\/\/github.com\/wix\/AppleSimulatorUtils\/releases\/download\/${VERSION}'"'/g' applesimutils.rb
-sed -i '' -e 's/^\ \ sha256 .*/\ \ sha256 '"'"$(shasum -b -a 256 ../build/${SRC_TGZ_FILE} | awk '{ print $1 }')"'"'/g' applesimutils.rb
-sed -i '' -e 's/^\ \ \ \ sha256 .*/\ \ \ \ sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"'\ \=\>\ \:mojave/g' applesimutils.rb
+sed -i '' -e 's/^\ \ sha256 .*/\ \ sha256 '"'"$(shasum -b -a 256 ../build/${SRC_TGZ_FILE} | awk '{ print ${VERSION} }')"'"'/g' applesimutils.rb
+sed -i '' -e 's/^\ \ \ \ sha256 .*/\ \ \ \ sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print ${VERSION} }')"'"'\ \=\>\ \:mojave/g' applesimutils.rb
 git add -A
-git commit -m "$1"
+git commit -m "Apple Simulator Utils ${VERSION}"
 git push
 
 cd ..
@@ -83,8 +83,8 @@ cd ..
 echo -e "\033[1;34mPushing changes to AppleSimUtils\033[0m"
 
 git add -A
-git commit -m "$1"
-git tag "$1"
+git commit -m "${VERSION}"
+git tag "${VERSION}"
 
 git push
 git push --tags
