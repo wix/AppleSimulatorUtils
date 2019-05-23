@@ -2,29 +2,29 @@
 set -e
 
 if [ "$#" -ne 1 ]; then
-	echo >&2 "Illegal number of parameters"
-	echo >&2 "releaseVersion.sh <version>"
+	echo >&2 "\033[1;31mIllegal number of parameters\033[0m"
+	echo >&2 "\033[1;31mreleaseVersion.sh <version>\033[0m"
 	exit -1
 fi
 
 if [[ -n $(git status --porcelain) ]]; then
-	echo >&2 "Cannot release version because there are unstaged changes:"
+	echo >&2 "\033[1;31mCannot release version because there are unstaged changes:\033[0m"
 	git status --short
 	exit -2
 fi
 
 if [[ -n $(git tag --contains $(git rev-parse --verify HEAD)) ]]; then
-	echo >&2 "The latest commit is already contained in the following releases:"
+	echo >&2 "\033[1;31mThe latest commit is already contained in the following releases:\033[0m"
 	git tag --contains $(git rev-parse --verify HEAD)
 	exit -3
 fi
 
 if [[ -n $(git log --branches --not --remotes) ]]; then
-	echo "Pushing commits to git"
+	echo -e "\033[1;34mPushing commits to git\033[0m"
 	git push
 fi
 
-echo "Creating release notes"
+echo -e "\033[1;34mCreating release notes\033[0m"
 
 RELEASE_NOTES_FILE=._tmp_release_notes.md
 
@@ -37,26 +37,26 @@ if ! [ -s "${RELEASE_NOTES_FILE}" ]; then
 	exit -1
 fi
 
-echo "Creating commit for version"
+echo -e "\033[1;34mCreating commit for version\033[0m"
 
 VERSION="$1"
 
 echo "\"$VERSION\"" > applesimutils/applesimutils/version.h
 
-echo "Cleaning up"
+echo -e "\033[1;34mCleaning up\033[0m"
 
 git clean -xdf
 
-echo "Creating a compressed tarball of the source"
+echo -e "\033[1;34mCreating a compressed tarball of the source\033[0m"
 
 SRC_TGZ_FILE="AppleSimulatorUtils-${VERSION}.tar.gz"
 
 mkdir -p build
 tar --exclude="releaseVersion.sh" --exclude=".git" --exclude="build" --exclude="bottle" --exclude "._tmp_release_notes.md" --exclude=".github" --exclude="homebrew-brew" -cvzf "build/${SRC_TGZ_FILE}" .
 
-echo "Creating a homebrew bottle"
+echo -e "\033[1;34mCreating a homebrew bottle"
 
-BOTTLE_TGZ_FILE="applesimutils-${VERSION}.mojave.bottle.tar.gz"
+BOTTLE_TGZ_FILE="applesimutils-${VERSION}.mojave.bottle.tar.gz\033[0m"
 
 rm -fr bottle
 BOTTLE_DIR="bottle/applesimutils/${VERSION}/"
@@ -67,9 +67,8 @@ cd bottle
 tar -cvzf "${BOTTLE_TGZ_FILE}" applesimutils
 popd
 
-echo "Updating brew repository with latest tarball and update applesimutils.rb"
+echo -e "\033[1;34mUpdating brew repository with latest tarball and update applesimutils.rb\033[0m"
 
-pushd .
 cd homebrew-brew
 
 git checkout master
@@ -83,9 +82,9 @@ git add -A
 git commit -m "$1"
 git push
 
-popd
+cd ..
 
-echo "Pushing changes to AppleSimUtils"
+echo -e "\033[1;34mPushing changes to AppleSimUtils\033[0m"
 
 git add -A
 git commit -m "$1"
@@ -94,7 +93,7 @@ git tag "$1"
 git push
 git push --tags
 
-echo "Creating a GitHub release"
+echo -e "\033[1;34mCreating a GitHub release\033[0m"
 
 #Escape user input in markdown to valid JSON string using PHP 🤦‍♂️ (https://stackoverflow.com/a/13466143/983912)
 RELEASENOTESCONTENTS=$(printf '%s' "$(<"${RELEASE_NOTES_FILE}")" | php -r 'echo json_encode(file_get_contents("php://stdin"));')
@@ -103,8 +102,8 @@ RELEASE_ID=$(curl -s --data "$API_JSON" https://api.github.com/repos/wix/AppleSi
 
 echo -e "\033[1;34mUploading attachments to release\033[0m"
 
-curl -s --data-binary @"${SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
-curl -s --data-binary @"${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+curl -s --data-binary @"${build/SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+curl -s --data-binary @"${bottle/BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
 
 # rm -fr build
 # rm -fr bottle
