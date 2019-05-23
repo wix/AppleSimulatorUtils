@@ -64,7 +64,7 @@ mkdir -p "${BOTTLE_DIR}"
 ./buildForBrew.sh "${BOTTLE_DIR}"
 pushd .
 cd bottle
-tar -cvzf "${BOTTLE_TGZ_FILE} applesimutils
+tar -cvzf "${BOTTLE_TGZ_FILE}" applesimutils
 popd
 
 echo "Updating brew repository with latest tarball and update applesimutils.rb"
