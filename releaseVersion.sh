@@ -43,10 +43,6 @@ VERSION="$1"
 
 echo "\"$VERSION\"" > applesimutils/applesimutils/version.h
 
-echo -e "\033[1;34mCleaning up\033[0m"
-
-git clean -xdf
-
 echo -e "\033[1;34mCreating a compressed tarball of the source\033[0m"
 
 SRC_TGZ_FILE="AppleSimulatorUtils-${VERSION}.tar.gz"
