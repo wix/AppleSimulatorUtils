@@ -52,7 +52,7 @@ tar --exclude="releaseVersion.sh" --exclude=".git" --exclude="build" --exclude="
 
 echo -e "\033[1;34mCreating a homebrew bottle"
 
-BOTTLE_TGZ_FILE="applesimutils-${VERSION}.mojave.bottle.tar.gz\033[0m"
+BOTTLE_TGZ_FILE="applesimutils-${VERSION}.mojave.bottle.tar.gz"
 
 rm -fr bottle
 BOTTLE_DIR="bottle/applesimutils/${VERSION}/"
@@ -98,8 +98,8 @@ RELEASE_ID=$(curl -s --data "$API_JSON" https://api.github.com/repos/wix/AppleSi
 
 echo -e "\033[1;34mUploading attachments to release\033[0m"
 
-curl -s --data-binary @"${build/SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
-curl -s --data-binary @"${bottle/BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+curl -s --data-binary @"build/${SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
 
 # rm -fr build
 # rm -fr bottle
