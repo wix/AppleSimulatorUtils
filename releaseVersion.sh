@@ -2,19 +2,19 @@
 set -e
 
 if [ "$#" -ne 1 ]; then
-	echo >&2 "\033[1;31mIllegal number of parameters\033[0m"
-	echo >&2 "\033[1;31mreleaseVersion.sh <version>\033[0m"
+	echo -e >&2 "\033[1;31mIllegal number of parameters\033[0m"
+	echo -e >&2 "\033[1;31mreleaseVersion.sh <version>\033[0m"
 	exit -1
 fi
 
 if [[ -n $(git status --porcelain) ]]; then
-	echo >&2 "\033[1;31mCannot release version because there are unstaged changes:\033[0m"
+	echo -e >&2 "\033[1;31mCannot release version because there are unstaged changes:\033[0m"
 	git status --short
 	exit -2
 fi
 
 if [[ -n $(git tag --contains $(git rev-parse --verify HEAD)) ]]; then
-	echo >&2 "\033[1;31mThe latest commit is already contained in the following releases:\033[0m"
+	echo -e >&2 "\033[1;31mThe latest commit is already contained in the following releases:\033[0m"
 	git tag --contains $(git rev-parse --verify HEAD)
 	exit -3
 fi
