@@ -50,9 +50,11 @@ SRC_TGZ_FILE="AppleSimulatorUtils-${VERSION}.tar.gz"
 mkdir -p build
 tar --exclude="releaseVersion.sh" --exclude=".git" --exclude="build" --exclude="bottle" --exclude "_tmp_release_notes.md" --exclude=".github" --exclude="homebrew-brew" -cvzf "build/${SRC_TGZ_FILE}" .
 
-echo -e "\033[1;34mCreating a homebrew bottle"
+echo -e "\033[1;34mCreating Homebrew bottles"
 
 BOTTLE_TGZ_FILE="applesimutils-${VERSION}.mojave.bottle.tar.gz"
+BOTTLE_TGZ_FILE_HSIERRA="applesimutils-${VERSION}.high_sierra.bottle.tar.gz"
+BOTTLE_TGZ_FILE_SIERRA="applesimutils-${VERSION}.sierra.bottle.tar.gz"
 
 rm -fr bottle
 BOTTLE_DIR="bottle/applesimutils/${VERSION}/"
@@ -61,6 +63,9 @@ mkdir -p "${BOTTLE_DIR}"
 pushd .
 cd bottle
 tar -cvzf "${BOTTLE_TGZ_FILE}" applesimutils
+
+cp "${BOTTLE_TGZ_FILE}" "${BOTTLE_TGZ_FILE_HSIERRA}"
+cp "${BOTTLE_TGZ_FILE}" "${BOTTLE_TGZ_FILE_SIERRA}"
 popd
 
 echo -e "\033[1;34mUpdating brew repository with latest tarball and update applesimutils.rb\033[0m"
@@ -72,8 +77,10 @@ git fetch
 git pull --rebase
 sed -i '' -e 's/^\ \ url .*/\ \ url '"'https:\/\/github.com\/wix\/AppleSimulatorUtils\/releases\/download\/${VERSION}\/${SRC_TGZ_FILE}'"'/g' applesimutils.rb
 sed -i '' -e 's/^\ \ \ \ root\_url .*/\ \ \ \ root\_url '"'https:\/\/github.com\/wix\/AppleSimulatorUtils\/releases\/download\/${VERSION}'"'/g' applesimutils.rb
-sed -i '' -e 's/^\ \ sha256 .*/\ \ sha256 '"'"$(shasum -b -a 256 ../build/${SRC_TGZ_FILE} | awk '{ print ${VERSION} }')"'"'/g' applesimutils.rb
-sed -i '' -e 's/^\ \ \ \ sha256 .*/\ \ \ \ sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print ${VERSION} }')"'"'\ \=\>\ \:mojave/g' applesimutils.rb
+sed -i '' -e 's/^\ \ sha256 .*/\ \ sha256 '"'"$(shasum -b -a 256 ../build/${SRC_TGZ_FILE} | awk '{ print $1 }')"'"'/g' applesimutils.rb
+sed -i '' -e 's/^    sha256 .* => :mojave/    sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"' => :mojave/g' applesimutils.rb
+sed -i '' -e 's/^    sha256 .* => :high_sierra/    sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"' => :high_sierra/g' applesimutils.rb
+sed -i '' -e 's/^    sha256 .* => :sierra/    sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"' => :sierra/g' applesimutils.rb
 git add -A
 git commit -m "Apple Simulator Utils ${VERSION}"
 git push
@@ -100,6 +107,8 @@ echo -e "\033[1;34mUploading attachments to release\033[0m"
 
 curl -s --data-binary @"build/${SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
 curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE_HSIERRA}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE_HSIERRA})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE_SIERRA}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE_SIERRA})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
 
 rm -fr build
 rm -fr bottle
