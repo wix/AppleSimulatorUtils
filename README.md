@@ -10,11 +10,11 @@ brew tap wix/brew
 brew install wix/brew/applesimutils
 ```
 
-## Troubleshooting Installation
+## Troubleshooting
 
-- In case your installation fails, make sure to update your command line tools in the system update of your Mac
-- If Homebrew complains about a conflict in the `wix/brew` Tap, run `brew untap wix/brew && brew tap wix/brew` and try installing again
-- If installation still fails, **run `brew doctor` and fix all issues**
+- In case an installation fails, make sure to update your command line tools in the System Update system prefernce pane of your Mac
+- If Homebrew complains about a conflict in the `wix/brew` tap, run `brew untap wix/brew && brew tap wix/brew` and try installing again
+- If installation still fails, **run `brew doctor` and fix all issues & warnings**
 
 ## Usage
 
