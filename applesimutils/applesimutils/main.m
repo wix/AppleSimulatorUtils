@@ -89,7 +89,7 @@ static NSArray* simulatorDevicesList()
 		deviceTypeMaps[obj[@"identifier"]] = obj;
 	}];
 	
-	NSPredicate* availabilityPredicate = [NSPredicate predicateWithFormat:@"availability == \"(available)\" OR isAvailable == \"YES\""];
+	NSPredicate* availabilityPredicate = [NSPredicate predicateWithFormat:@"availability == \"(available)\" OR isAvailable == \"YES\" OR isAvailable == 1"];
 	
 	NSArray* runtimes = [list[@"runtimes"] filteredArrayUsingPredicate:availabilityPredicate];
 	NSDictionary* devices = list[@"devices"];

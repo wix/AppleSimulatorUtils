@@ -27,8 +27,6 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
@@ -38,8 +36,8 @@
             ReferencedContainer = "container:applesimutils.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -67,16 +65,16 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--byId &quot;81D58764-BF68-4B18-BECD-BE407B921693&quot;"
+            argument = "--byId &quot;3C331CD3-736F-4EC4-932D-288FCF5C8924&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byType &quot;iPhone Xs Max&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byOS &quot;12.2&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byName &quot;iPhone 8 Plus&quot;"
@@ -84,7 +82,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--bundle &quot;com.wix.PermissionsTest&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
@@ -96,7 +94,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;location=never, notifications=YES&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
@@ -104,7 +102,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"
@@ -131,8 +129,6 @@
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
