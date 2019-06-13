@@ -61,10 +61,6 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--simulator &quot;iPhone 8 Plus, OS=11.1&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "--byId &quot;3C331CD3-736F-4EC4-932D-288FCF5C8924&quot;"
             isEnabled = "NO">
          </CommandLineArgument>

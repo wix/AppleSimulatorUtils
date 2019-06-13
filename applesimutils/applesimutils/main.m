@@ -140,36 +140,6 @@ static NSPredicate* predicateByType(NSString* deviceType)
 	return [NSPredicate predicateWithFormat:@"(deviceType.identifier == %@ || deviceType.name == %@)", deviceType, deviceType];
 }
 
-static NSPredicate* predicateByLegacyFilterRequest(NSString* simulatorFilterRequest)
-{
-	if(simulatorFilterRequest == nil)
-	{
-		return nil;
-	}
-	
-	NSRegularExpression* expr = [NSRegularExpression regularExpressionWithPattern:@"(.*?)(?:,\\s*OS\\s*=\\s*(.*)\\s*|)$" options:NSRegularExpressionCaseInsensitive error:NULL];
-	NSArray<NSTextCheckingResult *> * matches = [expr matchesInString:simulatorFilterRequest options:0 range:NSMakeRange(0, simulatorFilterRequest.length)];
-	
-	NSPredicate* filterPredicate = nil;
-	
-	if(matches.count > 0 && matches.firstObject.numberOfRanges >= 3)
-	{
-		NSString* simName = [simulatorFilterRequest substringWithRange:[matches.firstObject rangeAtIndex:1]];
-		NSRange osRange = [matches.firstObject rangeAtIndex:2];
-		if(osRange.location != NSNotFound)
-		{
-			NSString* osVer = [simulatorFilterRequest substringWithRange:osRange];
-			filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@ && (os.version == %@ || os.name == %@)", simName, osVer, osVer];
-		}
-		else
-		{
-			filterPredicate = [NSPredicate predicateWithFormat:@"name ==[cd] %@", simName];
-		}
-	}
-	
-	return filterPredicate;
-}
-
 static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSPredicate* filterPredicate)
 {
 	if(simulatorDevices == nil)
@@ -392,7 +362,6 @@ int main(int argc, const char* argv[]) {
 		LNUsageSetExampleStrings(@[
 								   @"%@ --byId <simulator identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 								   @"%@ --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
-								   @"%@ --simulator <simulator name/identifier> --restartSB",
 								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]",
 								   @"%@ --byId <simulator identifier> --biometricEnrollment <YES/NO>",
 								   @"%@ --byId <simulator identifier> --matchFace"
@@ -511,17 +480,10 @@ int main(int argc, const char* argv[]) {
 			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
 		}
 		
+		NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
+		
 		if([settings objectForKey:@"list"] != nil)
 		{
-			id value = [settings objectForKey:@"list"];
-			
-			if(filter == nil && [value isKindOfClass:[NSString class]])
-			{
-				NSString* simulatorFilterRequest = value;
-				filter = predicateByLegacyFilterRequest(simulatorFilterRequest);
-			}
-			
-			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
 			if(filteredSimulators == nil)
 			{
 				LNUsagePrintMessage(@"Error: Unable to filter simulators", LNLogLevelError);
@@ -548,22 +510,6 @@ int main(int argc, const char* argv[]) {
 			exit(0);
 		}
 		
-		__block NSString* simulatorId = [settings objectForKey:@"simulator"];
-		if(filter == nil && simulatorId.length > 0)
-		{
-			if([[NSUUID alloc] initWithUUIDString:simulatorId] == nil)
-			{
-				NSString* simulatorFilterRequest = simulatorId;
-				filter = predicateByLegacyFilterRequest(simulatorFilterRequest);
-			}
-			else
-			{
-				filter = predicateById(simulatorId);
-			}
-		}
-		
-		NSArray<NSDictionary*>* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
-		
 		if(filteredSimulators.count == 0)
 		{
 			if(filter == nil)
@@ -579,7 +525,7 @@ int main(int argc, const char* argv[]) {
 		}
 		
 		[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
-			simulatorId = simulator[@"udid"];
+			NSString* simulatorId = simulator[@"udid"];
 			
 			BOOL needsSimShutdown = NO;
 			if([simulator[@"state"] isEqualToString:@"Shutdown"] && [SetServicePermission isSimulatorReadyForPersmissions:simulatorId] == NO)
