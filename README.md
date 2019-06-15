@@ -7,7 +7,7 @@ Install [brew](https://brew.sh), then:
 
 ```shell
 brew tap wix/brew
-brew install wix/brew/applesimutils
+brew install applesimutils
 ```
 
 ## Troubleshooting
@@ -18,13 +18,13 @@ brew install wix/brew/applesimutils
 
 ## Usage
 
-```shell
+```
 A collection of utils for Apple simulators.
 
 Usage Examples:
     applesimutils --byId <simulator identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
     applesimutils --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
-    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]
+    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator type>] [--maxResults <int>]
     applesimutils --byId <simulator identifier> --biometricEnrollment <YES/NO>
     applesimutils --byId <simulator identifier> --matchFace
 
