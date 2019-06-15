@@ -360,15 +360,15 @@ int main(int argc, const char* argv[]) {
 		LNUsageSetIntroStrings(@[@"A collection of utils for Apple simulators."]);
 		
 		LNUsageSetExampleStrings(@[
-								   @"%@ --byId <simulator identifier> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
-								   @"%@ --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
-								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator OS version>] [--maxResults <int>]",
-								   @"%@ --byId <simulator identifier> --biometricEnrollment <YES/NO>",
-								   @"%@ --byId <simulator identifier> --matchFace"
+								   @"%@ --byId <simulator UDID> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+								   @"%@ --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]",
+								   @"%@ --byId <simulator UDID> --biometricEnrollment <YES/NO>",
+								   @"%@ --byId <simulator UDID> --matchFace"
 								   ]);
 		
 		LNUsageSetOptions(@[
-							[LNUsageOption optionWithName:@"byId" valueRequirement:GBValueRequired description:@"Filters simulators by identifier"],
+							[LNUsageOption optionWithName:@"byId" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
 							[LNUsageOption optionWithName:@"byName" valueRequirement:GBValueRequired description:@"Filters simulators by name"],
 							[LNUsageOption optionWithName:@"byType" valueRequirement:GBValueRequired description:@"Filters simulators by device type"],
 							[LNUsageOption optionWithName:@"byOS" valueRequirement:GBValueRequired description:@"Filters simulators by operating system"],
