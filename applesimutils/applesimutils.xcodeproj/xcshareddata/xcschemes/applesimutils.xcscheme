@@ -69,6 +69,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--byUDID &quot;D1645AED-E710-4C54-A292-E52648063807&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--byOS &quot;12.2&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -77,8 +81,8 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--bundle &quot;com.wix.PermissionsTest&quot;"
-            isEnabled = "NO">
+            argument = "--bundle &quot;com.wix.PermissionsTestT1&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
@@ -89,8 +93,12 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--setPermissions &quot;location=never, notifications=YES&quot;"
+            argument = "--setPermissions &quot;notifications=YES&quot;"
             isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--setPermissions &quot;health=YES&quot;"
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"
@@ -98,7 +106,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"

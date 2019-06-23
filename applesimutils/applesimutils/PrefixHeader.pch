@@ -9,6 +9,12 @@
 #ifndef PrefixHeader_pch
 #define PrefixHeader_pch
 
+#import "LNLog.h"
+
+#define debug_log(message) LNLog(LNLogLevelDebug, @"%@ (%s at line %d)", message, __FUNCTION__, __LINE__)
+#define logcontinue(message) debug_log(message); continue
+#define logreturn(message) debug_log(message); return
+
 #import "Swiftier.h"
 
 #endif /* PrefixHeader_pch */

@@ -36,6 +36,7 @@
 		dtx_defer {
 			if(success == NO)
 			{
+				debug_log(@"Retrying in one second");
 				[NSThread sleepForTimeInterval:1];
 			}
 		};
@@ -46,7 +47,7 @@
 		NSURL* healthURL = [self _healthdbURLForSimulatorId:simulatorId osVersion:osVersion];
 		if ([healthURL checkResourceIsReachableAndReturnError:error] == NO)
 		{
-			continue;
+			logcontinue(@"Health database not found");
 		}
 		
 		FMDatabase* db = [[FMDatabase alloc] initWithURL:healthURL];
@@ -59,7 +60,7 @@
 		
 		if([db open] == NO)
 		{
-			continue;
+			logcontinue(@"Health database failed to open");
 		}
 		
 		FMResultSet* resultSet;
@@ -73,7 +74,7 @@
 		
 		if((resultSet = [db executeQuery:@"select ROWID from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
 		{
-			continue;
+			logcontinue(@"Unable to execute query");
 		}
 		
 		BOOL didHaveRow = [resultSet nextWithError:error];
@@ -100,7 +101,7 @@
 			NSNumber* syncAnchor = @1;
 			if((syncAnchorResultSet = [db executeQuery:@"select MAX(sync_anchor) from sources"]) == nil)
 			{
-				continue;
+				logcontinue(@"Unable to execute query");;
 			}
 			
 			if([syncAnchorResultSet next] != NO)
@@ -121,13 +122,13 @@
 			
 			if([db executeUpdate:[NSString stringWithFormat:@"insert into sources (%@) VALUES (%@)", query, values] withParameterDictionary:params] == NO)
 			{
-				continue;
+				logcontinue(@"Unable to execute update");;
 			}
 			
 			[resultSet close];
 			if((resultSet = [db executeQuery:@"select ROWID from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
 			{
-				continue;
+				logcontinue(@"Unable to execute query");
 			}
 			[resultSet nextWithError:error];
 		}
@@ -136,7 +137,7 @@
 		
 		if(rowID == nil)
 		{
-			continue;
+			logcontinue(@"No row ID found");;
 		}
 		
 		__unused BOOL b = [db executeUpdate:@"delete from authorization where source_id == :source_id" withParameterDictionary:@{@"source_id": rowID}];

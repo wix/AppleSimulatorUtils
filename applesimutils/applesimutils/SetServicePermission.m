@@ -33,6 +33,7 @@
 		dtx_defer {
 			if(success == NO)
 			{
+				debug_log(@"Retrying in one second");
 				[NSThread sleepForTimeInterval:1];
 			}
 		};
@@ -44,7 +45,7 @@
 		
 		if ([tccURL checkResourceIsReachableAndReturnError:error] == NO)
 		{
-			continue;
+			logcontinue(@"TCC database is not found");
 		}
 		
 		FMDatabase* db = [[FMDatabase alloc] initWithURL:tccURL];
@@ -55,7 +56,10 @@
 			}
 		};
 		
-		if (![db open]) continue;
+		if (![db open])
+		{
+			logcontinue(@"TCC database failed to open");
+		}
 		
 		NSString *query;
 		NSDictionary *parameters;

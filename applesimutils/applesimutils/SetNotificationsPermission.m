@@ -85,6 +85,7 @@
 		}
 		
 		//Add a retry mechanism to be able to cope with a device which is in the process of booting while this runs.
+		debug_log(@"Retrying in one second");
 		[NSThread sleepForTimeInterval:1];
 	}
 	
