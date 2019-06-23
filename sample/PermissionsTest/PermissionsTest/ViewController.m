@@ -58,11 +58,10 @@
 
 - (IBAction)_health:(id)sender
 {
-//	NSSet* writableTypes = [NSSet setWithObject:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierPeakExpiratoryFlowRate]];
-	NSSet* readableTypes = [NSSet setWithObjects:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierDistanceWalkingRunning], [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureSystolic], nil];
+	NSSet* readableTypes = [NSSet setWithObjects:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierPeakExpiratoryFlowRate], [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureSystolic], nil];
 	
-	[_healthStore requestAuthorizationToShareTypes:nil readTypes:readableTypes completion:^(BOOL success, NSError * _Nullable error) {
-		NSLog(@"Health: %@", success ? @"<granted>" : [NSString stringWithFormat:@"<not granted: %@>", error]);
+	[_healthStore requestAuthorizationToShareTypes:readableTypes readTypes:readableTypes completion:^(BOOL success, NSError * _Nullable error) {
+		NSLog(@"Health: %@", success ? ([_healthStore authorizationStatusForType:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierPeakExpiratoryFlowRate]] == HKAuthorizationStatusSharingAuthorized ? @"<granted>" : @"<not granted>") : [NSString stringWithFormat:@"<error: %@>", error]);
 	}];
 }
 

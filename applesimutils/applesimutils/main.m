@@ -10,6 +10,7 @@
 #import "SetNotificationsPermission.h"
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
+#import "SetHealthKitPermission.h"
 #import "ClearKeychain.h"
 #import "LNOptionsParser.h"
 #import "SimUtils.h"
@@ -194,7 +195,32 @@ static void assertStringInArrayValues(NSString* str, NSArray* values, int errorC
 	}
 }
 
-static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier)
+static NSOperatingSystemVersion operatingSystemFromSimulator(NSDictionary* simulator)
+{
+	NSRegularExpression* regex = [NSRegularExpression regularExpressionWithPattern:@"([0-9]+)\\.([0-9]+)(\\.([0-9]+))?" options:0 error:NULL];
+	
+	NSString* version = [simulator valueForKeyPath:@"os.version"];
+	__unused NSArray<NSTextCheckingResult*>* results = [regex matchesInString:version options:0 range:NSMakeRange(0, version.length)];
+	
+	if(results.count != 1 || results.firstObject.numberOfRanges != 5)
+	{
+		LNUsagePrintMessage([NSString stringWithFormat:@"Unable to parse simulator version: %@", version], LNLogLevelError);
+		
+		exit(-10);
+	}
+	
+	NSOperatingSystemVersion rv = {0};
+	rv.majorVersion = [[version substringWithRange:(NSRange)[results.firstObject rangeAtIndex:1]] integerValue];
+	rv.minorVersion = [[version substringWithRange:(NSRange)[results.firstObject rangeAtIndex:2]] integerValue];
+	if([results.firstObject rangeAtIndex:4].location != NSNotFound)
+	{
+		rv.patchVersion = [[version substringWithRange:(NSRange)[results.firstObject rangeAtIndex:4]] integerValue];
+	}
+	
+	return rv;
+}
+
+static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier, NSDictionary* simulator)
 {
 	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{@"calendar": @"kTCCServiceCalendar",
 																   @"camera": @"kTCCServiceCamera",
@@ -205,7 +231,6 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 																   @"reminders": @"kTCCServiceReminders",
 																   @"medialibrary": @"kTCCServiceMediaLibrary",
 																   @"motion": @"kTCCServiceMotion",
-																   @"health": @"kTCCServiceMSO",
 																   @"siri": @"kTCCServiceSiri",
 																   @"speech": @"kTCCServiceSpeechRecognition",
 																   };
@@ -228,7 +253,19 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		NSString* permission = [split.firstObject stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		NSString* value = [split.lastObject stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		
-		if([permission isEqualToString:@"notifications"])
+		if([permission isEqualToString:@"health"])
+		{
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
+			
+			NSDictionary* map = @{
+								  @"YES": @(HealthKitPermissionStatusAllow),
+								  @"NO": @(HealthKitPermissionStatusDeny),
+								  @"unset": @(HealthKitPermissionStatusUnset)
+								  };
+			
+			success = [SetHealthKitPermission setHealthKitPermission:[map[value] unsignedIntegerValue] forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier osVersion:operatingSystemFromSimulator(simulator) needsSBRestart:&needsSpringBoardRestart error:&err];
+		}
+		else if([permission isEqualToString:@"notifications"])
 		{
 			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
 			
@@ -392,7 +429,8 @@ int main(int argc, const char* argv[]) {
 							]);
 		
 		LNUsageSetHiddenOptions(@[
-								  [LNUsageOption optionWithName:@"simulator" valueRequirement:GBValueRequired description:@""],
+								  [LNUsageOption optionWithName:@"byID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
+								  [LNUsageOption optionWithName:@"byUDID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
 								  ]);
 		
 		LNUsageSetAdditionalTopics(@[@{
@@ -401,7 +439,7 @@ int main(int argc, const char* argv[]) {
 												 @"calendar=YES|NO|unset",
 												 @"camera=YES|NO|unset",
 												 @"contacts=YES|NO|unset",
-												 @"health=YES|NO|unset",
+												 @"health=YES|NO|unset (iOS 12.0 and above)",
 												 @"homekit=YES|NO|unset",
 												 @"location=always|inuse|never|unset",
 												 @"medialibrary=YES|NO|unset",
@@ -455,10 +493,10 @@ int main(int argc, const char* argv[]) {
 		
 		NSPredicate* filter = nil;
 		
-		if([settings objectForKey:@"byId"])
+		NSString* udid = [settings objectForKey:@"byId"] ?: [settings objectForKey:@"byID"] ?: [settings objectForKey:@"byUDID"];
+		if(udid)
 		{
-			NSString* fStr = [settings objectForKey:@"byId"];
-			NSPredicate* predicate = predicateById(fStr);
+			NSPredicate* predicate = predicateById(udid);
 			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
 		}
 		if([settings objectForKey:@"byName"])
@@ -548,7 +586,7 @@ int main(int argc, const char* argv[]) {
 					exit(-2);
 				}
 				
-				needsSpringBoardRestart = performPermissionsPass(permissions, simulatorId, bundleId);
+				needsSpringBoardRestart = performPermissionsPass(permissions, simulatorId, bundleId, simulator);
 			}
 			
 			if([settings boolForKey:@"clearKeychain"])

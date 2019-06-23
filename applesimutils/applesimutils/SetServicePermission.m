@@ -7,12 +7,12 @@
 //
 
 #import "SetServicePermission.h"
-#import "JPSimulatorHacksDB.h"
+#import <FMDB/FMDB.h>
 #import "SimUtils.h"
 
 @implementation SetServicePermission
 
-+ (NSURL *)_tccPathForSimulatorId:(NSString*)simulatorId
++ (NSURL *)_tccURLForSimulatorId:(NSString*)simulatorId
 {
 	return [[SimUtils libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"TCC/TCC.db"];
 }
@@ -25,48 +25,61 @@
 					  status:(NSString*)status
 						 error:(NSError**)error
 {	
-	BOOL success = NO;
+	__block BOOL success = NO;
 	NSDate *start = [NSDate date];
 	
 	while (!success)
 	{
+		dtx_defer {
+			if(success == NO)
+			{
+				[NSThread sleepForTimeInterval:1];
+			}
+		};
+		
 		NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
 		if (elapsed > AppleSimUtilsRetryTimeout) break;
 		
-		NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
+		NSURL* tccURL = [self _tccURLForSimulatorId:simulatorId];
 		
 		if ([tccURL checkResourceIsReachableAndReturnError:error] == NO)
 		{
 			continue;
 		}
 		
-		JPSimulatorHacksDB *db = [JPSimulatorHacksDB databaseWithURL:tccURL];
+		FMDatabase* db = [[FMDatabase alloc] initWithURL:tccURL];
+		dtx_defer {
+			if(db.isOpen)
+			{
+				[db close];
+			}
+		};
+		
 		if (![db open]) continue;
 		
 		NSString *query;
-		NSArray *parameters;
+		NSDictionary *parameters;
 		
-		query = @"DELETE FROM access WHERE service = ? AND client = ? AND client_type = ?";
-		parameters = @[service, bundleIdentifier, @"0"];
+		query = @"DELETE FROM access WHERE service = :service AND client = :client AND client_type = :client_type";
+		parameters = @{@"service": service, @"client": bundleIdentifier, @"client_type": @"0"};
 		
-		if ([db executeUpdate:query withArgumentsInArray:parameters])
+		if ([db executeUpdate:query withParameterDictionary:parameters])
 		{
 			success = YES;
 			
 			if([status isEqualToString:@"unset"] == NO)
 			{
 				BOOL allowed = [status boolValue];
-				query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (?, ?, ?, ?, ?)";
-				parameters = @[service, bundleIdentifier, @"0", [@(allowed) stringValue], @"1"];
+				query = @"REPLACE INTO access (service, client, client_type, allowed, prompt_count) VALUES (:service, :client, :client_type, :allowed, :prompt_count)";
+				parameters = @{@"service": service, @"client": bundleIdentifier, @"client_type": @"0", @"allowed": [@(allowed) stringValue], @"prompt_count": @"1"};
 				
-				if ([db executeUpdate:query withArgumentsInArray:parameters] == NO)
+				if ([db executeUpdate:query withParameterDictionary:parameters] == NO)
 				{
 					success = NO;
 				}
 			}
 		}
 		
-		[db close];
 		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
 		
 		if(error)
@@ -92,7 +105,7 @@
 
 + (BOOL)isSimulatorReadyForPersmissions:(NSString *)simulatorId
 {
-	NSURL* tccURL = [self _tccPathForSimulatorId:simulatorId];
+	NSURL* tccURL = [self _tccURLForSimulatorId:simulatorId];
 	
 	return [tccURL checkResourceIsReachableAndReturnError:NULL];
 }

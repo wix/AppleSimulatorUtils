@@ -22,14 +22,14 @@
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Davai</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Please provide health stuff please</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Please provide health stuff please</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Gief</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Come on</string>
-	<key>NSHealthUpdateUsageDescription</key>
-	<string>Please provide health stuff please</string>
-	<key>NSHealthShareUsageDescription</key>
-	<string>Please provide health stuff please</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

@@ -1,0 +1,14 @@
+//
+//  PrefixHeader.pch
+//  applesimutils
+//
+//  Created by Leo Natan (Wix) on 6/19/19.
+//  Copyright © 2019 Wix. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import "Swiftier.h"
+
+#endif /* PrefixHeader_pch */

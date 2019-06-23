@@ -4,3 +4,6 @@
 [submodule "ObjCCLIInfra"]
 	path = ObjCCLIInfra
 	url = https://github.com/wix/ObjCCLIInfra.git
+[submodule "fmdb"]
+	path = fmdb
+	url = https://LeoNatan@github.com/ccgus/fmdb.git

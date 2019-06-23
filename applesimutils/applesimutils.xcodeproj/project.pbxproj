@@ -10,18 +10,78 @@
 		391596E01E8CBAA900FDD6F5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 391596DF1E8CBAA900FDD6F5 /* main.m */; };
 		391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391597011E8CDD1D00FDD6F5 /* SetNotificationsPermission.m */; };
 		391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF301E911CAA0009AACD /* SetServicePermission.m */; };
-		391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */; };
 		391EBF381E91212B0009AACD /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 391EBF371E91212B0009AACD /* libsqlite3.tbd */; };
+		392AFBB122BAB9E0007E0F15 /* SetHealthKitPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 392AFBB022BAB9E0007E0F15 /* SetHealthKitPermission.m */; };
 		393510391FCB9972001FB466 /* LNOptionsParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510361FCB9972001FB466 /* LNOptionsParser.m */; };
 		3935103A1FCB9972001FB466 /* LNLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510381FCB9972001FB466 /* LNLog.m */; };
 		393510451FCB9A1E001FB466 /* GBSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 3935103E1FCB9A1E001FB466 /* GBSettings.m */; };
 		393510461FCB9A1E001FB466 /* GBOptionsHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 3935103F1FCB9A1E001FB466 /* GBOptionsHelper.m */; };
 		393510471FCB9A1E001FB466 /* GBCommandLineParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510401FCB9A1E001FB466 /* GBCommandLineParser.m */; };
 		393510481FCB9A1E001FB466 /* GBPrint.m in Sources */ = {isa = PBXBuildFile; fileRef = 393510431FCB9A1E001FB466 /* GBPrint.m */; };
+		39470A6C22BA879F00BDFA5C /* libFMDB.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 39470A6122BA878700BDFA5C /* libFMDB.a */; };
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 		39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 39676AD51F94BE4100018548 /* ClearKeychain.m */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		39470A5E22BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DD76FA10486AA7600D96B5E;
+			remoteInfo = fmdb;
+		};
+		39470A6022BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EE4290EF12B42F870088BD94;
+			remoteInfo = FMDB;
+		};
+		39470A6222BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF5D041618416BB2008C5AA9;
+			remoteInfo = Tests;
+		};
+		39470A6422BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 6290CBB5188FE836009790F8;
+			remoteInfo = "FMDB-IOS";
+		};
+		39470A6622BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 83C73EFE1C326AB000FFC730;
+			remoteInfo = "FMDB iOS";
+		};
+		39470A6822BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 83C73F0B1C326ADA00FFC730;
+			remoteInfo = "FMDB MacOS";
+		};
+		39470A6A22BA878700BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2CD2426D1FCC09CA00479FDE;
+			remoteInfo = "FMDB watchOS";
+		};
+		39470A6D22BA8C1900BDFA5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = EE4290EE12B42F870088BD94;
+			remoteInfo = FMDB;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		391596DA1E8CBAA900FDD6F5 /* CopyFiles */ = {
@@ -42,9 +102,11 @@
 		391597011E8CDD1D00FDD6F5 /* SetNotificationsPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetNotificationsPermission.m; sourceTree = "<group>"; };
 		391EBF2F1E911CAA0009AACD /* SetServicePermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetServicePermission.h; sourceTree = "<group>"; };
 		391EBF301E911CAA0009AACD /* SetServicePermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetServicePermission.m; sourceTree = "<group>"; };
-		391EBF331E91211F0009AACD /* JPSimulatorHacksDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPSimulatorHacksDB.h; sourceTree = "<group>"; };
-		391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPSimulatorHacksDB.m; sourceTree = "<group>"; };
 		391EBF371E91212B0009AACD /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		392AFBA522BA9149007E0F15 /* Swiftier.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Swiftier.h; sourceTree = "<group>"; };
+		392AFBA622BA915A007E0F15 /* PrefixHeader.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
+		392AFBAF22BAB9E0007E0F15 /* SetHealthKitPermission.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetHealthKitPermission.h; sourceTree = "<group>"; };
+		392AFBB022BAB9E0007E0F15 /* SetHealthKitPermission.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SetHealthKitPermission.m; sourceTree = "<group>"; };
 		393510351FCB9972001FB466 /* LNOptionsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LNOptionsParser.h; path = ../../ObjCCLIInfra/LNOptionsParser.h; sourceTree = "<group>"; };
 		393510361FCB9972001FB466 /* LNOptionsParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LNOptionsParser.m; path = ../../ObjCCLIInfra/LNOptionsParser.m; sourceTree = "<group>"; };
 		393510371FCB9972001FB466 /* LNLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LNLog.h; path = ../../ObjCCLIInfra/LNLog.h; sourceTree = "<group>"; };
@@ -58,6 +120,7 @@
 		393510421FCB9A1E001FB466 /* GBOptionsHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBOptionsHelper.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBOptionsHelper.h; sourceTree = "<group>"; };
 		393510431FCB9A1E001FB466 /* GBPrint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBPrint.m; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBPrint.m; sourceTree = "<group>"; };
 		393510441FCB9A1E001FB466 /* GBSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBSettings.h; path = ../../ObjCCLIInfra/GBCli/GBCli/src/GBSettings.h; sourceTree = "<group>"; };
+		39470A5422BA878700BDFA5C /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = ../../fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
 		395046D31EA725FF00557294 /* SetLocationPermission.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetLocationPermission.h; sourceTree = "<group>"; };
 		395046D41EA725FF00557294 /* SetLocationPermission.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetLocationPermission.m; sourceTree = "<group>"; };
 		395046D61EA72F1000557294 /* SimUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimUtils.h; sourceTree = "<group>"; };
@@ -72,6 +135,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				39470A6C22BA879F00BDFA5C /* libFMDB.a in Frameworks */,
 				391EBF381E91212B0009AACD /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -99,6 +163,7 @@
 		391596DE1E8CBAA900FDD6F5 /* applesimutils */ = {
 			isa = PBXGroup;
 			children = (
+				39470A5322BA878000BDFA5C /* fmdb */,
 				391596FF1E8CDD0500FDD6F5 /* Handlers */,
 				3935103B1FCB9A0D001FB466 /* GBCli */,
 				393510371FCB9972001FB466 /* LNLog.h */,
@@ -107,6 +172,8 @@
 				393510361FCB9972001FB466 /* LNOptionsParser.m */,
 				391596DF1E8CBAA900FDD6F5 /* main.m */,
 				39FE99C31F8A6B17006DF8EF /* version.h */,
+				392AFBA522BA9149007E0F15 /* Swiftier.h */,
+				392AFBA622BA915A007E0F15 /* PrefixHeader.pch */,
 			);
 			path = applesimutils;
 			sourceTree = "<group>";
@@ -114,7 +181,6 @@
 		391596FF1E8CDD0500FDD6F5 /* Handlers */ = {
 			isa = PBXGroup;
 			children = (
-				391EBF321E9121150009AACD /* JP */,
 				395046D61EA72F1000557294 /* SimUtils.h */,
 				395046D71EA72F1000557294 /* SimUtils.m */,
 				391597001E8CDD1D00FDD6F5 /* SetNotificationsPermission.h */,
@@ -125,17 +191,10 @@
 				395046D41EA725FF00557294 /* SetLocationPermission.m */,
 				39676AD41F94BE4100018548 /* ClearKeychain.h */,
 				39676AD51F94BE4100018548 /* ClearKeychain.m */,
+				392AFBAF22BAB9E0007E0F15 /* SetHealthKitPermission.h */,
+				392AFBB022BAB9E0007E0F15 /* SetHealthKitPermission.m */,
 			);
 			name = Handlers;
-			sourceTree = "<group>";
-		};
-		391EBF321E9121150009AACD /* JP */ = {
-			isa = PBXGroup;
-			children = (
-				391EBF331E91211F0009AACD /* JPSimulatorHacksDB.h */,
-				391EBF341E91211F0009AACD /* JPSimulatorHacksDB.m */,
-			);
-			name = JP;
 			sourceTree = "<group>";
 		};
 		391EBF361E91212B0009AACD /* Frameworks */ = {
@@ -162,6 +221,28 @@
 			name = GBCli;
 			sourceTree = "<group>";
 		};
+		39470A5322BA878000BDFA5C /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				39470A5422BA878700BDFA5C /* fmdb.xcodeproj */,
+			);
+			name = fmdb;
+			sourceTree = "<group>";
+		};
+		39470A5522BA878700BDFA5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				39470A5F22BA878700BDFA5C /* fmdb */,
+				39470A6122BA878700BDFA5C /* libFMDB.a */,
+				39470A6322BA878700BDFA5C /* Tests.xctest */,
+				39470A6522BA878700BDFA5C /* libFMDB-IOS.a */,
+				39470A6722BA878700BDFA5C /* FMDB.framework */,
+				39470A6922BA878700BDFA5C /* FMDB.framework */,
+				39470A6B22BA878700BDFA5C /* FMDB.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -176,6 +257,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				39470A6E22BA8C1900BDFA5C /* PBXTargetDependency */,
 			);
 			name = applesimutils;
 			productName = applesimutils;
@@ -208,12 +290,70 @@
 			mainGroup = 391596D31E8CBAA900FDD6F5;
 			productRefGroup = 391596DD1E8CBAA900FDD6F5 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 39470A5522BA878700BDFA5C /* Products */;
+					ProjectRef = 39470A5422BA878700BDFA5C /* fmdb.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				391596DB1E8CBAA900FDD6F5 /* applesimutils */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		39470A5F22BA878700BDFA5C /* fmdb */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = fmdb;
+			remoteRef = 39470A5E22BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		39470A6122BA878700BDFA5C /* libFMDB.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libFMDB.a;
+			remoteRef = 39470A6022BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		39470A6322BA878700BDFA5C /* Tests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Tests.xctest;
+			remoteRef = 39470A6222BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		39470A6522BA878700BDFA5C /* libFMDB-IOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libFMDB-IOS.a";
+			remoteRef = 39470A6422BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		39470A6722BA878700BDFA5C /* FMDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FMDB.framework;
+			remoteRef = 39470A6622BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		39470A6922BA878700BDFA5C /* FMDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FMDB.framework;
+			remoteRef = 39470A6822BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		39470A6B22BA878700BDFA5C /* FMDB.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FMDB.framework;
+			remoteRef = 39470A6A22BA878700BDFA5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXSourcesBuildPhase section */
 		391596D81E8CBAA900FDD6F5 /* Sources */ = {
@@ -224,10 +364,10 @@
 				393510471FCB9A1E001FB466 /* GBCommandLineParser.m in Sources */,
 				393510451FCB9A1E001FB466 /* GBSettings.m in Sources */,
 				395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */,
+				392AFBB122BAB9E0007E0F15 /* SetHealthKitPermission.m in Sources */,
 				393510461FCB9A1E001FB466 /* GBOptionsHelper.m in Sources */,
 				391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */,
 				393510481FCB9A1E001FB466 /* GBPrint.m in Sources */,
-				391EBF351E91211F0009AACD /* JPSimulatorHacksDB.m in Sources */,
 				39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,
 				395046D81EA72F1000557294 /* SimUtils.m in Sources */,
@@ -237,6 +377,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		39470A6E22BA8C1900BDFA5C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FMDB;
+			targetProxy = 39470A6D22BA8C1900BDFA5C /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		391596E11E8CBAA900FDD6F5 /* Debug */ = {
@@ -352,6 +500,7 @@
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREFIX_HEADER = applesimutils/PrefixHeader.pch;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -364,6 +513,7 @@
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREFIX_HEADER = applesimutils/PrefixHeader.pch;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -22,14 +22,14 @@ brew install applesimutils
 A collection of utils for Apple simulators.
 
 Usage Examples:
-    applesimutils --byId <simulator identifier> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
-    applesimutils --byName <simulator name> --byOS <simulator OS version> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
-    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS version>] [--byType <simulator type>] [--maxResults <int>]
-    applesimutils --byId <simulator identifier> --biometricEnrollment <YES/NO>
-    applesimutils --byId <simulator identifier> --matchFace
+    applesimutils --byId <simulator UDID> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
+    applesimutils --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
+    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]
+    applesimutils --byId <simulator UDID> --biometricEnrollment <YES/NO>
+    applesimutils --byId <simulator UDID> --matchFace
 
 Options:
-    --byId                       Filters simulators by identifier
+    --byId                       Filters simulators by unique device identifier (UDID)
     --byName                     Filters simulators by name
     --byType                     Filters simulators by device type
     --byOS                       Filters simulators by operating system
@@ -51,7 +51,7 @@ Available Permissions:
     calendar=YES|NO|unset
     camera=YES|NO|unset
     contacts=YES|NO|unset
-    health=YES|NO|unset
+    health=YES|NO|unset (iOS 12.0 and above)
     homekit=YES|NO|unset
     location=always|inuse|never|unset
     medialibrary=YES|NO|unset
