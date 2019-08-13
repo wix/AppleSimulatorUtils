@@ -233,6 +233,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 																   @"motion": @"kTCCServiceMotion",
 																   @"siri": @"kTCCServiceSiri",
 																   @"speech": @"kTCCServiceSpeechRecognition",
+																   @"faceid": @"kTCCServiceFaceID",
 																   };
 	
 	NSArray<NSString*>* parsedArguments = [permissionsArgument componentsSeparatedByString:@","];
@@ -449,7 +450,8 @@ int main(int argc, const char* argv[]) {
 												 @"photos=YES|NO|unset",
 												 @"reminders=YES|NO|unset",
 												 @"siri=YES|NO|unset",
-                                                 @"speech=YES|NO|unset",
+												 @"speech=YES|NO|unset",
+												 @"faceid=YES|NO|unset",
 												 ]
 										 }]);
 		
