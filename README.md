@@ -51,6 +51,7 @@ Available Permissions:
     calendar=YES|NO|unset
     camera=YES|NO|unset
     contacts=YES|NO|unset
+    faceid=YES|NO|unset
     health=YES|NO|unset (iOS 12.0 and above)
     homekit=YES|NO|unset
     location=always|inuse|never|unset
@@ -62,5 +63,4 @@ Available Permissions:
     reminders=YES|NO|unset
     siri=YES|NO|unset
     speech=YES|NO|unset
-    faceid=YES|NO|unset
 ```

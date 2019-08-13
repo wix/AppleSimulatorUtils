@@ -225,6 +225,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{@"calendar": @"kTCCServiceCalendar",
 																   @"camera": @"kTCCServiceCamera",
 																   @"contacts": @"kTCCServiceAddressBook",
+																   @"faceid": @"kTCCServiceFaceID",
 																   @"homekit": @"kTCCServiceWillow",
 																   @"microphone": @"kTCCServiceMicrophone",
 																   @"photos": @"kTCCServicePhotos",
@@ -233,7 +234,6 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 																   @"motion": @"kTCCServiceMotion",
 																   @"siri": @"kTCCServiceSiri",
 																   @"speech": @"kTCCServiceSpeechRecognition",
-																   @"faceid": @"kTCCServiceFaceID",
 																   };
 	
 	NSArray<NSString*>* parsedArguments = [permissionsArgument componentsSeparatedByString:@","];
@@ -440,6 +440,7 @@ int main(int argc, const char* argv[]) {
 												 @"calendar=YES|NO|unset",
 												 @"camera=YES|NO|unset",
 												 @"contacts=YES|NO|unset",
+												 @"faceid=YES|NO|unset",
 												 @"health=YES|NO|unset (iOS 12.0 and above)",
 												 @"homekit=YES|NO|unset",
 												 @"location=always|inuse|never|unset",
@@ -451,7 +452,6 @@ int main(int argc, const char* argv[]) {
 												 @"reminders=YES|NO|unset",
 												 @"siri=YES|NO|unset",
 												 @"speech=YES|NO|unset",
-												 @"faceid=YES|NO|unset",
 												 ]
 										 }]);
 		
