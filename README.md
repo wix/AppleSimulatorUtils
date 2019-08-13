@@ -62,5 +62,5 @@ Available Permissions:
     reminders=YES|NO|unset
     siri=YES|NO|unset
     speech=YES|NO|unset
-    faceId=YES|NO|unset
+    faceid=YES|NO|unset
 ```
