@@ -20,6 +20,11 @@ static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
         devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
     }
 	
+    if ([fileManager fileExistsAtPath:devTools.path] == NO)
+	{
+        devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
+    }
+
 	NSTask* rebootTask = [NSTask new];
 	rebootTask.launchPath = [SimUtils xcrunURL].path;
 	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", devTools.path];
