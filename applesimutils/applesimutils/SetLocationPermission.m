@@ -11,23 +11,24 @@
 
 static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 {
-    NSFileManager *fileManager = [NSFileManager defaultManager];
-    //New Simulator Runtime location for Xcode 9
-    NSURL *devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
-    
-    if ([fileManager fileExistsAtPath:devTools.path] == NO)
-	{
-        devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
-    }
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSURL* developerTools = [SimUtils developerURL];
+	//New Simulator Runtime location for Xcode 9
+	NSURL *locationdDaemonURL = [developerTools URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
 	
-    if ([fileManager fileExistsAtPath:devTools.path] == NO)
+	if ([fileManager fileExistsAtPath:locationdDaemonURL.path] == NO)
 	{
-        devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
-    }
-
+		locationdDaemonURL = [developerTools URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.locationd.plist"];
+	}
+	
+	if ([fileManager fileExistsAtPath:locationdDaemonURL.path] == NO)
+	{
+		locationdDaemonURL = [developerTools URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.locationd.plist"];
+	}
+	
 	NSTask* rebootTask = [NSTask new];
 	rebootTask.launchPath = [SimUtils xcrunURL].path;
-	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", devTools.path];
+	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", locationdDaemonURL.path];
 	[rebootTask launch];
 	[rebootTask waitUntilExit];
 }
