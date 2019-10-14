@@ -11,17 +11,16 @@
 
 static void securitydCtl(NSString* simulatorId, BOOL stop)
 {
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	//New Simulator Runtime location for Xcode 9
-	NSURL *devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.securityd.plist"];
-	
-	if (![fileManager fileExistsAtPath:devTools.path]){
-		devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.securityd.plist"];
-	}
+	static NSURL *locationdDaemonURL;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		 locationdDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.securityd"];
+	});
+	NSCAssert(locationdDaemonURL != nil, @"Launch daemon “com.apple.securityd” not found. Please open an issue.");
 	
 	NSTask* rebootTask = [NSTask new];
 	rebootTask.launchPath = [SimUtils xcrunURL].path;
-	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", devTools.path];
+	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", locationdDaemonURL.path];
 	[rebootTask launch];
 	[rebootTask waitUntilExit];
 }

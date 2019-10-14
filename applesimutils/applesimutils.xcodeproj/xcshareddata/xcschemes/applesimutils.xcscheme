@@ -61,6 +61,10 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
+            argument = "--booted"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--byId &quot;3C331CD3-736F-4EC4-932D-288FCF5C8924&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -70,7 +74,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byUDID &quot;D1645AED-E710-4C54-A292-E52648063807&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byOS &quot;12.2&quot;"
@@ -82,11 +86,11 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--bundle &quot;com.wix.PermissionsTestT1&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES, location=inuse&quot;"
@@ -98,7 +102,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;health=YES&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list &quot;iPhone 8 Plus, OS=iOS 11.0&quot;"

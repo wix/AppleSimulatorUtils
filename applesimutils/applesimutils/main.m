@@ -79,7 +79,7 @@ static NSArray* simulatorDevicesList()
 	
 	if(list == nil)
 	{
-		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@", error.localizedDescription], LNLogLevelError);
+		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@.", error.localizedDescription], LNLogLevelError);
 		
 		return nil;
 	}
@@ -119,6 +119,11 @@ static NSArray* simulatorDevicesList()
 	}];
 	
 	return allDevices;
+}
+
+static NSPredicate* predicateByBooted()
+{
+	return [NSPredicate predicateWithFormat:@"state ==[c] %@", @"Booted"];
 }
 
 static NSPredicate* predicateByName(NSString* simName)
@@ -204,7 +209,7 @@ static NSOperatingSystemVersion operatingSystemFromSimulator(NSDictionary* simul
 	
 	if(results.count != 1 || results.firstObject.numberOfRanges != 5)
 	{
-		LNUsagePrintMessage([NSString stringWithFormat:@"Unable to parse simulator version: %@", version], LNLogLevelError);
+		LNUsagePrintMessage([NSString stringWithFormat:@"Unable to parse simulator version: %@.", version], LNLogLevelError);
 		
 		exit(-10);
 	}
@@ -222,19 +227,20 @@ static NSOperatingSystemVersion operatingSystemFromSimulator(NSDictionary* simul
 
 static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier, NSDictionary* simulator)
 {
-	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{@"calendar": @"kTCCServiceCalendar",
-																   @"camera": @"kTCCServiceCamera",
-																   @"contacts": @"kTCCServiceAddressBook",
-																   @"faceid": @"kTCCServiceFaceID",
-																   @"homekit": @"kTCCServiceWillow",
-																   @"microphone": @"kTCCServiceMicrophone",
-																   @"photos": @"kTCCServicePhotos",
-																   @"reminders": @"kTCCServiceReminders",
-																   @"medialibrary": @"kTCCServiceMediaLibrary",
-																   @"motion": @"kTCCServiceMotion",
-																   @"siri": @"kTCCServiceSiri",
-																   @"speech": @"kTCCServiceSpeechRecognition",
-																   };
+	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{
+		@"calendar": @"kTCCServiceCalendar",
+		@"camera": @"kTCCServiceCamera",
+		@"contacts": @"kTCCServiceAddressBook",
+		@"faceid": @"kTCCServiceFaceID",
+		@"homekit": @"kTCCServiceWillow",
+		@"microphone": @"kTCCServiceMicrophone",
+		@"photos": @"kTCCServicePhotos",
+		@"reminders": @"kTCCServiceReminders",
+		@"medialibrary": @"kTCCServiceMediaLibrary",
+		@"motion": @"kTCCServiceMotion",
+		@"siri": @"kTCCServiceSiri",
+		@"speech": @"kTCCServiceSpeechRecognition",
+	};
 	
 	NSArray<NSString*>* parsedArguments = [permissionsArgument componentsSeparatedByString:@","];
 	
@@ -247,7 +253,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		NSArray* split = [argument componentsSeparatedByString:@"="];
 		if(split.count != 2)
 		{
-			LNUsagePrintMessage([NSString stringWithFormat:@"Error: Permission argument cannot be parsed: “%@”", argument], LNLogLevelError);
+			LNUsagePrintMessage([NSString stringWithFormat:@"Error: Permission argument cannot be parsed: “%@”.", argument], LNLogLevelError);
 			exit(-10);
 		}
 		
@@ -256,7 +262,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		
 		if([permission isEqualToString:@"health"])
 		{
-			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
 			
 			NSDictionary* map = @{
 								  @"YES": @(HealthKitPermissionStatusAllow),
@@ -268,7 +274,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		}
 		else if([permission isEqualToString:@"notifications"])
 		{
-			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
 			
 			success = [SetNotificationsPermission setNotificationsStatus:value forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
 			
@@ -276,7 +282,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		}
 		else if([permission isEqualToString:@"location"])
 		{
-			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
 			
 			success = [SetLocationPermission setLocationPermission:value forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
 			
@@ -284,7 +290,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		}
 		else
 		{
-			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
 			
 			NSString* appleService = argumentToAppleService[permission];
 			if(appleService == nil)
@@ -311,7 +317,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 			err = [NSError errorWithDomain:@"AppleSimUtilsError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unknown permission pass error"}];
 		}
 		
-		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@", err.localizedDescription], LNLogLevelError);
+		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@.", err.localizedDescription], LNLogLevelError);
 		exit(-3);
 	}
 	
@@ -398,68 +404,70 @@ int main(int argc, const char* argv[]) {
 		LNUsageSetIntroStrings(@[@"A collection of utils for Apple simulators."]);
 		
 		LNUsageSetExampleStrings(@[
-								   @"%@ --byId <simulator UDID> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
-								   @"%@ --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
-								   @"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]",
-								   @"%@ --byId <simulator UDID> --biometricEnrollment <YES/NO>",
-								   @"%@ --byId <simulator UDID> --matchFace"
-								   ]);
+			@"%@ --byId <simulator UDID> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+			@"%@ --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
+			@"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]",
+			@"%@ --byId <simulator UDID> --biometricEnrollment <YES/NO>",
+			@"%@ --byId <simulator UDID> --matchFace"
+		]);
 		
 		LNUsageSetOptions(@[
-							[LNUsageOption optionWithName:@"byId" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
-							[LNUsageOption optionWithName:@"byName" valueRequirement:GBValueRequired description:@"Filters simulators by name"],
-							[LNUsageOption optionWithName:@"byType" valueRequirement:GBValueRequired description:@"Filters simulators by device type"],
-							[LNUsageOption optionWithName:@"byOS" valueRequirement:GBValueRequired description:@"Filters simulators by operating system"],
-							
-							[LNUsageOption optionWithName:@"list" valueRequirement:GBValueOptional description:@"Lists available simulators"],
-							[LNUsageOption optionWithName:@"setPermissions" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
-							[LNUsageOption optionWithName:@"clearKeychain" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
-							[LNUsageOption optionWithName:@"restartSB" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
-							
-							[LNUsageOption optionWithName:@"biometricEnrollment" valueRequirement:GBValueRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
-							[LNUsageOption optionWithName:@"matchFace" valueRequirement:GBValueNone description:@"Approves Face ID authentication request with a matching face"],
-							[LNUsageOption optionWithName:@"unmatchFace" valueRequirement:GBValueNone description:@"Fails Face ID authentication request with a non-matching face"],
-							[LNUsageOption optionWithName:@"matchFinger" valueRequirement:GBValueNone description:@"Approves Touch ID authentication request with a matching finger"],
-							[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:GBValueNone description:@"Fails Touch ID authentication request with a non-matching finger"],
-							
-							[LNUsageOption optionWithName:@"bundle" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
-							
-							[LNUsageOption optionWithName:@"maxResults" valueRequirement:GBValueRequired description:@"Limits the number of results returned from --list"],
-							
-							[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:GBValueNone description:@"Prints version"],
-							]);
+			[LNUsageOption optionWithName:@"byId" shortcut:@"id" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
+			[LNUsageOption optionWithName:@"byName" shortcut:@"n" valueRequirement:GBValueRequired description:@"Filters simulators by name"],
+			[LNUsageOption optionWithName:@"byType" shortcut:@"t" valueRequirement:GBValueRequired description:@"Filters simulators by device type"],
+			[LNUsageOption optionWithName:@"byOS" shortcut:@"o" valueRequirement:GBValueRequired description:@"Filters simulators by operating system"],
+			[LNUsageOption optionWithName:@"booted" shortcut:@"bt" valueRequirement:GBValueNone description:@"Filters simulators by booted status"],
+			
+			[LNUsageOption optionWithName:@"list" shortcut:@"l" valueRequirement:GBValueOptional description:@"Lists available simulators"],
+			[LNUsageOption optionWithName:@"setPermissions" shortcut:@"sp" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
+			[LNUsageOption optionWithName:@"clearKeychain" shortcut:@"ck" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
+			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
+			
+			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:GBValueRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
+			[LNUsageOption optionWithName:@"matchFace" shortcut:@"mf" valueRequirement:GBValueNone description:@"Approves Face ID authentication request with a matching face"],
+			[LNUsageOption optionWithName:@"unmatchFace" shortcut:@"uf" valueRequirement:GBValueNone description:@"Fails Face ID authentication request with a non-matching face"],
+			[LNUsageOption optionWithName:@"matchFinger" valueRequirement:GBValueNone description:@"Approves Touch ID authentication request with a matching finger"],
+			[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:GBValueNone description:@"Fails Touch ID authentication request with a non-matching finger"],
+			
+			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
+			
+			[LNUsageOption optionWithName:@"maxResults" valueRequirement:GBValueRequired description:@"Limits the number of results returned from --list"],
+			
+			[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:GBValueNone description:@"Prints version"],
+		]);
 		
 		LNUsageSetHiddenOptions(@[
-								  [LNUsageOption optionWithName:@"byID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
-								  [LNUsageOption optionWithName:@"byUDID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
-								  ]);
+			[LNUsageOption optionWithName:@"byID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
+			[LNUsageOption optionWithName:@"byUDID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
+		]);
 		
-		LNUsageSetAdditionalTopics(@[@{
-										 @"Available Permissions":
-											 @[
-												 @"calendar=YES|NO|unset",
-												 @"camera=YES|NO|unset",
-												 @"contacts=YES|NO|unset",
-												 @"faceid=YES|NO|unset",
-												 @"health=YES|NO|unset (iOS 12.0 and above)",
-												 @"homekit=YES|NO|unset",
-												 @"location=always|inuse|never|unset",
-												 @"medialibrary=YES|NO|unset",
-												 @"microphone=YES|NO|unset",
-												 @"motion=YES|NO|unset",
-												 @"notifications=YES|NO|unset",
-												 @"photos=YES|NO|unset",
-												 @"reminders=YES|NO|unset",
-												 @"siri=YES|NO|unset",
-												 @"speech=YES|NO|unset",
-												 ]
-										 }]);
+		LNUsageSetAdditionalTopics(@[
+			@{
+				@"Available Permissions":
+					@[
+						@"calendar=YES|NO|unset",
+						@"camera=YES|NO|unset",
+						@"contacts=YES|NO|unset",
+						@"faceid=YES|NO|unset",
+						@"health=YES|NO|unset (iOS 12.0 and above)",
+						@"homekit=YES|NO|unset",
+						@"location=always|inuse|never|unset",
+						@"medialibrary=YES|NO|unset",
+						@"microphone=YES|NO|unset",
+						@"motion=YES|NO|unset",
+						@"notifications=YES|NO|unset",
+						@"photos=YES|NO|unset",
+						@"reminders=YES|NO|unset",
+						@"siri=YES|NO|unset",
+						@"speech=YES|NO|unset",
+					]
+			}]);
 		
 		LNUsageSetAdditionalStrings(@[
-									  @"",
-									  @"For more features, open an issue at https://github.com/wix/AppleSimulatorUtils",
-									  @"Pull-requests are always welcome!"
-									  ]);
+			@"",
+			@"For more features, open an issue at https://github.com/wix/AppleSimulatorUtils",
+			@"Pull-requests are always welcome!"
+		]);
 		
 		GBSettings* settings = LNUsageParseArguments(argc, argv);
 		
@@ -485,159 +493,172 @@ int main(int argc, const char* argv[]) {
 			exit(0);
 		}
 		
-		NSArray* simulatorDevices = simulatorDevicesList();
-		
-		if(simulatorDevices == nil)
+		@try
 		{
-			LNUsagePrintMessage(@"Error: Unable to obtain a list of simulators", LNLogLevelError);
-			exit(-1);
-		}
-		
-		NSPredicate* filter = nil;
-		
-		NSString* udid = [settings objectForKey:@"byId"] ?: [settings objectForKey:@"byID"] ?: [settings objectForKey:@"byUDID"];
-		if(udid)
-		{
-			NSPredicate* predicate = predicateById(udid);
-			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
-		}
-		if([settings objectForKey:@"byName"])
-		{
-			NSString* fStr = [settings objectForKey:@"byName"];
-			NSPredicate* predicate = predicateByName(fStr);
-			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
-		}
-		if([settings objectForKey:@"byType"])
-		{
-			NSString* fStr = [settings objectForKey:@"byType"];
-			NSPredicate* predicate = predicateByType(fStr);
-			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
-		}
-		if([settings objectForKey:@"byOS"])
-		{
-			NSString* fStr = [settings objectForKey:@"byOS"];
-			NSPredicate* predicate = predicateByOS(fStr);
-			filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
-		}
-		
-		NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
-		
-		if([settings objectForKey:@"list"] != nil)
-		{
-			if(filteredSimulators == nil)
+			NSArray* simulatorDevices = simulatorDevicesList();
+			
+			if(simulatorDevices == nil)
 			{
-				LNUsagePrintMessage(@"Error: Unable to filter simulators", LNLogLevelError);
+				LNUsagePrintMessage(@"Error: Unable to obtain a list of simulators.", LNLogLevelError);
+				exit(-1);
 			}
 			
-			NSUInteger maxResults = NSUIntegerMax;
-			if([settings objectForKey:@"maxResults"])
+			NSPredicate* filter = nil;
+			
+			NSString* udid = [settings objectForKey:@"byId"] ?: [settings objectForKey:@"byID"] ?: [settings objectForKey:@"byUDID"];
+			if(udid)
 			{
-				maxResults = [settings unsignedIntegerForKey:@"maxResults"];
+				NSPredicate* predicate = predicateById(udid);
+				filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+			}
+			if([settings objectForKey:@"booted"])
+			{
+				NSPredicate* predicate = predicateByBooted();
+				filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+			}
+			if([settings objectForKey:@"byName"])
+			{
+				NSString* fStr = [settings objectForKey:@"byName"];
+				NSPredicate* predicate = predicateByName(fStr);
+				filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+			}
+			if([settings objectForKey:@"byType"])
+			{
+				NSString* fStr = [settings objectForKey:@"byType"];
+				NSPredicate* predicate = predicateByType(fStr);
+				filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
+			}
+			if([settings objectForKey:@"byOS"])
+			{
+				NSString* fStr = [settings objectForKey:@"byOS"];
+				NSPredicate* predicate = predicateByOS(fStr);
+				filter = predicateByAppendingOrCreatingPredicate(filter, predicate);
 			}
 			
-			if(maxResults < 1)
+			NSArray* filteredSimulators = filteredDeviceList(simulatorDevices, filter);
+			
+			if([settings objectForKey:@"list"] != nil)
 			{
-				LNUsagePrintMessage(@"Error: Invalid value for --maxResults", LNLogLevelError);
-			}
-			
-			if(maxResults != NSUIntegerMax)
-			{
-				filteredSimulators = [filteredSimulators subarrayWithRange:NSMakeRange(0, MIN(filteredSimulators.count, maxResults))];
-			}
-			
-			LNLog(LNLogLevelStdOut, @"%@", [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:filteredSimulators options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding]);
-			
-			exit(0);
-		}
-		
-		if(filteredSimulators.count == 0)
-		{
-			if(filter == nil)
-			{
-				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found"], LNLogLevelError);
-			}
-			else
-			{
-				LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found matching “%@”", filter], LNLogLevelError);
-			}
-			
-			exit(-1);
-		}
-		
-		[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
-			NSString* simulatorId = simulator[@"udid"];
-			
-			BOOL needsSimShutdown = NO;
-			if([simulator[@"state"] isEqualToString:@"Shutdown"] && [SetServicePermission isSimulatorReadyForPersmissions:simulatorId] == NO)
-			{
-				needsSimShutdown = YES;
-				
-				bootSimulator(simulatorId);
-			}
-			
-			BOOL needsSpringBoardRestart = NO;
-			
-			NSString* permissions = [settings objectForKey:@"setPermissions"];
-			if(permissions != nil)
-			{
-				NSString* bundleId = [settings objectForKey:@"bundle"];
-				if(bundleId.length == 0)
+				if(filteredSimulators == nil)
 				{
-					LNUsagePrintMessage(@"Error: No app bundle identifier provided", LNLogLevelError);
-					
-					exit(-2);
+					LNUsagePrintMessage(@"Error: Unable to filter simulators.", LNLogLevelError);
 				}
 				
-				needsSpringBoardRestart = performPermissionsPass(permissions, simulatorId, bundleId, simulator);
-			}
-			
-			if([settings boolForKey:@"clearKeychain"])
-			{
-				performClearKeychainPass(simulatorId);
+				NSUInteger maxResults = NSUIntegerMax;
+				if([settings objectForKey:@"maxResults"])
+				{
+					maxResults = [settings unsignedIntegerForKey:@"maxResults"];
+				}
 				
-				needsSpringBoardRestart = YES;
-			}
-			
-			if([settings boolForKey:@"restartSB"])
-			{
-				needsSpringBoardRestart = YES;
-			}
-			
-			NSString* biometricEnrollment = [settings objectForKey:@"biometricEnrollment"];
-			if(biometricEnrollment)
-			{
-				assertStringInArrayValues(biometricEnrollment, @[@"YES", @"NO"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for biometricEnrollment; expected YES|NO", biometricEnrollment]);
+				if(maxResults < 1)
+				{
+					LNUsagePrintMessage(@"Error: Invalid value for --maxResults.", LNLogLevelError);
+				}
 				
-				setBiometricEnrollment(simulatorId, [biometricEnrollment boolValue]);
+				if(maxResults != NSUIntegerMax)
+				{
+					filteredSimulators = [filteredSimulators subarrayWithRange:NSMakeRange(0, MIN(filteredSimulators.count, maxResults))];
+				}
+				
+				LNLog(LNLogLevelStdOut, @"%@", [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:filteredSimulators options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding]);
+				
+				exit(0);
 			}
 			
-			if([settings boolForKey:@"matchFace"])
+			if(filteredSimulators.count == 0)
 			{
-				sendBiometricMatch(simulatorId, ASUBiometricTypeFace, YES);
-			}
-			if([settings boolForKey:@"unmatchFace"])
-			{
-				sendBiometricMatch(simulatorId, ASUBiometricTypeFace, NO);
-			}
-			if([settings boolForKey:@"matchFinger"])
-			{
-				sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, YES);
-			}
-			if([settings boolForKey:@"unmatchFinger"])
-			{
-				sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, NO);
+				if(filter == nil)
+				{
+					LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found."], LNLogLevelError);
+				}
+				else
+				{
+					LNUsagePrintMessage([NSString stringWithFormat:@"Error: No simulator found matching “%@”.", filter], LNLogLevelError);
+				}
+				
+				exit(-1);
 			}
 			
-			if(needsSpringBoardRestart)
-			{
-				restartSpringBoard(simulatorId);
-			}
-			
-			if(needsSimShutdown)
-			{
-				shutdownSimulator(simulatorId);
-			}
-		}];
+			[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
+				NSString* simulatorId = simulator[@"udid"];
+				
+				BOOL needsSimShutdown = NO;
+				if([simulator[@"state"] isEqualToString:@"Shutdown"] && [SetServicePermission isSimulatorReadyForPersmissions:simulatorId] == NO)
+				{
+					needsSimShutdown = YES;
+					
+					bootSimulator(simulatorId);
+				}
+				
+				BOOL needsSpringBoardRestart = NO;
+				
+				NSString* permissions = [settings objectForKey:@"setPermissions"];
+				if(permissions != nil)
+				{
+					NSString* bundleId = [settings objectForKey:@"bundle"];
+					if(bundleId.length == 0)
+					{
+						LNUsagePrintMessage(@"Error: No app bundle identifier provided.", LNLogLevelError);
+						
+						exit(-2);
+					}
+					
+					needsSpringBoardRestart = performPermissionsPass(permissions, simulatorId, bundleId, simulator);
+				}
+				
+				if([settings boolForKey:@"clearKeychain"])
+				{
+					performClearKeychainPass(simulatorId);
+					
+					needsSpringBoardRestart = YES;
+				}
+				
+				if([settings boolForKey:@"restartSB"])
+				{
+					needsSpringBoardRestart = YES;
+				}
+				
+				NSString* biometricEnrollment = [settings objectForKey:@"biometricEnrollment"];
+				if(biometricEnrollment)
+				{
+					assertStringInArrayValues(biometricEnrollment, @[@"YES", @"NO"], -10, [NSString stringWithFormat:@"Error: Value “%@” cannot be parsed for biometricEnrollment; expected YES|NO.", biometricEnrollment]);
+					
+					setBiometricEnrollment(simulatorId, [biometricEnrollment boolValue]);
+				}
+				
+				if([settings boolForKey:@"matchFace"])
+				{
+					sendBiometricMatch(simulatorId, ASUBiometricTypeFace, YES);
+				}
+				if([settings boolForKey:@"unmatchFace"])
+				{
+					sendBiometricMatch(simulatorId, ASUBiometricTypeFace, NO);
+				}
+				if([settings boolForKey:@"matchFinger"])
+				{
+					sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, YES);
+				}
+				if([settings boolForKey:@"unmatchFinger"])
+				{
+					sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, NO);
+				}
+				
+				if(needsSpringBoardRestart)
+				{
+					restartSpringBoard(simulatorId);
+				}
+				
+				if(needsSimShutdown)
+				{
+					shutdownSimulator(simulatorId);
+				}
+			}];
+		}
+		@catch (NSException *exception)
+		{
+			LNUsagePrintMessage(exception.reason, LNLogLevelError);
+			exit(-1);
+		}
 	}
 	exit(0);
 }
