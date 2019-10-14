@@ -52,23 +52,23 @@ tar --exclude="releaseVersion.sh" --exclude=".git" --exclude="build" --exclude="
 
 echo -e "\033[1;34mCreating Homebrew bottles"
 
-BOTTLE_TGZ_FILE="applesimutils-${VERSION}.mojave.bottle.tar.gz"
-BOTTLE_TGZ_FILE_HSIERRA="applesimutils-${VERSION}.high_sierra.bottle.tar.gz"
-BOTTLE_TGZ_FILE_SIERRA="applesimutils-${VERSION}.sierra.bottle.tar.gz"
-
 rm -fr bottle
 BOTTLE_DIR="bottle/applesimutils/${VERSION}/"
 mkdir -p "${BOTTLE_DIR}"
 ./buildForBrew.sh "${BOTTLE_DIR}"
 pushd .
 cd bottle
-tar -cvzf "${BOTTLE_TGZ_FILE}" applesimutils
 
-cp "${BOTTLE_TGZ_FILE}" "${BOTTLE_TGZ_FILE_HSIERRA}"
-cp "${BOTTLE_TGZ_FILE}" "${BOTTLE_TGZ_FILE_SIERRA}"
+BOTTLES=( "catalina" "mojave" "high_sierra" "sierra" )
+for BOTTLE in "${BOTTLES[@]}"
+do
+	BOTTLE_TGZ_FILE="applesimutils-${VERSION}.${BOTTLE}.bottle.tar.gz"
+	tar -cvzf "${BOTTLE_TGZ_FILE}" applesimutils
+done
+
 popd
 
-echo -e "\033[1;34mUpdating brew repository with latest tarball and update applesimutils.rb\033[0m"
+echo -e "\033[1;34mUpdating applesimutils.rb with latest hashes\033[0m"
 
 cd homebrew-brew
 
@@ -78,9 +78,13 @@ git pull --rebase
 sed -i '' -e 's/^\ \ url .*/\ \ url '"'https:\/\/github.com\/wix\/AppleSimulatorUtils\/releases\/download\/${VERSION}\/${SRC_TGZ_FILE}'"'/g' applesimutils.rb
 sed -i '' -e 's/^\ \ \ \ root\_url .*/\ \ \ \ root\_url '"'https:\/\/github.com\/wix\/AppleSimulatorUtils\/releases\/download\/${VERSION}'"'/g' applesimutils.rb
 sed -i '' -e 's/^\ \ sha256 .*/\ \ sha256 '"'"$(shasum -b -a 256 ../build/${SRC_TGZ_FILE} | awk '{ print $1 }')"'"'/g' applesimutils.rb
-sed -i '' -e 's/^    sha256 .* => :mojave/    sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"' => :mojave/g' applesimutils.rb
-sed -i '' -e 's/^    sha256 .* => :high_sierra/    sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"' => :high_sierra/g' applesimutils.rb
-sed -i '' -e 's/^    sha256 .* => :sierra/    sha256 '"'"$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')"'"' => :sierra/g' applesimutils.rb
+
+for BOTTLE in "${BOTTLES[@]}"
+do
+	BOTTLE_TGZ_FILE="applesimutils-${VERSION}.${BOTTLE}.bottle.tar.gz"
+	sed -i '' -e "s/^    sha256 .* => :${BOTTLE}/    sha256 '$(shasum -b -a 256 ../bottle/${BOTTLE_TGZ_FILE} | awk '{ print $1 }')' => :${BOTTLE}/g" applesimutils.rb
+done
+
 git add -A
 git commit -m "Apple Simulator Utils ${VERSION}"
 git push
@@ -106,9 +110,12 @@ RELEASE_ID=$(curl -s --data "$API_JSON" https://api.github.com/repos/wix/AppleSi
 echo -e "\033[1;34mUploading attachments to release\033[0m"
 
 curl -s --data-binary @"build/${SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
-curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
-curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE_HSIERRA}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE_HSIERRA})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
-curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE_SIERRA}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE_SIERRA})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+
+for BOTTLE in "${BOTTLES[@]}"
+do
+	BOTTLE_TGZ_FILE="applesimutils-${VERSION}.${BOTTLE}.bottle.tar.gz"
+	curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+done
 
 rm -fr build
 rm -fr bottle

@@ -29,23 +29,24 @@ Usage Examples:
     applesimutils --byId <simulator UDID> --matchFace
 
 Options:
-    --byId                       Filters simulators by unique device identifier (UDID)
-    --byName                     Filters simulators by name
-    --byType                     Filters simulators by device type
-    --byOS                       Filters simulators by operating system
-    --list                       Lists available simulators
-    --setPermissions             Sets the specified permissions and restarts SpringBoard for the changes to take effect
-    --clearKeychain              Clears the simulator's keychain
-    --restartSB                  Restarts SpringBoard
-    --biometricEnrollment        Enables or disables biometric (Face ID/Touch ID) enrollment.
-    --matchFace                  Approves Face ID authentication request with a matching face
-    --unmatchFace                Fails Face ID authentication request with a non-matching face
-    --matchFinger                Approves Touch ID authentication request with a matching finger
-    --unmatchFinger              Fails Touch ID authentication request with a non-matching finger
-    --bundle                     The app bundle identifier
-    --maxResults                 Limits the number of results returned from --list
-    --version, -v                Prints version
-    --help, -h                   Prints usage
+    --byId, -id                   Filters simulators by unique device identifier (UDID)
+    --byName, -n                  Filters simulators by name
+    --byType, -t                  Filters simulators by device type
+    --byOS, -o                    Filters simulators by operating system
+    --booted, -bt                 Filters simulators by booted status
+    --list, -l                    Lists available simulators
+    --setPermissions, -sp         Sets the specified permissions and restarts SpringBoard for the changes to take effect
+    --clearKeychain, -ck          Clears the simulator's keychain
+    --restartSB, -sb              Restarts SpringBoard
+    --biometricEnrollment, -be    Enables or disables biometric (Face ID/Touch ID) enrollment.
+    --matchFace, -mf              Approves Face ID authentication request with a matching face
+    --unmatchFace, -uf            Fails Face ID authentication request with a non-matching face
+    --matchFinger                 Approves Touch ID authentication request with a matching finger
+    --unmatchFinger               Fails Touch ID authentication request with a non-matching finger
+    --bundle, -b                  The app bundle identifier
+    --maxResults                  Limits the number of results returned from --list
+    --version, -v                 Prints version
+    --help, -h                    Prints usage
 
 Available Permissions:
     calendar=YES|NO|unset
