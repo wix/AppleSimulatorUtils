@@ -18,6 +18,11 @@ static void securitydCtl(NSString* simulatorId, BOOL stop)
 	if (![fileManager fileExistsAtPath:devTools.path]){
 		devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/com.apple.securityd.plist"];
 	}
+    
+    // New Simulator Runtime location for Xcode 11
+    if (![fileManager fileExistsAtPath:devTools.path]){
+        devTools = [[SimUtils developerURL] URLByAppendingPathComponent:@"Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/com.apple.securityd.plist"];
+    }
 	
 	NSTask* rebootTask = [NSTask new];
 	rebootTask.launchPath = [SimUtils xcrunURL].path;
