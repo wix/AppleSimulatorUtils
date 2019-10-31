@@ -62,7 +62,7 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "--booted"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--byId &quot;3C331CD3-736F-4EC4-932D-288FCF5C8924&quot;"
@@ -90,7 +90,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES, location=inuse&quot;"
@@ -130,7 +130,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--version"

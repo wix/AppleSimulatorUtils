@@ -407,8 +407,8 @@ int main(int argc, const char* argv[]) {
 			@"%@ --byId <simulator UDID> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 			@"%@ --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 			@"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]",
-			@"%@ --byId <simulator UDID> --biometricEnrollment <YES/NO>",
-			@"%@ --byId <simulator UDID> --matchFace"
+			@"%@ --booted --biometricEnrollment <YES/NO>",
+			@"%@ --booted --biometricMatch"
 		]);
 		
 		LNUsageSetOptions(@[
@@ -424,10 +424,8 @@ int main(int argc, const char* argv[]) {
 			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
 			
 			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:GBValueRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
-			[LNUsageOption optionWithName:@"matchFace" shortcut:@"mf" valueRequirement:GBValueNone description:@"Approves Face ID authentication request with a matching face"],
-			[LNUsageOption optionWithName:@"unmatchFace" shortcut:@"uf" valueRequirement:GBValueNone description:@"Fails Face ID authentication request with a non-matching face"],
-			[LNUsageOption optionWithName:@"matchFinger" valueRequirement:GBValueNone description:@"Approves Touch ID authentication request with a matching finger"],
-			[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:GBValueNone description:@"Fails Touch ID authentication request with a non-matching finger"],
+			[LNUsageOption optionWithName:@"biometricMatch" shortcut:@"bm" valueRequirement:GBValueNone description:@"Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)"],
+			[LNUsageOption optionWithName:@"biometricNonmatch" shortcut:@"bnm" valueRequirement:GBValueNone description:@"Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)"],
 			
 			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
 			
@@ -439,6 +437,11 @@ int main(int argc, const char* argv[]) {
 		LNUsageSetHiddenOptions(@[
 			[LNUsageOption optionWithName:@"byID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
 			[LNUsageOption optionWithName:@"byUDID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
+			
+			[LNUsageOption optionWithName:@"matchFace" shortcut:@"mf" valueRequirement:GBValueNone description:@"Approves a Face ID authentication request with a matching face"],
+			[LNUsageOption optionWithName:@"unmatchFace" shortcut:@"uf" valueRequirement:GBValueNone description:@"Fails a Face ID authentication request with a non-matching face"],
+			[LNUsageOption optionWithName:@"matchFinger" valueRequirement:GBValueNone description:@"Approves a Touch ID authentication request with a matching finger"],
+			[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:GBValueNone description:@"Fails a Touch ID authentication request with a non-matching finger"],
 		]);
 		
 		LNUsageSetAdditionalTopics(@[
@@ -626,6 +629,14 @@ int main(int argc, const char* argv[]) {
 					setBiometricEnrollment(simulatorId, [biometricEnrollment boolValue]);
 				}
 				
+				if([settings boolForKey:@"biometricMatch"])
+				{
+					sendBiometricMatch(simulatorId, ASUBiometricTypeFace, YES);
+				}
+				if([settings boolForKey:@"biometricNonmatch"])
+				{
+					sendBiometricMatch(simulatorId, ASUBiometricTypeFace, NO);
+				}
 				if([settings boolForKey:@"matchFace"])
 				{
 					sendBiometricMatch(simulatorId, ASUBiometricTypeFace, YES);
