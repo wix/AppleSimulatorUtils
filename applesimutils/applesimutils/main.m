@@ -480,6 +480,8 @@ int main(int argc, const char* argv[]) {
 		   ![settings boolForKey:@"clearKeychain"] &&
 		   ![settings objectForKey:@"list"] &&
 		   ![settings objectForKey:@"biometricEnrollment"] &&
+		   ![settings objectForKey:@"biometricMatch"] &&
+		   ![settings objectForKey:@"biometricNonmatch"] &&
 		   ![settings boolForKey:@"matchFace"] &&
 		   ![settings boolForKey:@"unmatchFace"] &&
 		   ![settings boolForKey:@"matchFinger"] &&
