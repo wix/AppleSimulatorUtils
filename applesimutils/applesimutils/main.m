@@ -49,15 +49,6 @@ static void shutdownSimulator(NSString* simulatorId)
 	[shutdownTask waitUntilExit];
 }
 
-static void restartSpringBoard(NSString* simulatorId)
-{
-	NSTask* respringTask = [NSTask new];
-	respringTask.launchPath = [SimUtils xcrunURL].path;
-	respringTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", @"stop", @"com.apple.SpringBoard"];
-	[respringTask launch];
-	[respringTask waitUntilExit];
-}
-
 static NSArray* simulatorDevicesList()
 {
 	NSTask* listTask = [NSTask new];
@@ -658,7 +649,7 @@ int main(int argc, const char* argv[]) {
 				
 				if(needsSpringBoardRestart)
 				{
-					restartSpringBoard(simulatorId);
+					[SimUtils restartSpringBoardForSimulatorId:simulatorId];
 				}
 				
 				if(needsSimShutdown)

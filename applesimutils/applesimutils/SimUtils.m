@@ -156,4 +156,32 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 	return locationdDaemonURL;
 }
 
++ (void)restartSpringBoardForSimulatorId:(NSString*)simulatorId
+{
+	NSTask* respringTask = [NSTask new];
+	respringTask.launchPath = [SimUtils xcrunURL].path;
+	respringTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", @"stop", @"com.apple.SpringBoard"];
+	[respringTask launch];
+	[respringTask waitUntilExit];
+}
+
+static NSMutableArray<dispatch_block_t>* _blocks;
+
++ (void)registerCleanupBlock:(dispatch_block_t)block
+{
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		_blocks = [NSMutableArray new];
+	});
+	[_blocks addObject:block];
+}
+
+__attribute__((destructor))
+static void cleanup()
+{
+	[_blocks enumerateObjectsUsingBlock:^(dispatch_block_t  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+		obj();
+	}];
+}
+
 @end

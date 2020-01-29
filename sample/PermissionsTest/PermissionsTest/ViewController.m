@@ -28,16 +28,16 @@
 	[super viewDidLoad];
 	
 	_eventStore = [EKEventStore new];
-	_locationManager = [CLLocationManager new];
-	_locationManager.delegate = self;
 	
 	_healthStore = [HKHealthStore new];
 	
-	NSLog(@"%@", NSBundle.mainBundle.bundleURL.absoluteString);
+	NSLog(@"%@", NSBundle.mainBundle.bundleURL.path);
 }
 
 - (IBAction)_location:(id)sender
 {
+	_locationManager = [CLLocationManager new];
+	_locationManager.delegate = self;
 	[_locationManager requestAlwaysAuthorization];
 }
 
@@ -67,7 +67,7 @@
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
-	NSLog(@"Location: %@", status == kCLAuthorizationStatusAuthorizedAlways ? @"<always>" : status == kCLAuthorizationStatusAuthorizedWhenInUse ? @"<when in use>" : @"not granted");
+	NSLog(@"Location: %@", status == kCLAuthorizationStatusAuthorizedAlways ? @"<always>" : status == kCLAuthorizationStatusAuthorizedWhenInUse ? @"<when in use>" : @"<not granted>");
 }
 
 @end

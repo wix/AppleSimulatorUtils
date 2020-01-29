@@ -35,6 +35,18 @@
 	return [self _setSectionInfoData:sectionInfoData forBundleIdentifier:bundleIdentifier displayName:displayName simulatorIdentifier:simulatorId error:error];
 }
 
++ (BOOL)_ensurePermissionSet:(NSString*)path bundleIdentifier:(NSString*)bundleIdentifier sectionInfoData:(id)sectionInfoData
+{
+	NSMutableDictionary* bulletinVersionedSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:path];
+	
+	return bulletinVersionedSectionInfo[@"sectionInfo"][bundleIdentifier] == sectionInfoData || [bulletinVersionedSectionInfo[@"sectionInfo"][bundleIdentifier] isEqual:sectionInfoData];
+}
+
+static void _setImmutable(NSString* path, BOOL immutable)
+{
+	[NSFileManager.defaultManager setAttributes:@{NSFileImmutable: @(immutable)} ofItemAtPath:path error:NULL];
+}
+
 + (BOOL)_setSectionInfoData:(id)sectionInfoData forBundleIdentifier:(NSString*)bundleIdentifier displayName:(NSString*)displayName simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
 {
 	NSURL* simulatorLibraryURL = [SimUtils libraryURLForSimulatorId:simulatorId];
@@ -47,6 +59,7 @@
 		NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
 		if (elapsed > AppleSimUtilsRetryTimeout) break;
 		
+		//Legacy
 		NSFileManager *fileManager = [NSFileManager defaultManager];
 		NSString* sectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"];
 		if([fileManager fileExistsAtPath:sectionInfoPath])
@@ -69,6 +82,7 @@
 		NSString* versionedSectionInfoPath = [simulatorLibraryURL.path stringByAppendingPathComponent:@"BulletinBoard/VersionedSectionInfo.plist"];
 		if([fileManager fileExistsAtPath:versionedSectionInfoPath])
 		{
+			_setImmutable(versionedSectionInfoPath, YES);
 			NSMutableDictionary* bulletinVersionedSectionInfo = [NSMutableDictionary dictionaryWithContentsOfFile:versionedSectionInfoPath];
 			if(sectionInfoData == nil)
 			{
@@ -79,9 +93,19 @@
 				bulletinVersionedSectionInfo[@"sectionInfo"][bundleIdentifier] = sectionInfoData;
 			}
 			
+			_setImmutable(versionedSectionInfoPath, NO);
 			[bulletinVersionedSectionInfo writeToFile:versionedSectionInfoPath atomically:YES];
+			_setImmutable(versionedSectionInfoPath, YES);
 			
-			return YES;
+			if([self _ensurePermissionSet:versionedSectionInfoPath bundleIdentifier:bundleIdentifier sectionInfoData:sectionInfoData])
+			{
+				//Pass only if file is verified to include the permission as expected.
+				[SimUtils registerCleanupBlock:^{
+					_setImmutable(versionedSectionInfoPath, NO);
+				}];
+				
+				return YES;
+			}
 		}
 		
 		//Add a retry mechanism to be able to cope with a device which is in the process of booting while this runs.
