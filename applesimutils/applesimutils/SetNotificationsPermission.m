@@ -30,6 +30,7 @@
 	
 	propList[@"$objects"][2] = bundleIdentifier;
 	propList[@"$objects"][3][@"allowsNotifications"] = @(enabled);
+    propList[@"$objects"][3][@"criticalAlertSetting"] = enabled ? @2 : @1;
 	propList[@"$objects"][5] = displayName;
 	
 	NSData* sectionInfoData = CFBridgingRelease(CFPropertyListCreateData(NULL, (__bridge CFTypeRef)propList, kCFPropertyListBinaryFormat_v1_0, 0, NULL));
