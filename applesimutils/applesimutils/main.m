@@ -403,36 +403,36 @@ int main(int argc, const char* argv[]) {
 		]);
 		
 		LNUsageSetOptions(@[
-			[LNUsageOption optionWithName:@"byId" shortcut:@"id" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
-			[LNUsageOption optionWithName:@"byName" shortcut:@"n" valueRequirement:GBValueRequired description:@"Filters simulators by name"],
-			[LNUsageOption optionWithName:@"byType" shortcut:@"t" valueRequirement:GBValueRequired description:@"Filters simulators by device type"],
-			[LNUsageOption optionWithName:@"byOS" shortcut:@"o" valueRequirement:GBValueRequired description:@"Filters simulators by operating system"],
-			[LNUsageOption optionWithName:@"booted" shortcut:@"bt" valueRequirement:GBValueNone description:@"Filters simulators by booted status"],
+			[LNUsageOption optionWithName:@"byId" shortcut:@"id" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by unique device identifier (UDID)"],
+			[LNUsageOption optionWithName:@"byName" shortcut:@"n" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by name"],
+			[LNUsageOption optionWithName:@"byType" shortcut:@"t" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by device type"],
+			[LNUsageOption optionWithName:@"byOS" shortcut:@"o" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by operating system"],
+			[LNUsageOption optionWithName:@"booted" shortcut:@"bt" valueRequirement:LNUsageOptionRequirementNone description:@"Filters simulators by booted status"],
 			
-			[LNUsageOption optionWithName:@"list" shortcut:@"l" valueRequirement:GBValueOptional description:@"Lists available simulators"],
-			[LNUsageOption optionWithName:@"setPermissions" shortcut:@"sp" valueRequirement:GBValueRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
-			[LNUsageOption optionWithName:@"clearKeychain" shortcut:@"ck" valueRequirement:GBValueNone description:@"Clears the simulator's keychain"],
-			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:GBValueNone description:@"Restarts SpringBoard"],
+			[LNUsageOption optionWithName:@"list" shortcut:@"l" valueRequirement:LNUsageOptionRequirementOptional description:@"Lists available simulators"],
+			[LNUsageOption optionWithName:@"setPermissions" shortcut:@"sp" valueRequirement:LNUsageOptionRequirementRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
+			[LNUsageOption optionWithName:@"clearKeychain" shortcut:@"ck" valueRequirement:LNUsageOptionRequirementNone description:@"Clears the simulator's keychain"],
+			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:LNUsageOptionRequirementNone description:@"Restarts SpringBoard"],
 			
-			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:GBValueRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
-			[LNUsageOption optionWithName:@"biometricMatch" shortcut:@"bm" valueRequirement:GBValueNone description:@"Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)"],
-			[LNUsageOption optionWithName:@"biometricNonmatch" shortcut:@"bnm" valueRequirement:GBValueNone description:@"Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)"],
+			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:LNUsageOptionRequirementRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
+			[LNUsageOption optionWithName:@"biometricMatch" shortcut:@"bm" valueRequirement:LNUsageOptionRequirementNone description:@"Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)"],
+			[LNUsageOption optionWithName:@"biometricNonmatch" shortcut:@"bnm" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)"],
 			
-			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:GBValueRequired description:@"The app bundle identifier"],
+			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:LNUsageOptionRequirementRequired description:@"The app bundle identifier"],
 			
-			[LNUsageOption optionWithName:@"maxResults" valueRequirement:GBValueRequired description:@"Limits the number of results returned from --list"],
+			[LNUsageOption optionWithName:@"maxResults" valueRequirement:LNUsageOptionRequirementRequired description:@"Limits the number of results returned from --list"],
 			
-			[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:GBValueNone description:@"Prints version"],
+			[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:LNUsageOptionRequirementNone description:@"Prints version"],
 		]);
 		
 		LNUsageSetHiddenOptions(@[
-			[LNUsageOption optionWithName:@"byID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
-			[LNUsageOption optionWithName:@"byUDID" valueRequirement:GBValueRequired description:@"Filters simulators by unique device identifier (UDID)"],
+			[LNUsageOption optionWithName:@"byID" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by unique device identifier (UDID)"],
+			[LNUsageOption optionWithName:@"byUDID" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by unique device identifier (UDID)"],
 			
-			[LNUsageOption optionWithName:@"matchFace" shortcut:@"mf" valueRequirement:GBValueNone description:@"Approves a Face ID authentication request with a matching face"],
-			[LNUsageOption optionWithName:@"unmatchFace" shortcut:@"uf" valueRequirement:GBValueNone description:@"Fails a Face ID authentication request with a non-matching face"],
-			[LNUsageOption optionWithName:@"matchFinger" valueRequirement:GBValueNone description:@"Approves a Touch ID authentication request with a matching finger"],
-			[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:GBValueNone description:@"Fails a Touch ID authentication request with a non-matching finger"],
+			[LNUsageOption optionWithName:@"matchFace" shortcut:@"mf" valueRequirement:LNUsageOptionRequirementNone description:@"Approves a Face ID authentication request with a matching face"],
+			[LNUsageOption optionWithName:@"unmatchFace" shortcut:@"uf" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a Face ID authentication request with a non-matching face"],
+			[LNUsageOption optionWithName:@"matchFinger" valueRequirement:LNUsageOptionRequirementNone description:@"Approves a Touch ID authentication request with a matching finger"],
+			[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a Touch ID authentication request with a non-matching finger"],
 		]);
 		
 		LNUsageSetAdditionalTopics(@[
@@ -463,7 +463,7 @@ int main(int argc, const char* argv[]) {
 			@"Pull-requests are always welcome!"
 		]);
 		
-		GBSettings* settings = LNUsageParseArguments(argc, argv);
+		id<LNUsageArgumentParser> settings = LNUsageParseArguments(argc, argv);
 		
 		if(![settings boolForKey:@"version"] &&
 		   ![settings objectForKey:@"setPermissions"] &&
