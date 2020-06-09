@@ -12,7 +12,7 @@
 
 @implementation SetHealthKitPermission
 
-+ (NSURL*)_healthdbURLForSimulatorId:(NSString*)simulatorId osVersion:(NSOperatingSystemVersion)isVersion
++ (NSURL*)healthdbURLForSimulatorId:(NSString*)simulatorId osVersion:(NSOperatingSystemVersion)isVersion
 {
 	return [[SimUtils libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"Health/healthdb.sqlite"];
 }
@@ -44,7 +44,7 @@
 		NSTimeInterval elapsed = [[NSDate date] timeIntervalSinceDate:start];
 		if (elapsed > AppleSimUtilsRetryTimeout) break;
 		
-		NSURL* healthURL = [self _healthdbURLForSimulatorId:simulatorId osVersion:osVersion];
+		NSURL* healthURL = [self healthdbURLForSimulatorId:simulatorId osVersion:osVersion];
 		if ([healthURL checkResourceIsReachableAndReturnError:error] == NO)
 		{
 			logcontinue(@"Health database not found");
@@ -74,7 +74,8 @@
 		
 		if((resultSet = [db executeQuery:@"select ROWID from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
 		{
-			logcontinue(@"Unable to execute query");
+			auto msg = [NSString stringWithFormat:@"Health database failed to execute query: %@", [db lastErrorMessage]];
+			logcontinue(msg);
 		}
 		
 		BOOL didHaveRow = [resultSet nextWithError:error];
@@ -101,7 +102,8 @@
 			NSNumber* syncAnchor = @1;
 			if((syncAnchorResultSet = [db executeQuery:@"select MAX(sync_anchor) from sources"]) == nil)
 			{
-				logcontinue(@"Unable to execute query");;
+				auto msg = [NSString stringWithFormat:@"Health database failed to execute query: %@", [db lastErrorMessage]];
+				logcontinue(msg);
 			}
 			
 			if([syncAnchorResultSet next] != NO)
@@ -122,13 +124,15 @@
 			
 			if([db executeUpdate:[NSString stringWithFormat:@"insert into sources (%@) VALUES (%@)", query, values] withParameterDictionary:params] == NO)
 			{
-				logcontinue(@"Unable to execute update");;
+				auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+				logcontinue(msg);
 			}
 			
 			[resultSet close];
 			if((resultSet = [db executeQuery:@"select ROWID from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
 			{
-				logcontinue(@"Unable to execute query");
+				auto msg = [NSString stringWithFormat:@"Health database failed to execute query: %@", [db lastErrorMessage]];
+				logcontinue(msg);
 			}
 			[resultSet nextWithError:error];
 		}
@@ -144,13 +148,21 @@
 		
 		if(permission == HealthKitPermissionStatusUnset)
 		{
-			[db executeUpdate:@"delete from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}];
+			if([db executeUpdate:@"delete from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}] == NO)
+			{
+				auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+				logcontinue(msg);
+			}
 		}
 		else
 		{
 			for(int i = 0; i < 200; i++)
 			{
-				[db executeUpdate:@"insert into authorization (source_id, object_type, status, request, mode, date_modified, modification_epoch, provenance, deleted_object_anchor, object_limit_anchor, object_limit_modified) VALUES (:source_id, :object_type, :status, :request, :mode, :date_modified, :modification_epoch, :provenance, :deleted_object_anchor, :object_limit_anchor, :object_limit_modified)" withParameterDictionary:@{@"source_id": rowID, @"object_type": @(i), @"status": permission == HealthKitPermissionStatusAllow ? @101 : @104, @"request": @203, @"mode": @0, @"date_modified": @(NSDate.date.timeIntervalSinceReferenceDate), @"modification_epoch": @1, @"provenance": @0, @"deleted_object_anchor": @0, @"object_limit_anchor": @0, @"object_limit_modified": NSNull.null}];
+				if([db executeUpdate:@"insert into authorization (source_id, object_type, status, request, mode, date_modified, modification_epoch, provenance, deleted_object_anchor, object_limit_anchor, object_limit_modified) VALUES (:source_id, :object_type, :status, :request, :mode, :date_modified, :modification_epoch, :provenance, :deleted_object_anchor, :object_limit_anchor, :object_limit_modified)" withParameterDictionary:@{@"source_id": rowID, @"object_type": @(i), @"status": permission == HealthKitPermissionStatusAllow ? @101 : @104, @"request": @203, @"mode": @0, @"date_modified": @(NSDate.date.timeIntervalSinceReferenceDate), @"modification_epoch": @1, @"provenance": @0, @"deleted_object_anchor": @0, @"object_limit_anchor": @0, @"object_limit_modified": NSNull.null}] == NO)
+				{
+					auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+					logcontinue(msg);
+				}
 			}
 		}
 		

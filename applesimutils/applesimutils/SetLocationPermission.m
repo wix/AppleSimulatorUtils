@@ -11,7 +11,7 @@
 
 static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 {
-	NSURL *locationdDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.locationd"];
+	NSURL *locationdDaemonURL = [SetLocationPermission locationdURL];
 	NSCAssert(locationdDaemonURL != nil, @"Launch daemon “com.apple.locationd” not found. Please open an issue.");
 	
 	NSTask* rebootTask = [NSTask new];
@@ -22,6 +22,16 @@ static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 }
 
 @implementation SetLocationPermission
+
++ (NSURL*)locationdURL
+{
+	static NSURL *locationdDaemonURL;
+	static dispatch_once_t onceToken;
+	dispatch_once(&onceToken, ^{
+		 locationdDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.locationd"];
+	});
+	return locationdDaemonURL;
+}
 
 + (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
 {

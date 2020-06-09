@@ -11,9 +11,9 @@
 
 #import "LNLog.h"
 
-#define debug_log(message) LNLog(LNLogLevelDebug, @"%@ (%s at line %d)", message, __FUNCTION__, __LINE__)
-#define logcontinue(message) debug_log(message); continue
-#define logreturn(message) debug_log(message); return
+#define debug_log(message) LNLog(LNLogLevelDebug, @"%@", message)
+#define logcontinue(message) if(error) { *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:(message)}]; }; debug_log((message)); continue
+#define logreturn(message) if(error) { *error = [NSError errorWithDomain:@"" code:0 userInfo:@{NSLocalizedDescriptionKey:(message)}]; }; debug_log((message)); return
 
 #import "Swiftier.h"
 

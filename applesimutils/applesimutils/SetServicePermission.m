@@ -58,7 +58,8 @@
 		
 		if (![db open])
 		{
-			logcontinue(@"TCC database failed to open");
+			auto msg = [NSString stringWithFormat:@"TCC database failed to open: %@", [db lastErrorMessage]];
+			logcontinue(msg);
 		}
 		
 		NSString *query;
@@ -80,17 +81,15 @@
 				if ([db executeUpdate:query withParameterDictionary:parameters] == NO)
 				{
 					success = NO;
+					auto msg = [NSString stringWithFormat:@"TCC database failed to update: %@", [db lastErrorMessage]];
+					logcontinue(msg);
 				}
 			}
 		}
-		
-		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.05]];
-		
-		if(error)
+		else
 		{
-			*error = [NSError errorWithDomain:@"SetServicePermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%@ (db)", [db lastErrorMessage]]}];
-			//On error, stop retries.
-			break;
+			auto msg = [NSString stringWithFormat:@"TCC database failed to update: %@", [db lastErrorMessage]];
+			logcontinue(msg);
 		}
 	}
 	

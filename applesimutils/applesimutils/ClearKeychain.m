@@ -9,13 +9,19 @@
 #import "ClearKeychain.h"
 #import "SimUtils.h"
 
-static void securitydCtl(NSString* simulatorId, BOOL stop)
+extern NSURL* securitydURL(void)
 {
-	static NSURL *locationdDaemonURL;
+	static NSURL *securitydDaemonURL;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		 locationdDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.securityd"];
+		 securitydDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.securityd"];
 	});
+	return securitydDaemonURL;
+}
+
+static void securitydCtl(NSString* simulatorId, BOOL stop)
+{
+	NSURL *locationdDaemonURL = securitydURL();
 	NSCAssert(locationdDaemonURL != nil, @"Launch daemon “com.apple.securityd” not found. Please open an issue.");
 	
 	NSTask* rebootTask = [NSTask new];

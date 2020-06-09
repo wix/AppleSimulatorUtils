@@ -270,7 +270,7 @@
 		391596D41E8CBAA900FDD6F5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = Wix;
 				TargetAttributes = {
 					391596DB1E8CBAA900FDD6F5 = {
@@ -499,6 +499,7 @@
 			buildSettings = {
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CODE_SIGN_IDENTITY = "-";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREFIX_HEADER = applesimutils/PrefixHeader.pch;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -512,6 +513,7 @@
 			buildSettings = {
 				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = NO;
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = NO;
+				CODE_SIGN_IDENTITY = "-";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREFIX_HEADER = applesimutils/PrefixHeader.pch;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;

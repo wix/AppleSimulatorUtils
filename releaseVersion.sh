@@ -105,7 +105,7 @@ echo -e "\033[1;34mCreating a GitHub release\033[0m"
 #Escape user input in markdown to valid JSON string using PHP 🤦‍♂️ (https://stackoverflow.com/a/13466143/983912)
 RELEASENOTESCONTENTS=$(printf '%s' "$(<"${RELEASE_NOTES_FILE}")" | php -r 'echo json_encode(file_get_contents("php://stdin"));')
 API_JSON=$(printf '{"tag_name": "%s","target_commitish": "master", "name": "%s", "body": %s, "draft": false, "prerelease": false}' "$VERSION" "$VERSION" "$RELEASENOTESCONTENTS")
-RELEASE_ID=$(curl -s --data "$API_JSON" https://api.github.com/repos/wix/AppleSimulatorUtils/releases?access_token=${GITHUB_RELEASES_TOKEN} | jq ".id")
+RELEASE_ID=$(curl -H "Authorization: token ${GITHUB_RELEASES_TOKEN}" -s --data "$API_JSON" https://api.github.com/repos/wix/AppleSimulatorUtils/releases | jq ".id")
 
 echo -e "\033[1;34mUploading attachments to release\033[0m"
 
@@ -114,7 +114,7 @@ curl -s --data-binary @"build/${SRC_TGZ_FILE}" -H "Content-Type: application/oct
 for BOTTLE in "${BOTTLES[@]}"
 do
 	BOTTLE_TGZ_FILE="applesimutils-${VERSION}.${BOTTLE}.bottle.tar.gz"
-	curl -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE})&access_token=${GITHUB_RELEASES_TOKEN}" | jq "."
+	curl -H "Authorization: token ${GITHUB_RELEASES_TOKEN}" -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE})" | jq "."
 done
 
 rm -fr build

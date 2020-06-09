@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1120"
+   LastUpgradeVersion = "1150"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -94,11 +94,15 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=YES, notifications=YES, reminders=YES, location=inuse&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--paths"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;notifications=YES&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;health=YES&quot;"

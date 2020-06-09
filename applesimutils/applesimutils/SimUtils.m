@@ -79,7 +79,7 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 
 + (NSURL*)URLForSimulatorId:(NSString*)simulatorId
 {
-	return [[[NSURL fileURLWithPath:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject] URLByAppendingPathComponent:@"/Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId];
+	return [[[NSURL fileURLWithPath:NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES).firstObject] URLByAppendingPathComponent:@"Developer/CoreSimulator/Devices/"] URLByAppendingPathComponent:simulatorId];
 }
 
 + (NSURL*)_dataURLForSimulatorId:(NSString*)simulatorId

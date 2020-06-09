@@ -408,20 +408,19 @@ int main(int argc, const char* argv[]) {
 			[LNUsageOption optionWithName:@"byType" shortcut:@"t" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by device type"],
 			[LNUsageOption optionWithName:@"byOS" shortcut:@"o" valueRequirement:LNUsageOptionRequirementRequired description:@"Filters simulators by operating system"],
 			[LNUsageOption optionWithName:@"booted" shortcut:@"bt" valueRequirement:LNUsageOptionRequirementNone description:@"Filters simulators by booted status"],
-			
+			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"list" shortcut:@"l" valueRequirement:LNUsageOptionRequirementOptional description:@"Lists available simulators"],
+			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:LNUsageOptionRequirementRequired description:@"The app bundle identifier"],
+			[LNUsageOption optionWithName:@"maxResults" valueRequirement:LNUsageOptionRequirementRequired description:@"Limits the number of results returned from --list"],
+			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"setPermissions" shortcut:@"sp" valueRequirement:LNUsageOptionRequirementRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
 			[LNUsageOption optionWithName:@"clearKeychain" shortcut:@"ck" valueRequirement:LNUsageOptionRequirementNone description:@"Clears the simulator's keychain"],
 			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:LNUsageOptionRequirementNone description:@"Restarts SpringBoard"],
-			
+			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:LNUsageOptionRequirementRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
 			[LNUsageOption optionWithName:@"biometricMatch" shortcut:@"bm" valueRequirement:LNUsageOptionRequirementNone description:@"Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)"],
 			[LNUsageOption optionWithName:@"biometricNonmatch" shortcut:@"bnm" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)"],
-			
-			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:LNUsageOptionRequirementRequired description:@"The app bundle identifier"],
-			
-			[LNUsageOption optionWithName:@"maxResults" valueRequirement:LNUsageOptionRequirementRequired description:@"Limits the number of results returned from --list"],
-			
+			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:LNUsageOptionRequirementNone description:@"Prints version"],
 		]);
 		
@@ -433,6 +432,7 @@ int main(int argc, const char* argv[]) {
 			[LNUsageOption optionWithName:@"unmatchFace" shortcut:@"uf" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a Face ID authentication request with a non-matching face"],
 			[LNUsageOption optionWithName:@"matchFinger" valueRequirement:LNUsageOptionRequirementNone description:@"Approves a Touch ID authentication request with a matching finger"],
 			[LNUsageOption optionWithName:@"unmatchFinger" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a Touch ID authentication request with a non-matching finger"],
+			[LNUsageOption optionWithName:@"paths" shortcut:@"p" valueRequirement:LNUsageOptionRequirementOptional description:@"Prints important paths for the selected simulator"],
 		]);
 		
 		LNUsageSetAdditionalTopics(@[
@@ -470,6 +470,7 @@ int main(int argc, const char* argv[]) {
 		   ![settings boolForKey:@"restartSB"] &&
 		   ![settings boolForKey:@"clearKeychain"] &&
 		   ![settings objectForKey:@"list"] &&
+		   ![settings objectForKey:@"paths"] &&
 		   ![settings objectForKey:@"biometricEnrollment"] &&
 		   ![settings objectForKey:@"biometricMatch"] &&
 		   ![settings objectForKey:@"biometricNonmatch"] &&
@@ -573,6 +574,81 @@ int main(int argc, const char* argv[]) {
 				}
 				
 				exit(-1);
+			}
+			
+			if([settings objectForKey:@"paths"] != nil)
+			{
+				[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
+					NSString* simulatorId = simulator[@"udid"];
+				
+					NSString* title = [NSString stringWithFormat:@"%@ (%@, %@)", simulator[@"name"], simulatorId, simulator[@"state"]];
+					NSString* underline = [@"" stringByPaddingToLength:title.length withString:@"-" startingAtIndex:0];
+					LNLog(LNLogLevelStdOut, @"%@\n%@", title, underline);
+					
+					NSURL* url = [SimUtils URLForSimulatorId:simulatorId];
+					if(url.path)
+					{
+						LNLog(LNLogLevelStdOut, @"Path: %@", url.path);
+					}
+					
+					NSMutableDictionary* simPaths = [NSMutableDictionary new];
+					
+					url = [SimUtils libraryURLForSimulatorId:simulatorId];
+					if(url.path)
+					{
+						simPaths[@"Library Path"] = url.path;
+						
+						NSFileManager *fileManager = [NSFileManager defaultManager];
+						NSString* sectionInfoPath = [url.path stringByAppendingPathComponent:@"BulletinBoard/SectionInfo.plist"];
+						if([fileManager fileExistsAtPath:sectionInfoPath])
+						{
+							simPaths[@"BulletinBoard Section Info Plist Path"] = sectionInfoPath;
+						}
+						else
+						{
+							NSString* versionedSectionInfoPath = [url.path stringByAppendingPathComponent:@"BulletinBoard/VersionedSectionInfo.plist"];
+							if([fileManager fileExistsAtPath:versionedSectionInfoPath])
+							{
+								simPaths[@"BulletinBoard Versioned Section Info Plist Path"] = versionedSectionInfoPath;
+							}
+						}
+						
+						simPaths[@"TCC Database Path"] = [url URLByAppendingPathComponent:@"TCC/TCC.db"].path;
+					}
+					
+					url = [SetLocationPermission locationdURL];
+					if(url.path != nil)
+					{
+						simPaths[@"locationd Daemon Info Plist Path"] = url.path;
+					}
+					
+					url = securitydURL();
+					if(url.path != nil)
+					{
+						simPaths[@"securityd Daemon Info Plist Path"] = url.path;
+					}
+					
+					url = [SetHealthKitPermission healthdbURLForSimulatorId:simulatorId osVersion:operatingSystemFromSimulator(simulator)];
+					if(url.path != nil)
+					{
+						simPaths[@"Health Database Path"] = url.path;
+					}
+					
+					NSString* bundleId = [settings objectForKey:@"bundle"];
+					if(bundleId != nil && (url = [SimUtils binaryURLForBundleId:bundleId simulatorId:simulatorId]).path != nil)
+					{
+						simPaths[@"App Binary Path"] = url.path;
+					}
+					
+					NSArray<NSString*>* keys = [simPaths.allKeys sortedArrayUsingSelector:@selector(compare:)];
+					[keys enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+						LNLog(LNLogLevelStdOut, @"%@: %@", obj, simPaths[obj]);
+					}];
+					
+					LNLog(LNLogLevelStdOut, @"\n");
+				}];
+				
+				exit(0);
 			}
 			
 			[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
