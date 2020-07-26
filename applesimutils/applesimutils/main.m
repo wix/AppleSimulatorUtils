@@ -279,6 +279,14 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 			
 			needsSpringBoardRestart |= NO;
 		}
+		else if([permission isEqualToString:@"photos"])
+		{
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"limited", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
+			
+			success = [SetServicePermission setPermisionStatus:value forService:argumentToAppleService[permission] bundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier operatingSystemVersion:operatingSystemFromSimulator(simulator) error:&err];
+			
+			needsSpringBoardRestart |= NO;
+		}
 		else
 		{
 			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
@@ -290,7 +298,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 				return;
 			}
 			
-			success = [SetServicePermission setPermisionStatus:value forService:appleService bundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			success = [SetServicePermission setPermisionStatus:value forService:appleService bundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier operatingSystemVersion:operatingSystemFromSimulator(simulator) error:&err];
 			
 			needsSpringBoardRestart |= NO;
 		}
@@ -443,14 +451,14 @@ int main(int argc, const char* argv[]) {
 						@"camera=YES|NO|unset",
 						@"contacts=YES|NO|unset",
 						@"faceid=YES|NO|unset",
-						@"health=YES|NO|unset (iOS 12.0 and above)",
+						@"health=YES|NO|unset (iOS/tvOS 12.0 and above)",
 						@"homekit=YES|NO|unset",
 						@"location=always|inuse|never|unset",
 						@"medialibrary=YES|NO|unset",
 						@"microphone=YES|NO|unset",
 						@"motion=YES|NO|unset",
 						@"notifications=YES|NO|unset",
-						@"photos=YES|NO|unset",
+						@"photos=YES|NO|limited|unset (“limited” supported on iOS/tvOS 14.0 and above)",
 						@"reminders=YES|NO|unset",
 						@"siri=YES|NO|unset",
 						@"speech=YES|NO|unset",

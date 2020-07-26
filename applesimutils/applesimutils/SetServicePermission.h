@@ -11,6 +11,6 @@
 @interface SetServicePermission : NSObject
 
 + (BOOL)isSimulatorReadyForPersmissions:(NSString*)simulatorId;
-+ (BOOL)setPermisionStatus:(NSString*)status forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error;
++ (BOOL)setPermisionStatus:(NSString*)status forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId operatingSystemVersion:(NSOperatingSystemVersion)operatingSystemVersion error:(NSError**)error;
 
 @end

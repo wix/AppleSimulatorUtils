@@ -11,8 +11,10 @@
 @import CoreLocation;
 @import UserNotifications;
 @import HealthKit;
+@import Photos;
+@import PhotosUI;
 
-@interface ViewController () <CLLocationManagerDelegate>
+@interface ViewController () <CLLocationManagerDelegate, PHPickerViewControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
 	EKEventStore* _eventStore;
 	CLLocationManager* _locationManager;
@@ -32,6 +34,51 @@
 	_healthStore = [HKHealthStore new];
 	
 	NSLog(@"%@", NSBundle.mainBundle.bundleURL.path);
+}
+
+- (IBAction)_photos:(id)sender
+{
+	id handler = ^(PHAuthorizationStatus status) {
+		if(@available(iOS 14, *))
+		{
+			if(status == PHAuthorizationStatusLimited)
+			{
+				NSLog(@"Photos: <limited>");
+				
+				return;
+			}
+		}
+		
+		NSLog(@"Photos: %@", status == PHAuthorizationStatusRestricted ? @"<restricted>" : status == PHAuthorizationStatusDenied ? @"<not granted>" : status == PHAuthorizationStatusAuthorized ? @"<granted>" : @"<?>");
+	};
+	
+	if(@available(iOS 14, *))
+	{
+		[PHPhotoLibrary requestAuthorizationForAccessLevel:PHAccessLevelReadWrite handler:handler];
+	}
+	else
+	{
+		[PHPhotoLibrary requestAuthorization:handler];
+	}
+}
+
+- (IBAction)_photosOS14:(id)sender
+{
+	if(@available(iOS 14, *))
+	{
+		PHPickerConfiguration* config = [PHPickerConfiguration new];
+		config.selectionLimit = 0;
+
+		PHPickerViewController* picker = [[PHPickerViewController alloc] initWithConfiguration:config];
+		picker.delegate = self;
+		[self presentViewController:picker animated:YES completion:nil];
+	}
+	else
+	{
+		UIImagePickerController* picker = [UIImagePickerController new];
+		picker.delegate = self;
+		[self presentViewController:picker animated:YES completion:nil];
+	}
 }
 
 - (IBAction)_location:(id)sender
@@ -68,6 +115,11 @@
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
 	NSLog(@"Location: %@", status == kCLAuthorizationStatusAuthorizedAlways ? @"<always>" : status == kCLAuthorizationStatusAuthorizedWhenInUse ? @"<when in use>" : @"<not granted>");
+}
+
+- (void)picker:(PHPickerViewController *)picker didFinishPicking:(NSArray<PHPickerResult *> *)results API_AVAILABLE(ios(14))
+{
+	[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

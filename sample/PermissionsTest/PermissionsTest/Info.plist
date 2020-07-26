@@ -22,6 +22,8 @@
 	<true/>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Davai</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Zan-Gief</string>
 	<key>NSHealthShareUsageDescription</key>
 	<string>Please provide health stuff please</string>
 	<key>NSHealthUpdateUsageDescription</key>

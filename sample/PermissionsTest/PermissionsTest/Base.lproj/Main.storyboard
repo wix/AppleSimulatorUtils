@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17140" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14766.13"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17115"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -17,45 +18,60 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="KV7-cb-aX3">
-                                <rect key="frame" x="144" y="261.5" width="87" height="144"/>
+                                <rect key="frame" x="134.5" y="223.5" width="106" height="220"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DzF-Pc-DIX">
-                                        <rect key="frame" x="0.0" y="0.0" width="87" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DzF-Pc-DIX">
+                                        <rect key="frame" x="0.0" y="0.0" width="106" height="30"/>
+                                        <state key="normal" title="Photos"/>
+                                        <connections>
+                                            <action selector="_photos:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="aXR-i5-Z9x"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="K1v-Ed-IRw">
+                                        <rect key="frame" x="0.0" y="38" width="106" height="30"/>
+                                        <state key="normal" title="Photos (Picker)"/>
+                                        <connections>
+                                            <action selector="_photosOS14:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="g4Q-aH-BXb"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wB0-al-Li2">
+                                        <rect key="frame" x="0.0" y="76" width="106" height="30"/>
                                         <state key="normal" title="Location"/>
                                         <connections>
-                                            <action selector="_location:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Zkx-Zg-o8F"/>
+                                            <action selector="_location:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="TE5-wm-RGS"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xXb-r4-S9r">
-                                        <rect key="frame" x="0.0" y="38" width="87" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xXb-r4-S9r">
+                                        <rect key="frame" x="0.0" y="114" width="106" height="30"/>
                                         <state key="normal" title="Notifications"/>
                                         <connections>
-                                            <action selector="_notifications:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yZ3-Uu-Kho"/>
+                                            <action selector="_notifications:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="QAO-q4-VEV"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGt-D9-vnI">
-                                        <rect key="frame" x="0.0" y="76" width="87" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AGt-D9-vnI">
+                                        <rect key="frame" x="0.0" y="152" width="106" height="30"/>
                                         <state key="normal" title="Calendar"/>
                                         <connections>
-                                            <action selector="_calendar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="kHk-vP-kqB"/>
+                                            <action selector="_calendar:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="59I-X4-AKy"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AHz-Bq-qtW">
-                                        <rect key="frame" x="0.0" y="114" width="87" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AHz-Bq-qtW">
+                                        <rect key="frame" x="0.0" y="190" width="106" height="30"/>
                                         <state key="normal" title="Health"/>
                                         <connections>
+                                            <action selector="_health:" destination="BYZ-38-t0r" eventType="primaryActionTriggered" id="OPu-SR-rWA"/>
                                             <action selector="_health:" destination="dkx-z0-nzr" eventType="touchUpInside" id="lD0-b5-iPz"/>
                                         </connections>
                                     </button>
                                 </subviews>
                             </stackView>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="KV7-cb-aX3" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="da2-LN-qmO"/>
                             <constraint firstItem="KV7-cb-aX3" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="fmc-J2-UtM"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -63,4 +79,13 @@
             <point key="canvasLocation" x="138" y="134"/>
         </scene>
     </scenes>
+    <color key="tintColor" systemColor="systemBlueColor"/>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemBlueColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
