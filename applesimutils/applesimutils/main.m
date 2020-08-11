@@ -14,6 +14,7 @@
 #import "ClearKeychain.h"
 #import "LNOptionsParser.h"
 #import "SimUtils.h"
+#import "NSTask+InputOutput.h"
 
 static char* const __version =
 #include "version.h"
@@ -55,15 +56,8 @@ static NSArray* simulatorDevicesList()
 	listTask.launchPath = [SimUtils xcrunURL].path;
 	listTask.arguments = @[@"simctl", @"list", @"--json"];
 	
-	NSPipe* outPipe = [NSPipe pipe];
-	[listTask setStandardOutput:outPipe];
-	
-	[listTask launch];
-	
-	NSFileHandle* readFileHandle = [outPipe fileHandleForReading];
-	NSData* jsonData = [readFileHandle readDataToEndOfFile];
-	
-	[listTask waitUntilExit];
+	NSData* jsonData;
+	[listTask launchAndWaitUntilExitReturningStandardOutputData:&jsonData standardRrrorData:NULL];
 	
 	NSError* error;
 	NSDictionary* list = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
@@ -744,7 +738,7 @@ int main(int argc, const char* argv[]) {
 		}
 		@catch (NSException *exception)
 		{
-			LNUsagePrintMessage(exception.reason, LNLogLevelError);
+			LNUsagePrintMessage([NSString stringWithFormat:@"%@.", [exception.reason stringByReplacingCharactersInRange:NSMakeRange(0,1) withString:[[exception.reason substringToIndex:1] capitalizedString]]], LNLogLevelError);
 			exit(-1);
 		}
 	}

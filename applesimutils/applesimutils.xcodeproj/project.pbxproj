@@ -22,6 +22,7 @@
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 		39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 39676AD51F94BE4100018548 /* ClearKeychain.m */; };
+		39EAF80624E2F008003F86C3 /* NSTask+InputOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EAF80524E2F008003F86C3 /* NSTask+InputOutput.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +128,8 @@
 		395046D71EA72F1000557294 /* SimUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimUtils.m; sourceTree = "<group>"; };
 		39676AD41F94BE4100018548 /* ClearKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClearKeychain.h; sourceTree = "<group>"; };
 		39676AD51F94BE4100018548 /* ClearKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClearKeychain.m; sourceTree = "<group>"; };
+		39EAF80424E2F008003F86C3 /* NSTask+InputOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSTask+InputOutput.h"; sourceTree = "<group>"; };
+		39EAF80524E2F008003F86C3 /* NSTask+InputOutput.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSTask+InputOutput.m"; sourceTree = "<group>"; };
 		39FE99C31F8A6B17006DF8EF /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -174,6 +177,8 @@
 				39FE99C31F8A6B17006DF8EF /* version.h */,
 				392AFBA522BA9149007E0F15 /* Swiftier.h */,
 				392AFBA622BA915A007E0F15 /* PrefixHeader.pch */,
+				39EAF80424E2F008003F86C3 /* NSTask+InputOutput.h */,
+				39EAF80524E2F008003F86C3 /* NSTask+InputOutput.m */,
 			);
 			path = applesimutils;
 			sourceTree = "<group>";
@@ -367,6 +372,7 @@
 				392AFBB122BAB9E0007E0F15 /* SetHealthKitPermission.m in Sources */,
 				393510461FCB9A1E001FB466 /* GBOptionsHelper.m in Sources */,
 				391EBF311E911CAA0009AACD /* SetServicePermission.m in Sources */,
+				39EAF80624E2F008003F86C3 /* NSTask+InputOutput.m in Sources */,
 				393510481FCB9A1E001FB466 /* GBPrint.m in Sources */,
 				39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,

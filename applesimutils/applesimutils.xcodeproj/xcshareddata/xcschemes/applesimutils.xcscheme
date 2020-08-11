@@ -77,7 +77,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--bundle &quot;com.wix.PermissionsTest&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--clearKeychain"
@@ -85,7 +85,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;photos=limited, notifications=YES, reminders=YES, location=inuse&quot;"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--setPermissions &quot;calendar=NO&quot;"
@@ -109,7 +109,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"
@@ -129,7 +129,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--help"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--version"
