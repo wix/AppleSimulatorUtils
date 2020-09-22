@@ -18,11 +18,15 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 {
 	NSParameterAssert(binaryName != nil);
 	
-	NSString* shellPath = NSProcessInfo.processInfo.environment[@"SHELL"] ?: @"/bin/zsh";
+//	NSString* shellPath = NSProcessInfo.processInfo.environment[@"SHELL"] ?: @"/bin/zsh";
+//
+//	NSTask* whichTask = [NSTask new];
+//	whichTask.launchPath = shellPath;
+//	whichTask.arguments = @[@"-l", @"-c", [NSString stringWithFormat:@" %@", binaryName]];
 	
 	NSTask* whichTask = [NSTask new];
-	whichTask.launchPath = shellPath;
-	whichTask.arguments = @[@"-l", @"-c", [NSString stringWithFormat:@"/usr/bin/which %@", binaryName]];
+	whichTask.launchPath = @"/usr/bin/which";
+	whichTask.arguments = @[binaryName];
 	
 	NSString* whichResponse;
 	NSString* whichError;
