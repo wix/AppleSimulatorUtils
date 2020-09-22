@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+# Assumes gh is installed and logged in
+
 if [ "$#" -ne 1 ]; then
 	echo -e >&2 "\033[1;31mIllegal number of parameters\033[0m"
 	echo -e >&2 "\033[1;31mreleaseVersion.sh <version>\033[0m"
@@ -102,19 +104,16 @@ git push --tags
 
 echo -e "\033[1;34mCreating a GitHub release\033[0m"
 
-#Escape user input in markdown to valid JSON string using PHP 🤦‍♂️ (https://stackoverflow.com/a/13466143/983912)
-RELEASENOTESCONTENTS=$(printf '%s' "$(<"${RELEASE_NOTES_FILE}")" | php -r 'echo json_encode(file_get_contents("php://stdin"));')
-API_JSON=$(printf '{"tag_name": "%s","target_commitish": "master", "name": "%s", "body": %s, "draft": false, "prerelease": false}' "$VERSION" "$VERSION" "$RELEASENOTESCONTENTS")
-RELEASE_ID=$(curl -H "Authorization: token ${GITHUB_RELEASES_TOKEN}" -s --data "$API_JSON" https://api.github.com/repos/wix/AppleSimulatorUtils/releases | jq ".id")
+gh release create --repo wix/AppleSimulatorUtils "$VERSION" --title "$VERSION" --notes-file "${RELEASE_NOTES_FILE}"
 
 echo -e "\033[1;34mUploading attachments to release\033[0m"
 
-curl -H "Authorization: token ${GITHUB_RELEASES_TOKEN}" -s --data-binary @"build/${SRC_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${SRC_TGZ_FILE})" | jq "."
+gh release upload --repo wix/AppleSimulatorUtils "$VERSION" "build/${SRC_TGZ_FILE}#$(basename ${SRC_TGZ_FILE})"
 
 for BOTTLE in "${BOTTLES[@]}"
-do
+do	
 	BOTTLE_TGZ_FILE="applesimutils-${VERSION}.${BOTTLE}.bottle.tar.gz"
-	curl -H "Authorization: token ${GITHUB_RELEASES_TOKEN}" -s --data-binary @"bottle/${BOTTLE_TGZ_FILE}" -H "Content-Type: application/octet-stream" "https://uploads.github.com/repos/wix/AppleSimulatorUtils/releases/${RELEASE_ID}/assets?name=$(basename ${BOTTLE_TGZ_FILE})" | jq "."
+	gh release upload --repo wix/AppleSimulatorUtils "$VERSION" "bottle/${BOTTLE_TGZ_FILE}#$(basename ${BOTTLE_TGZ_FILE})"
 done
 
 rm -fr build
