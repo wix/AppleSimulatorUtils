@@ -32,6 +32,8 @@
 	<string>Gief</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Come on</string>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>Please allow tracking</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

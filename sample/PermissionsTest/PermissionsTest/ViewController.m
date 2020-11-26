@@ -13,6 +13,7 @@
 @import HealthKit;
 @import Photos;
 @import PhotosUI;
+@import AppTrackingTransparency;
 
 @interface ViewController () <CLLocationManagerDelegate, PHPickerViewControllerDelegate, UINavigationControllerDelegate, UIImagePickerControllerDelegate>
 {
@@ -110,6 +111,20 @@
 	[_healthStore requestAuthorizationToShareTypes:readableTypes readTypes:readableTypes completion:^(BOOL success, NSError * _Nullable error) {
 		NSLog(@"Health: %@", success ? ([_healthStore authorizationStatusForType:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierPeakExpiratoryFlowRate]] == HKAuthorizationStatusSharingAuthorized ? @"<granted>" : @"<not granted>") : [NSString stringWithFormat:@"<error: %@>", error]);
 	}];
+}
+
+- (IBAction)_trackOS14:(id)sender
+{
+    if(@available(iOS 14, *)) {
+        [ATTrackingManager requestTrackingAuthorizationWithCompletionHandler:^(ATTrackingManagerAuthorizationStatus status) {
+            
+            NSLog(@"Track: %@", status == ATTrackingManagerAuthorizationStatusRestricted ? @"<restricted>" : status == ATTrackingManagerAuthorizationStatusDenied ? @"<not granted>" : status == ATTrackingManagerAuthorizationStatusAuthorized ? @"<granted>" : @"<?>");
+        }];
+    }
+    else
+    {
+        NSLog(@"Track: <granted>");
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
