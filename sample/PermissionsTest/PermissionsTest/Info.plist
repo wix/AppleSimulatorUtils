@@ -25,15 +25,15 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Zan-Gief</string>
 	<key>NSHealthShareUsageDescription</key>
-	<string>Please provide health stuff please</string>
+	<string>My heart will go on...</string>
 	<key>NSHealthUpdateUsageDescription</key>
-	<string>Please provide health stuff please</string>
+	<string>My heart will go on...</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Gief</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Come on</string>
-    <key>NSUserTrackingUsageDescription</key>
-    <string>Please allow tracking</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>Stalker Alert!!1</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

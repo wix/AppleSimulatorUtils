@@ -149,31 +149,68 @@ static NSArray* filteredDeviceList(NSArray* simulatorDevices, NSPredicate* filte
 
 
 /*
- As of iOS 10.3:
+ strings /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/PrivateFrameworks/TCC.framework/TCC | grep kTCCService
  
- -kTCCServiceAll
- -kTCCServiceAddressBook
- +kTCCServiceCalendar
- +kTCCServiceReminders
- ?kTCCServiceTwitter
- ?kTCCServiceFacebook
- ?kTCCServiceSinaWeibo
- ?kTCCServiceLiverpool
- ?kTCCServiceUbiquity
- ?kTCCServiceTencentWeibo
- ?kTCCServiceShareKit
- +kTCCServicePhotos
- ?kTCCServiceBluetoothPeripheral
- +kTCCServiceMicrophone
- +kTCCServiceCamera
- +kTCCServiceMotion
- ?kTCCServiceKeyboardNetwork
- +kTCCServiceWillow
- +kTCCServiceMediaLibrary
- +kTCCServiceSpeechRecognition
- +kTCCServiceMSO
- +kTCCServiceSiri
- ?kTCCServiceCalls
+ As of iOS 14.2:
+ 
+ kTCCServiceAll
+ kTCCServiceAddressBook
+ kTCCServiceContactsLimited
+ kTCCServiceContactsFull
+ kTCCServiceCalendar
+ kTCCServiceReminders
+ kTCCServiceTwitter
+ kTCCServiceFacebook
+ kTCCServiceSinaWeibo
+ kTCCServiceLiverpool
+ kTCCServiceUbiquity
+ kTCCServiceTencentWeibo
+ kTCCServiceShareKit
+ kTCCServicePhotos
+ kTCCServicePhotosAdd
+ kTCCServiceMicrophone
+ kTCCServiceCamera
+ kTCCServiceWillow
+ kTCCServiceMediaLibrary
+ kTCCServiceSiri
+ kTCCServiceMotion
+ kTCCServiceSpeechRecognition
+ kTCCServiceUserTracking
+ kTCCServiceBluetoothAlways
+ kTCCServiceWebKitIntelligentTrackingPrevention
+ kTCCServicePrototype3Rights
+ kTCCServicePrototype4Rights
+ kTCCServiceBluetoothPeripheral
+ kTCCServiceBluetoothWhileInUse
+ kTCCServiceKeyboardNetwork
+ kTCCServiceMSO
+ kTCCServiceCalls
+ kTCCServiceFaceID
+ kTCCServiceSensorKitMotion
+ kTCCServiceSensorKitWatchMotion
+ kTCCServiceSensorKitLocationMetrics
+ kTCCServiceSensorKitAmbientLightSensor
+ kTCCServiceSensorKitWatchAmbientLightSensor
+ kTCCServiceSensorKitWatchHeartRate
+ kTCCServiceSensorKitWatchOnWristState
+ kTCCServiceSensorKitKeyboardMetrics
+ kTCCServiceSensorKitWatchPedometer
+ kTCCServiceSensorKitPedometer
+ kTCCServiceSensorKitWatchFallStats
+ kTCCServiceSensorKitWatchForegroundAppCategory
+ kTCCServiceSensorKitForegroundAppCategory
+ kTCCServiceSensorKitWatchSpeechMetrics
+ kTCCServiceSensorKitSpeechMetrics
+ kTCCServiceSensorKitMotionHeartRate
+ kTCCServiceSensorKitOdometer
+ kTCCServiceSensorKitElevation
+ kTCCServiceSensorKitStrideCalibration
+ kTCCServiceSensorKitDeviceUsage
+ kTCCServiceSensorKitPhoneUsage
+ kTCCServiceSensorKitMessageUsage
+ kTCCServiceSensorKitFacialMetrics
+ kTCCServiceExposureNotification
+ kTCCServiceExposureNotificationRegion
  */
 
 static void assertStringInArrayValues(NSString* str, NSArray* values, int errorCode, NSString* failureMessage)
@@ -226,6 +263,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		@"motion": @"kTCCServiceMotion",
 		@"siri": @"kTCCServiceSiri",
 		@"speech": @"kTCCServiceSpeechRecognition",
+		@"userTracking": @"kTCCServiceUserTracking",
 	};
 	
 	NSArray<NSString*>* parsedArguments = [permissionsArgument componentsSeparatedByString:@","];
@@ -458,6 +496,7 @@ int main(int argc, const char* argv[]) {
 						@"reminders=YES|NO|unset",
 						@"siri=YES|NO|unset",
 						@"speech=YES|NO|unset",
+						@"userTracking=YES|NO|unset (iOS/tvOS 14.0 and above)"
 					]
 			}]);
 		
