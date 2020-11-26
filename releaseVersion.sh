@@ -61,7 +61,7 @@ mkdir -p "${BOTTLE_DIR}"
 pushd .
 cd bottle
 
-BOTTLES=( "catalina" "mojave" "high_sierra" "sierra", "big_sur", "arm64_big_sur" )
+BOTTLES=( "catalina" "mojave" "high_sierra" "sierra" "big_sur" "arm64_big_sur" )
 for BOTTLE in "${BOTTLES[@]}"
 do
 	BOTTLE_TGZ_FILE="applesimutils-${VERSION}.${BOTTLE}.bottle.tar.gz"
