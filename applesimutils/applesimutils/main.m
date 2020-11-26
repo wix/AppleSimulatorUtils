@@ -11,6 +11,7 @@
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
 #import "SetHealthKitPermission.h"
+#import "ClearMedia.h"
 #import "ClearKeychain.h"
 #import "LNOptionsParser.h"
 #import "SimUtils.h"
@@ -417,6 +418,7 @@ int main(int argc, const char* argv[]) {
 			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"setPermissions" shortcut:@"sp" valueRequirement:LNUsageOptionRequirementRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
 			[LNUsageOption optionWithName:@"clearKeychain" shortcut:@"ck" valueRequirement:LNUsageOptionRequirementNone description:@"Clears the simulator's keychain"],
+			[LNUsageOption optionWithName:@"clearMedia" shortcut:@"cm" valueRequirement:LNUsageOptionRequirementNone description:@"Clears the simulator's media"],
 			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:LNUsageOptionRequirementNone description:@"Restarts SpringBoard"],
 			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:LNUsageOptionRequirementRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
@@ -471,6 +473,7 @@ int main(int argc, const char* argv[]) {
 		   ![settings objectForKey:@"setPermissions"] &&
 		   ![settings boolForKey:@"restartSB"] &&
 		   ![settings boolForKey:@"clearKeychain"] &&
+		   ![settings boolForKey:@"clearMedia"] &&
 		   ![settings objectForKey:@"list"] &&
 		   ![settings objectForKey:@"paths"] &&
 		   ![settings objectForKey:@"biometricEnrollment"] &&
@@ -683,6 +686,13 @@ int main(int argc, const char* argv[]) {
 				if([settings boolForKey:@"clearKeychain"])
 				{
 					performClearKeychainPass(simulatorId);
+					
+					needsSpringBoardRestart = YES;
+				}
+				
+				if([settings boolForKey:@"clearMedia"])
+				{
+					performClearMediaPass(simulatorId);
 					
 					needsSpringBoardRestart = YES;
 				}

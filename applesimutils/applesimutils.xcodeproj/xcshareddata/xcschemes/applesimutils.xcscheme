@@ -84,6 +84,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--clearMedia"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--setPermissions &quot;photos=limited, notifications=YES, reminders=YES, location=inuse&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -109,7 +113,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--list"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "--restartSB"
