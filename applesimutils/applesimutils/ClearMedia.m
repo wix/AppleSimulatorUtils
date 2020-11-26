@@ -14,7 +14,7 @@ extern NSURL* assetsdURL(void)
 	static NSURL *assetsdURL;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		assetsdURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.mobileassetd"];
+		assetsdURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.assetsd"];
 	});
 	return assetsdURL;
 }
@@ -34,7 +34,6 @@ static void assetsdCtl(NSString* simulatorId, BOOL stop)
 void performClearMediaPass(NSString* simulatorIdentifier)
 {
 	assetsdCtl(simulatorIdentifier, YES);
-	
 	NSURL* mediaURL = [[SimUtils dataURLForSimulatorId:simulatorIdentifier] URLByAppendingPathComponent:@"Media"];
 	[NSFileManager.defaultManager removeItemAtURL:[mediaURL URLByAppendingPathComponent:@"DCIM"] error:NULL];
 	[NSFileManager.defaultManager removeItemAtURL:[mediaURL URLByAppendingPathComponent:@"PhotoData"] error:NULL];
