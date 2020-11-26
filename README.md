@@ -23,39 +23,45 @@ Usage Examples:
     applesimutils --booted --biometricMatch
 
 Options:
-    --byId, -id                    Filters simulators by unique device identifier (UDID)
-    --byName, -n                   Filters simulators by name
-    --byType, -t                   Filters simulators by device type
-    --byOS, -o                     Filters simulators by operating system
-    --booted, -bt                  Filters simulators by booted status
-    --list, -l                     Lists available simulators
-    --setPermissions, -sp          Sets the specified permissions and restarts SpringBoard for the changes to take effect
-    --clearKeychain, -ck           Clears the simulator's keychain
-    --restartSB, -sb               Restarts SpringBoard
-    --biometricEnrollment, -be     Enables or disables biometric (Face ID/Touch ID) enrollment.
-    --biometricMatch, -bm          Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)
-    --biometricNonmatch, -bnm      Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)
-    --bundle, -b                   The app bundle identifier
-    --maxResults                   Limits the number of results returned from --list
-    --version, -v                  Prints version
-    --help, -h                     Prints usage
+    --byId, -id                   Filters simulators by unique device identifier (UDID)
+    --byName, -n                  Filters simulators by name
+    --byType, -t                  Filters simulators by device type
+    --byOS, -o                    Filters simulators by operating system
+    --booted, -bt                 Filters simulators by booted status
+
+    --list, -l                    Lists available simulators
+    --bundle, -b                  The app bundle identifier
+    --maxResults                  Limits the number of results returned from --list
+
+    --setPermissions, -sp         Sets the specified permissions and restarts SpringBoard for the changes to take effect
+    --clearKeychain, -ck          Clears the simulator's keychain
+    --clearMedia, -cm             Clears the simulator's media
+    --restartSB, -sb              Restarts SpringBoard
+
+    --biometricEnrollment, -be    Enables or disables biometric (Face ID/Touch ID) enrollment.
+    --biometricMatch, -bm         Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)
+    --biometricNonmatch, -bnm     Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)
+
+    --version, -v                 Prints version
+    --help, -h                    Prints usage
 
 Available Permissions:
     calendar=YES|NO|unset
     camera=YES|NO|unset
     contacts=YES|NO|unset
     faceid=YES|NO|unset
-    health=YES|NO|unset (iOS 12.0 and above)
+    health=YES|NO|unset (iOS/tvOS 12.0 and above)
     homekit=YES|NO|unset
     location=always|inuse|never|unset
     medialibrary=YES|NO|unset
     microphone=YES|NO|unset
     motion=YES|NO|unset
     notifications=YES|NO|unset
-    photos=YES|NO|unset
+    photos=YES|NO|limited|unset (“limited” supported on iOS/tvOS 14.0 and above)
     reminders=YES|NO|unset
     siri=YES|NO|unset
     speech=YES|NO|unset
+    userTracking=YES|NO|unset (iOS/tvOS 14.0 and above)
 ```
 
 ## Troubleshooting
