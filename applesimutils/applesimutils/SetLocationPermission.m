@@ -35,6 +35,8 @@ static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 
 + (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
 {
+	LNLog(LNLogLevelDebug, @"Setting location permission");
+	
 	NSURL* plistURL = [[SimUtils libraryURLForSimulatorId:simulatorId] URLByAppendingPathComponent:@"Caches/locationd/clients.plist"];
 	
 	NSData* plistData = [NSData dataWithContentsOfURL:plistURL];

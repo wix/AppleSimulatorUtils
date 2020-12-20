@@ -137,6 +137,8 @@
 
 + (BOOL)setPermisionStatus:(NSString*)status forService:(NSString*)service bundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId operatingSystemVersion:(NSOperatingSystemVersion)operatingSystemVersion error:(NSError**)error;
 {
+	LNLog(LNLogLevelDebug, @"Setting service “%@” permission", service);
+	
 	return [self _changeAccessToService:service simulatorId:simulatorId operatingSystemVersion:operatingSystemVersion bundleIdentifier:bundleIdentifier status:status error:error];
 }
 

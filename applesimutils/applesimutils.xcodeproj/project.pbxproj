@@ -23,6 +23,7 @@
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 		39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 39676AD51F94BE4100018548 /* ClearKeychain.m */; };
+		39A57000258F3FF90067D86B /* DTXLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A56FFF258F3FF90067D86B /* DTXLogging.m */; };
 		39EAF80624E2F008003F86C3 /* NSTask+InputOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EAF80524E2F008003F86C3 /* NSTask+InputOutput.m */; };
 /* End PBXBuildFile section */
 
@@ -131,6 +132,9 @@
 		395046D71EA72F1000557294 /* SimUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimUtils.m; sourceTree = "<group>"; };
 		39676AD41F94BE4100018548 /* ClearKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClearKeychain.h; sourceTree = "<group>"; };
 		39676AD51F94BE4100018548 /* ClearKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClearKeychain.m; sourceTree = "<group>"; };
+		39A56FF8258F3FF90067D86B /* DTXLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTXLogging.h; path = ../../ObjCCLIInfra/DTXLoggingInfra/DTXLogging.h; sourceTree = "<group>"; };
+		39A56FFF258F3FF90067D86B /* DTXLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DTXLogging.m; path = ../../ObjCCLIInfra/DTXLoggingInfra/DTXLogging.m; sourceTree = "<group>"; };
+		39A57002258F416F0067D86B /* DTXLoggingSubsystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DTXLoggingSubsystem.h; sourceTree = "<group>"; };
 		39EAF80424E2F008003F86C3 /* NSTask+InputOutput.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSTask+InputOutput.h"; sourceTree = "<group>"; };
 		39EAF80524E2F008003F86C3 /* NSTask+InputOutput.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSTask+InputOutput.m"; sourceTree = "<group>"; };
 		39FE99C31F8A6B17006DF8EF /* version.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = version.h; sourceTree = "<group>"; };
@@ -172,6 +176,9 @@
 				39470A5322BA878000BDFA5C /* fmdb */,
 				391596FF1E8CDD0500FDD6F5 /* Handlers */,
 				3935103B1FCB9A0D001FB466 /* GBCli */,
+				39A56FF8258F3FF90067D86B /* DTXLogging.h */,
+				39A56FFF258F3FF90067D86B /* DTXLogging.m */,
+				39A57002258F416F0067D86B /* DTXLoggingSubsystem.h */,
 				393510371FCB9972001FB466 /* LNLog.h */,
 				393510381FCB9972001FB466 /* LNLog.m */,
 				393510351FCB9972001FB466 /* LNOptionsParser.h */,
@@ -280,7 +287,7 @@
 		391596D41E8CBAA900FDD6F5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1150;
+				LastUpgradeCheck = 1230;
 				ORGANIZATIONNAME = Wix;
 				TargetAttributes = {
 					391596DB1E8CBAA900FDD6F5 = {
@@ -384,6 +391,7 @@
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,
 				395046D81EA72F1000557294 /* SimUtils.m in Sources */,
 				391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */,
+				39A57000258F3FF90067D86B /* DTXLogging.m in Sources */,
 				393510391FCB9972001FB466 /* LNOptionsParser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -425,6 +433,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -484,6 +493,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

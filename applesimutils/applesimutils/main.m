@@ -23,6 +23,8 @@ static char* const __version =
 
 static void bootSimulator(NSString* simulatorId)
 {
+	LNLog(LNLogLevelDebug, @"Booting simulator “%@”", simulatorId);
+	
 	NSTask* bootTask = [NSTask new];
 	bootTask.launchPath = [SimUtils xcrunURL].path;
 	bootTask.arguments = @[@"simctl", @"boot", simulatorId];
@@ -44,6 +46,8 @@ static void bootSimulator(NSString* simulatorId)
 
 static void shutdownSimulator(NSString* simulatorId)
 {
+	LNLog(LNLogLevelDebug, @"Shutting down simulator “%@”", simulatorId);
+	
 	NSTask* shutdownTask = [NSTask new];
 	shutdownTask.launchPath = [SimUtils xcrunURL].path;
 	shutdownTask.arguments = @[@"simctl", @"shutdown", simulatorId];
@@ -53,12 +57,14 @@ static void shutdownSimulator(NSString* simulatorId)
 
 static NSArray* simulatorDevicesList()
 {
+	LNLog(LNLogLevelDebug, @"Obtaining simulator device list");
+	
 	NSTask* listTask = [NSTask new];
 	listTask.launchPath = [SimUtils xcrunURL].path;
 	listTask.arguments = @[@"simctl", @"list", @"--json"];
 	
 	NSData* jsonData;
-	[listTask launchAndWaitUntilExitReturningStandardOutputData:&jsonData standardRrrorData:NULL];
+	[listTask launchAndWaitUntilExitReturningStandardOutputData:&jsonData standardErrorData:NULL];
 	
 	NSError* error;
 	NSDictionary* list = [NSJSONSerialization JSONObjectWithData:jsonData options:NSJSONReadingMutableContainers error:&error];
@@ -250,6 +256,8 @@ static NSOperatingSystemVersion operatingSystemFromSimulator(NSDictionary* simul
 
 static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simulatorIdentifier, NSString* bundleIdentifier, NSDictionary* simulator)
 {
+	LNLog(LNLogLevelDebug, @"Performing permission pass");
+	
 	NSDictionary<NSString*, NSString*>* argumentToAppleService = @{
 		@"calendar": @"kTCCServiceCalendar",
 		@"camera": @"kTCCServiceCamera",

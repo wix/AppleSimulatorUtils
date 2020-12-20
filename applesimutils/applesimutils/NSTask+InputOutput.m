@@ -10,7 +10,7 @@
 
 @implementation NSTask (InputOutput)
 
-- (int)launchAndWaitUntilExitReturningStandardOutputData:(out NSData* __autoreleasing __nullable * __nullable)stdOutData standardRrrorData:(out NSData *__autoreleasing  _Nullable * __nullable)stdErrData
+- (int)launchAndWaitUntilExitReturningStandardOutputData:(out NSData* __autoreleasing __nullable * __nullable)stdOutData standardErrorData:(out NSData *__autoreleasing  _Nullable * __nullable)stdErrData
 {
 	NSPipe* outPipe = [NSPipe pipe];
 	NSMutableData* outData = [NSMutableData new];
@@ -34,7 +34,9 @@
 		
 		dispatch_semaphore_signal(waitForTermination);
 	};
-
+	
+	LNLog(LNLogLevelDebug, @"Running “%@”%@", self.launchPath, self.arguments.count > 0 ? [NSString stringWithFormat:@" with argument%@: “%@”", self.arguments.count > 1 ? @"s" : @"", [self.arguments componentsJoinedByString:@" "]] : @"");
+	
 	[self launch];
 	
 	dispatch_semaphore_wait(waitForTermination, DISPATCH_TIME_FOREVER);
@@ -57,7 +59,7 @@
 	NSData* stdOutData;
 	NSData* stdErrData;
 	
-	int rv = [self launchAndWaitUntilExitReturningStandardOutputData:&stdOutData standardRrrorData:&stdErrData];
+	int rv = [self launchAndWaitUntilExitReturningStandardOutputData:&stdOutData standardErrorData:&stdErrData];
 	
 	if(stdOut != NULL)
 	{

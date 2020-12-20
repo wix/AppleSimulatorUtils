@@ -19,6 +19,8 @@
 
 + (BOOL)setHealthKitPermission:(HealthKitPermissionStatus)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId osVersion:(NSOperatingSystemVersion)osVersion needsSBRestart:(BOOL*)needsSBRestart error:(NSError**)error
 {
+	LNLog(LNLogLevelDebug, @"Setting HealthKit permission");
+	
 	if(osVersion.majorVersion < 12)
 	{
 		*error = [NSError errorWithDomain:@"SetHealthKitPermissionError" code:0 userInfo:@{NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Setting health permission is supported for iOS 12 simulators and above (got %@.%@)", @(osVersion.majorVersion), @(osVersion.minorVersion)]}];

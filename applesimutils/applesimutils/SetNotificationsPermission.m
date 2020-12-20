@@ -13,6 +13,8 @@
 
 + (BOOL)setNotificationsStatus:(NSString*)status forBundleIdentifier:(NSString*)bundleIdentifier displayName:(NSString*)displayName simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
 {
+	LNLog(LNLogLevelDebug, @"Setting notification permission");
+	
 	if([status isEqualToString:@"unset"])
 	{
 		return [self _setSectionInfoData:nil forBundleIdentifier:bundleIdentifier displayName:displayName simulatorIdentifier:simulatorId error:error];
