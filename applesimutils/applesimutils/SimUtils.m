@@ -97,7 +97,10 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 	getBundlePathTask.arguments = @[@"simctl", @"get_app_container", simulatorId, bundleId, @"app"];
 	
 	NSString* bundlePath;
-	[getBundlePathTask launchAndWaitUntilExitReturningStandardOutput:&bundlePath standardRrror:NULL];
+	if(0 != [getBundlePathTask launchAndWaitUntilExitReturningStandardOutput:&bundlePath standardRrror:NULL])
+	{
+		return nil;
+	}
 		
 	NSURL* bundleURL = [NSURL fileURLWithPath:bundlePath];
 	

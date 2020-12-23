@@ -41,9 +41,21 @@
 	
 	dispatch_semaphore_wait(waitForTermination, DISPATCH_TIME_FOREVER);
 	
+	NSString* stdOutStr = [[[NSString alloc] initWithData:outData encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+	if(stdOutStr.length > 0)
+	{
+		LNLog(LNLogLevelDebug, @"Got output:\n%@", stdOutStr);
+	}
+	
 	if(stdOutData != NULL)
 	{
 		*stdOutData = outData;
+	}
+	
+	NSString* stdErrStr = [[[NSString alloc] initWithData:errData encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
+	if(self.terminationStatus != 0 && stdErrStr.length > 0)
+	{
+		LNLog(LNLogLevelError, @"Got error:\n%@", stdErrStr);
 	}
 	
 	if(stdErrData != NULL)
@@ -61,12 +73,12 @@
 	
 	int rv = [self launchAndWaitUntilExitReturningStandardOutputData:&stdOutData standardErrorData:&stdErrData];
 	
-	if(stdOut != NULL)
+	if(stdOutData.length > 0 && stdOut != NULL)
 	{
 		*stdOut = [[[NSString alloc] initWithData:stdOutData encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 	}
 	
-	if(stdErr != NULL)
+	if(stdErrData.length > 0 && stdErr != NULL)
 	{
 		*stdErr = [[[NSString alloc] initWithData:stdErrData encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 	}

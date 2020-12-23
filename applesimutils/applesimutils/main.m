@@ -60,7 +60,7 @@ static NSArray* simulatorDevicesList()
 	LNLog(LNLogLevelDebug, @"Obtaining simulator device list");
 	
 	NSTask* listTask = [NSTask new];
-	listTask.launchPath = [SimUtils xcrunURL].path;
+	listTask.launchPath = SimUtils.xcrunURL.path;
 	listTask.arguments = @[@"simctl", @"list", @"--json"];
 	
 	NSData* jsonData;
@@ -707,7 +707,7 @@ int main(int argc, const char* argv[]) {
 				NSString* simulatorId = simulator[@"udid"];
 				
 				BOOL needsSimShutdown = NO;
-				if([simulator[@"state"] isEqualToString:@"Shutdown"] && [SetServicePermission isSimulatorReadyForPersmissions:simulatorId] == NO)
+				if([simulator[@"state"] isEqualToString:@"Shutdown"] && [settings objectForKey:@"setPermissions"] != nil)
 				{
 					needsSimShutdown = YES;
 					
@@ -782,12 +782,12 @@ int main(int argc, const char* argv[]) {
 					sendBiometricMatch(simulatorId, ASUBiometricTypeFinger, NO);
 				}
 				
-				if(needsSpringBoardRestart)
+				if(needsSpringBoardRestart == YES && needsSimShutdown == NO)
 				{
 					[SimUtils restartSpringBoardForSimulatorId:simulatorId];
 				}
 				
-				if(needsSimShutdown)
+				if(needsSimShutdown == YES)
 				{
 					shutdownSimulator(simulatorId);
 				}
