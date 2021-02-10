@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+### User running this script must have git permission, and have https://cli.github.com/ installed and authenticated.
+
 # Assumes gh is installed and logged in
 
 if [ "$#" -ne 1 ]; then
