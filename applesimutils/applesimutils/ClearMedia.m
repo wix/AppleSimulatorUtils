@@ -25,7 +25,7 @@ static void assetsdCtl(NSString* simulatorId, BOOL stop)
 	NSCAssert(locationdDaemonURL != nil, @"Launch daemon “com.apple.mobileassetd” not found. Please open an issue.");
 	
 	NSTask* rebootTask = [NSTask new];
-	rebootTask.launchPath = [SimUtils xcrunURL].path;
+	rebootTask.launchPath = SimUtils.xcrunURL.path;
 	rebootTask.arguments = @[@"simctl", @"spawn", simulatorId, @"launchctl", stop ? @"unload" : @"load", locationdDaemonURL.path];
 	[rebootTask launch];
 	[rebootTask waitUntilExit];
