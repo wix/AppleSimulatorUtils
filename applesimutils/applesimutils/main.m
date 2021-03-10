@@ -11,6 +11,7 @@
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
 #import "SetHealthKitPermission.h"
+#import "SetSimulatorLocation.h"
 #import "ClearMedia.h"
 #import "ClearKeychain.h"
 #import "LNOptionsParser.h"
@@ -448,7 +449,8 @@ int main(int argc, const char* argv[]) {
 			@"%@ --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 			@"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]",
 			@"%@ --booted --biometricEnrollment <YES/NO>",
-			@"%@ --booted --biometricMatch"
+			@"%@ --booted --biometricMatch",
+			@"%@ --booted --setLocation \"[51.51915, -0.12907]\""
 		]);
 		
 		LNUsageSetOptions(@[
@@ -467,9 +469,11 @@ int main(int argc, const char* argv[]) {
 			[LNUsageOption optionWithName:@"clearMedia" shortcut:@"cm" valueRequirement:LNUsageOptionRequirementNone description:@"Clears the simulator's media"],
 			[LNUsageOption optionWithName:@"restartSB" shortcut:@"sb" valueRequirement:LNUsageOptionRequirementNone description:@"Restarts SpringBoard"],
 			LNUsageOption.emptyOption,
-			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:LNUsageOptionRequirementRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment."],
+			[LNUsageOption optionWithName:@"biometricEnrollment" shortcut:@"be" valueRequirement:LNUsageOptionRequirementRequired description:@"Enables or disables biometric (Face ID/Touch ID) enrollment"],
 			[LNUsageOption optionWithName:@"biometricMatch" shortcut:@"bm" valueRequirement:LNUsageOptionRequirementNone description:@"Approves a biometric authentication request with a matching biometric feature (e.g. face or finger)"],
 			[LNUsageOption optionWithName:@"biometricNonmatch" shortcut:@"bnm" valueRequirement:LNUsageOptionRequirementNone description:@"Fails a biometric authentication request with a non-matching biometric feature (e.g. face or finger)"],
+			LNUsageOption.emptyOption,
+			[LNUsageOption optionWithName:@"setLocation" shortcut:@"sl" valueRequirement:LNUsageOptionRequirementRequired description:@"Sets the simulated location; the latitude and longitude should be provided as two numbers in JSON array, or \"none\" to clear the simulated location"],
 			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"version" shortcut:@"v" valueRequirement:LNUsageOptionRequirementNone description:@"Prints version"],
 		]);
@@ -524,12 +528,13 @@ int main(int argc, const char* argv[]) {
 		   ![settings objectForKey:@"list"] &&
 		   ![settings objectForKey:@"paths"] &&
 		   ![settings objectForKey:@"biometricEnrollment"] &&
-		   ![settings objectForKey:@"biometricMatch"] &&
-		   ![settings objectForKey:@"biometricNonmatch"] &&
+		   ![settings boolForKey:@"biometricMatch"] &&
+		   ![settings boolForKey:@"biometricNonmatch"] &&
 		   ![settings boolForKey:@"matchFace"] &&
 		   ![settings boolForKey:@"unmatchFace"] &&
 		   ![settings boolForKey:@"matchFinger"] &&
-		   ![settings boolForKey:@"unmatchFinger"]
+		   ![settings boolForKey:@"unmatchFinger"] &&
+		   ![settings objectForKey:@"setLocation"]
 		   )
 		{
 			LNUsagePrintMessage(nil, LNLogLevelStdOut);
@@ -701,6 +706,35 @@ int main(int argc, const char* argv[]) {
 				}];
 				
 				exit(0);
+			}
+			
+			NSString* setLocationParam = [settings objectForKey:@"setLocation"];
+			if(setLocationParam != nil && filteredSimulators.count > 0)
+			{
+				NSArray<NSString*>* simulatorUDIDs = [filteredSimulators valueForKey:@"udid"];
+				
+				if([setLocationParam isKindOfClass:NSString.class] && [setLocationParam isEqualToString:@"none"])
+				{
+					[SetSimulatorLocation clearLocationForSimulatorUDIDs:simulatorUDIDs];
+				}
+				else
+				{
+					NSError* jsonError = nil;
+					NSArray* locationArgs = [NSJSONSerialization JSONObjectWithData:[setLocationParam dataUsingEncoding:NSUTF8StringEncoding] options:0 error:&jsonError];
+					if(jsonError != nil)
+					{
+						LNUsagePrintMessage([NSString stringWithFormat:@"Error: Unable to parse location JSON: %@.", jsonError.localizedDescription], LNLogLevelError);
+						
+						exit(-2);
+					}
+					if(locationArgs.count != 2)
+					{
+						LNUsagePrintMessage(@"Error: Invalid number of arguments in JSON.", LNLogLevelError);
+						
+						exit(-2);
+					}
+					[SetSimulatorLocation setLatitude:[locationArgs.firstObject doubleValue] longitude:[locationArgs.lastObject doubleValue] forSimulatorUDIDs:simulatorUDIDs];
+				}
 			}
 			
 			[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
