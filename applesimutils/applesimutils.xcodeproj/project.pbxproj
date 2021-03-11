@@ -23,6 +23,7 @@
 		395046D51EA725FF00557294 /* SetLocationPermission.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D41EA725FF00557294 /* SetLocationPermission.m */; };
 		395046D81EA72F1000557294 /* SimUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 395046D71EA72F1000557294 /* SimUtils.m */; };
 		39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */ = {isa = PBXBuildFile; fileRef = 39676AD51F94BE4100018548 /* ClearKeychain.m */; };
+		3976EA0225F8EEE800E4BD78 /* SetSimulatorLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3976E9FA25F8EEE800E4BD78 /* SetSimulatorLocation.m */; };
 		39A57000258F3FF90067D86B /* DTXLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 39A56FFF258F3FF90067D86B /* DTXLogging.m */; };
 		39EAF80624E2F008003F86C3 /* NSTask+InputOutput.m in Sources */ = {isa = PBXBuildFile; fileRef = 39EAF80524E2F008003F86C3 /* NSTask+InputOutput.m */; };
 /* End PBXBuildFile section */
@@ -132,6 +133,8 @@
 		395046D71EA72F1000557294 /* SimUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SimUtils.m; sourceTree = "<group>"; };
 		39676AD41F94BE4100018548 /* ClearKeychain.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ClearKeychain.h; sourceTree = "<group>"; };
 		39676AD51F94BE4100018548 /* ClearKeychain.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClearKeychain.m; sourceTree = "<group>"; };
+		3976E9FA25F8EEE800E4BD78 /* SetSimulatorLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetSimulatorLocation.m; sourceTree = "<group>"; };
+		3976EA0125F8EEE800E4BD78 /* SetSimulatorLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetSimulatorLocation.h; sourceTree = "<group>"; };
 		39A56FF8258F3FF90067D86B /* DTXLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DTXLogging.h; path = ../../ObjCCLIInfra/DTXLoggingInfra/DTXLogging.h; sourceTree = "<group>"; };
 		39A56FFF258F3FF90067D86B /* DTXLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DTXLogging.m; path = ../../ObjCCLIInfra/DTXLoggingInfra/DTXLogging.m; sourceTree = "<group>"; };
 		39A57002258F416F0067D86B /* DTXLoggingSubsystem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DTXLoggingSubsystem.h; sourceTree = "<group>"; };
@@ -210,6 +213,8 @@
 				391EBF301E911CAA0009AACD /* SetServicePermission.m */,
 				395046D61EA72F1000557294 /* SimUtils.h */,
 				395046D71EA72F1000557294 /* SimUtils.m */,
+				3976EA0125F8EEE800E4BD78 /* SetSimulatorLocation.h */,
+				3976E9FA25F8EEE800E4BD78 /* SetSimulatorLocation.m */,
 			);
 			name = Handlers;
 			sourceTree = "<group>";
@@ -388,6 +393,7 @@
 				39EAF80624E2F008003F86C3 /* NSTask+InputOutput.m in Sources */,
 				393510481FCB9A1E001FB466 /* GBPrint.m in Sources */,
 				39676AD61F94BE4100018548 /* ClearKeychain.m in Sources */,
+				3976EA0225F8EEE800E4BD78 /* SetSimulatorLocation.m in Sources */,
 				391596E01E8CBAA900FDD6F5 /* main.m in Sources */,
 				395046D81EA72F1000557294 /* SimUtils.m in Sources */,
 				391597021E8CDD1D00FDD6F5 /* SetNotificationsPermission.m in Sources */,
