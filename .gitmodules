@@ -1,9 +1,9 @@
 [submodule "homebrew-brew"]
 	path = homebrew-brew
-	url = https://github.com/wix/homebrew-brew
+	url = git@github.com:wix/homebrew-brew.git
 [submodule "ObjCCLIInfra"]
 	path = ObjCCLIInfra
-	url = https://github.com/wix/ObjCCLIInfra.git
+	url = git@github.com:wix/ObjCCLIInfra.git
 [submodule "fmdb"]
 	path = fmdb
-	url = https://LeoNatan@github.com/ccgus/fmdb.git
+	url = git@github.com:ccgus/fmdb.git
