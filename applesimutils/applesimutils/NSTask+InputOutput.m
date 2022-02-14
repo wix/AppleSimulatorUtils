@@ -12,34 +12,51 @@
 
 - (int)launchAndWaitUntilExitReturningStandardOutputData:(out NSData* __autoreleasing __nullable * __nullable)stdOutData standardErrorData:(out NSData *__autoreleasing  _Nullable * __nullable)stdErrData
 {
+	dispatch_semaphore_t waitForStdout = dispatch_semaphore_create(0);
+	dispatch_semaphore_t waitForStderr = dispatch_semaphore_create(0);
+	dispatch_semaphore_t waitForTaskTermination = dispatch_semaphore_create(0);
+	
 	NSPipe* outPipe = [NSPipe pipe];
 	NSMutableData* outData = [NSMutableData new];
 	self.standardOutput = outPipe;
 	outPipe.fileHandleForReading.readabilityHandler = ^(NSFileHandle * _Nonnull fileHandle) {
-		[outData appendData:fileHandle.availableData];
+		NSData* newData = [fileHandle readDataOfLength:NSUIntegerMax];
+		
+		if (newData.length == 0) {
+			dispatch_semaphore_signal(waitForStdout);
+		} else {
+			[outData appendData:newData];
+		}
 	};
 	
 	NSPipe* errPipe = [NSPipe pipe];
 	NSMutableData* errData = [NSMutableData new];
 	self.standardError = errPipe;
 	errPipe.fileHandleForReading.readabilityHandler = ^(NSFileHandle * _Nonnull fileHandle) {
-		[errData appendData:fileHandle.availableData];
+		NSData* newData = [fileHandle readDataOfLength:NSUIntegerMax];
+		
+		if (newData.length == 0) {
+			dispatch_semaphore_signal(waitForStderr);
+		} else {
+			[errData appendData:newData];
+		}
 	};
 	
-	dispatch_semaphore_t waitForTermination = dispatch_semaphore_create(0);
-	
 	self.terminationHandler = ^(NSTask* _Nonnull task) {
-		outPipe.fileHandleForReading.readabilityHandler = nil;
-		errPipe.fileHandleForReading.readabilityHandler = nil;
-		
-		dispatch_semaphore_signal(waitForTermination);
+		dispatch_semaphore_signal(waitForTaskTermination);
 	};
 	
 	LNLog(LNLogLevelDebug, @"Running “%@”%@", self.launchPath, self.arguments.count > 0 ? [NSString stringWithFormat:@" with argument%@: “%@”", self.arguments.count > 1 ? @"s" : @"", [self.arguments componentsJoinedByString:@" "]] : @"");
 	
 	[self launch];
 	
-	dispatch_semaphore_wait(waitForTermination, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_wait(waitForStdout, DISPATCH_TIME_FOREVER);
+	dispatch_semaphore_wait(waitForStderr, DISPATCH_TIME_FOREVER);
+	// also wait for the NSTask to terminate, otherwise we can't read terminationStatus
+	dispatch_semaphore_wait(waitForTaskTermination, DISPATCH_TIME_FOREVER);
+	
+	outPipe.fileHandleForReading.readabilityHandler = nil;
+	errPipe.fileHandleForReading.readabilityHandler = nil;
 	
 	NSString* stdOutStr = [[[NSString alloc] initWithData:outData encoding:NSUTF8StringEncoding] stringByTrimmingCharactersInSet:NSCharacterSet.whitespaceAndNewlineCharacterSet];
 	if(stdOutStr.length > 0)
