@@ -8,22 +8,39 @@
 
 #import "SetSimulatorLocation.h"
 
+static NSString * const kLocationNotificationLatitudeKey = @"simulateLocationLatitude";
+static NSString * const kLocationNotificationLongitudeKey = @"simulateLocationLongitude";
+static NSString * const kLocationNotificationDevicesKey = @"simulateLocationDevices";
+static NSString * const kLocationNotificationName = @"com.apple.iphonesimulator.simulateLocation";
+
 @implementation SetSimulatorLocation
 
-+ (void)setLatitude:(double)latitude longitude:(double)longitude forSimulatorUDIDs:(NSArray<NSString*>*)udids
-{
-	[NSDistributedNotificationCenter.defaultCenter postNotificationName:@"com.apple.iphonesimulator.simulateLocation" object:nil userInfo:@{
-		@"simulateLocationLatitude": @(latitude),
-		@"simulateLocationLongitude": @(longitude),
-		@"simulateLocationDevices": udids,
-	}];
++ (void)setLatitude:(double)latitude longitude:(double)longitude
+  forSimulatorUDIDs:(NSArray<NSString *> *)udids {
+  [self postNewLocationNotification:@{
+    kLocationNotificationLatitudeKey: @(latitude),
+    kLocationNotificationLongitudeKey: @(longitude),
+    kLocationNotificationDevicesKey: udids
+  }];
 }
 
-+ (void)clearLocationForSimulatorUDIDs:(NSArray<NSString *> *)udids
-{
-	[NSDistributedNotificationCenter.defaultCenter postNotificationName:@"com.apple.iphonesimulator.simulateLocation" object:nil userInfo:@{
-		@"simulateLocationDevices": udids,
-	}];
++ (void)clearLocationForSimulatorUDIDs:(NSArray<NSString *> *)udids {
+  [self postNewLocationNotification:@{
+    kLocationNotificationDevicesKey: udids
+  }];
+}
+
+/// Post the new location configurations over the distributed notification center.
+///
+/// @note The notification is posted twice as a workaround to overcome the issue of not notifying
+///  the app for the new location that was set on the first attempt after setting a new location
+///  permissions. We post the new location notifications twice, and the location is set on the
+///  second attempt. The mentioned bug also happens when setting the location directly through the
+///  Simulator app (without AppleSimUtils).
++ (void)postNewLocationNotification:(NSDictionary *)info {
+  auto notificationCenter = NSDistributedNotificationCenter.defaultCenter;
+  [notificationCenter postNotificationName:kLocationNotificationName object:nil userInfo:info];
+  [notificationCenter postNotificationName:kLocationNotificationName object:nil userInfo:info];
 }
 
 @end
