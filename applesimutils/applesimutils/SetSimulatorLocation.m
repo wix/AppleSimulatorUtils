@@ -39,8 +39,11 @@ static NSString * const kLocationNotificationName = @"com.apple.iphonesimulator.
 ///  Simulator app (without AppleSimUtils).
 + (void)postNewLocationNotification:(NSDictionary *)info {
   auto notificationCenter = NSDistributedNotificationCenter.defaultCenter;
-  [notificationCenter postNotificationName:kLocationNotificationName object:nil userInfo:info];
-  [notificationCenter postNotificationName:kLocationNotificationName object:nil userInfo:info];
+
+  for (uint i = 0; i < 2; i ++) {
+    [notificationCenter postNotificationName:kLocationNotificationName object:nil userInfo:info
+                          deliverImmediately:YES];
+  }
 }
 
 @end
