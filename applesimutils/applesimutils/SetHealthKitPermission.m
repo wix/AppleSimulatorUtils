@@ -73,8 +73,13 @@
 				[resultSet close];
 			}
 		};
-		
-		if((resultSet = [db executeQuery:@"select ROWID from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
+        auto bundleIdQuery = @"select ROWID from sources where bundle_id == :bundle_id";
+        if(osVersion.majorVersion >= 16)
+        {
+            bundleIdQuery = @"select ROWID from sources where logical_source_id IN(select ROWID from logical_sources where bundle_id == :bundle_id)";
+        }
+
+		if((resultSet = [db executeQuery:bundleIdQuery withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
 		{
 			auto msg = [NSString stringWithFormat:@"Health database failed to execute query: %@", [db lastErrorMessage]];
 			logcontinue(msg);
@@ -113,25 +118,49 @@
 				syncAnchor = @([syncAnchorResultSet intForColumnIndex:0] + 1);
 			}
 			
-			NSMutableString* query = @"uuid, bundle_id, name, source_options, local_device, product_type, deleted, mod_date, provenance, sync_anchor".mutableCopy;
-			NSMutableString* values = @":uuid, :bundle_id, :name, :source_options, :local_device, :product_type, :deleted, :mod_date, :provenance, :sync_anchor".mutableCopy;
-			NSMutableDictionary* params = @{@"uuid": uuidData, @"bundle_id": bundleIdentifier, @"name": bundleIdentifier, @"source_options": @5, @"local_device": @0, @"product_type": @"", @"deleted": @0, @"mod_date": @(NSDate.date.timeIntervalSinceReferenceDate), @"provenance": @0, @"sync_anchor": syncAnchor}.mutableCopy;
-			
-			if(osVersion.majorVersion < 12)
-			{
-				[query appendString:@", sync_primary"];
-				[values appendString:@", :sync_primary"];
-				params[@"sync_primary"] = @1;
-			}
-			
-			if([db executeUpdate:[NSString stringWithFormat:@"insert into sources (%@) VALUES (%@)", query, values] withParameterDictionary:params] == NO)
-			{
-				auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
-				logcontinue(msg);
-			}
+
+            if(osVersion.majorVersion >= 16)
+            {
+                [db beginTransaction];
+                if([db executeUpdate:@"insert into logical_sources (bundle_id) VALUES (:bundle_id)" withParameterDictionary:@{@"bundle_id": bundleIdentifier}] == NO)
+                {
+                    auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+                    logcontinue(msg);
+                }
+
+                NSMutableString* query = @"uuid, name, source_options, local_device, product_type, deleted, mod_date, provenance, sync_anchor, logical_source_id, sync_identity".mutableCopy;
+                NSMutableString* values = @":uuid, :name, :source_options, :local_device, :product_type, :deleted, :mod_date, :provenance, :sync_anchor, (select ROWID from logical_sources where bundle_id == :bundle_id), :sync_identity".mutableCopy;
+                NSMutableDictionary* params = @{@"uuid": uuidData, @"name": bundleIdentifier, @"source_options": @5, @"local_device": @0, @"product_type": @"", @"deleted": @0, @"mod_date": @(NSDate.date.timeIntervalSinceReferenceDate), @"provenance": @0, @"sync_anchor": syncAnchor, @"bundle_id": bundleIdentifier, @"sync_identity": @1}.mutableCopy;
+
+                if([db executeUpdate:[NSString stringWithFormat:@"insert into sources (%@) VALUES (%@)", query, values] withParameterDictionary:params] == NO)
+                {
+                    auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+                    logcontinue(msg);
+                }
+                [db commit];
+            }
+            else
+            {
+                NSMutableString* query = @"uuid, bundle_id, name, source_options, local_device, product_type, deleted, mod_date, provenance, sync_anchor".mutableCopy;
+                NSMutableString* values = @":uuid, :bundle_id, :name, :source_options, :local_device, :product_type, :deleted, :mod_date, :provenance, :sync_anchor".mutableCopy;
+                NSMutableDictionary* params = @{@"uuid": uuidData, @"bundle_id": bundleIdentifier, @"name": bundleIdentifier, @"source_options": @5, @"local_device": @0, @"product_type": @"", @"deleted": @0, @"mod_date": @(NSDate.date.timeIntervalSinceReferenceDate), @"provenance": @0, @"sync_anchor": syncAnchor}.mutableCopy;
+
+                if(osVersion.majorVersion < 12)
+                {
+                    [query appendString:@", sync_primary"];
+                    [values appendString:@", :sync_primary"];
+                    params[@"sync_primary"] = @1;
+                }
+
+                if([db executeUpdate:[NSString stringWithFormat:@"insert into sources (%@) VALUES (%@)", query, values] withParameterDictionary:params] == NO)
+                {
+                    auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+                    logcontinue(msg);
+                }
+            }
 			
 			[resultSet close];
-			if((resultSet = [db executeQuery:@"select ROWID from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
+			if((resultSet = [db executeQuery:bundleIdQuery withParameterDictionary:@{@"bundle_id": bundleIdentifier}]) == nil)
 			{
 				auto msg = [NSString stringWithFormat:@"Health database failed to execute query: %@", [db lastErrorMessage]];
 				logcontinue(msg);
@@ -150,11 +179,29 @@
 		
 		if(permission == HealthKitPermissionStatusUnset)
 		{
-			if([db executeUpdate:@"delete from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}] == NO)
-			{
-				auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
-				logcontinue(msg);
-			}
+            if(osVersion.majorVersion >= 16)
+            {
+                [db beginTransaction];
+                if([db executeUpdate:@"delete from sources where (select ROWID from logical_sources where bundle_id == :bundle_id)" withParameterDictionary:@{@"bundle_id": bundleIdentifier}] == NO)
+                {
+                    auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+                    logcontinue(msg);
+                }
+                if([db executeUpdate:@"delete from logical_sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}] == NO)
+                {
+                    auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+                    logcontinue(msg);
+                }
+                [db commit];
+            }
+            else
+            {
+                if([db executeUpdate:@"delete from sources where bundle_id == :bundle_id" withParameterDictionary:@{@"bundle_id": bundleIdentifier}] == NO)
+                {
+                    auto msg = [NSString stringWithFormat:@"Health database failed to execute update: %@", [db lastErrorMessage]];
+                    logcontinue(msg);
+                }
+            }
 		}
 		else
 		{
