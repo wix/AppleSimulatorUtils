@@ -351,17 +351,20 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		}
 	}];
 	
-	if(success == NO)
-	{
-		if(err == nil)
-		{
-			err = [NSError errorWithDomain:@"AppleSimUtilsError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unknown permission pass error"}];
-		}
-		
-		LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@.", err.localizedDescription], LNLogLevelError);
-		exit(-3);
-	}
-	
+  if(success) {
+    LNUsagePrintMessage(
+        [NSString stringWithFormat:@"Permissions settings performed successfully: %@.",
+         permissionsArgument],
+        LNLogLevelDebug);
+  } else {
+    if(err == nil) {
+      err = [NSError errorWithDomain:@"AppleSimUtilsError" code:0 userInfo:@{NSLocalizedDescriptionKey: @"Unknown permission pass error"}];
+    }
+
+    LNUsagePrintMessage([NSString stringWithFormat:@"Error: %@.", err.localizedDescription], LNLogLevelError);
+    exit(-3);
+  }
+
 	return needsSpringBoardRestart;
 }
 
