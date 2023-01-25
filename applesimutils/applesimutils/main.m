@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SetNotificationsPermission.h"
+#import "SetCriticalAlertPermission.h"
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
 #import "SetHealthKitPermission.h"
@@ -313,6 +314,14 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 			
 			needsSpringBoardRestart |= YES;
 		}
+        else if([permission isEqualToString:@"criticalAlerts"])
+        {
+            assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
+            
+            success = [SetCriticalAlertsPermission setCriticalAlertsStatus:value forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+            
+            needsSpringBoardRestart |= YES;
+        }
 		else if([permission isEqualToString:@"location"])
 		{
 			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
@@ -504,6 +513,7 @@ int main(int argc, const char* argv[]) {
 						@"microphone=YES|NO|unset",
 						@"motion=YES|NO|unset",
 						@"notifications=YES|NO|unset",
+                        @"criticalAlerts=YES|NO|unset",
 						@"photos=YES|NO|limited|unset (“limited” supported on iOS/tvOS 14.0 and above)",
 						@"reminders=YES|NO|unset",
 						@"siri=YES|NO|unset",
