@@ -179,7 +179,7 @@
 		391596DE1E8CBAA900FDD6F5 /* applesimutils */ = {
 			isa = PBXGroup;
 			children = (
-				39470A5322BA878000BDFA5C /* FMDB */,
+				39470A5322BA878000BDFA5C /* fmdb */,
 				391596FF1E8CDD0500FDD6F5 /* Handlers */,
 				3935103B1FCB9A0D001FB466 /* GBCli */,
 				39A56FF8258F3FF90067D86B /* DTXLogging.h */,
@@ -248,12 +248,12 @@
 			name = GBCli;
 			sourceTree = "<group>";
 		};
-		39470A5322BA878000BDFA5C /* FMDB */ = {
+		39470A5322BA878000BDFA5C /* fmdb */ = {
 			isa = PBXGroup;
 			children = (
 				39470A5422BA878700BDFA5C /* fmdb.xcodeproj */,
 			);
-			name = FMDB;
+			name = fmdb;
 			sourceTree = "<group>";
 		};
 		39470A5522BA878700BDFA5C /* Products */ = {
