@@ -104,6 +104,18 @@
 	}];
 }
 
+- (IBAction)_criticalAlerts:(id)sender
+{
+	UNUserNotificationCenter* center = [UNUserNotificationCenter currentNotificationCenter];
+    if (@available(iOS 12.0, *)) {
+        [center requestAuthorizationWithOptions: UNAuthorizationOptionAlert | UNAuthorizationOptionSound | UNAuthorizationOptionCriticalAlert completionHandler:^(BOOL granted, NSError * _Nullable error) {
+            NSLog(@"Critical Alerts: %@", granted ? @"<granted>" : @"<not granted>");
+        }];
+    } else {
+        NSLog(@"Critical Alerts: Not available on iOS<12.0");
+    }
+}
+
 - (IBAction)_health:(id)sender
 {
 	NSSet* readableTypes = [NSSet setWithObjects:[HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierPeakExpiratoryFlowRate], [HKQuantityType quantityTypeForIdentifier:HKQuantityTypeIdentifierBloodPressureSystolic], nil];
