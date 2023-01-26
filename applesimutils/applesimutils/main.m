@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "SetNotificationsPermission.h"
-#import "SetCriticalAlertPermission.h"
+#import "SetCriticalAlertsPermission.h"
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
 #import "SetHealthKitPermission.h"
