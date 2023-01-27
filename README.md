@@ -49,7 +49,6 @@ Available Permissions:
     calendar=YES|NO|unset
     camera=YES|NO|unset
     contacts=YES|NO|unset
-    criticalAlerts=YES|NO|unset
     faceid=YES|NO|unset
     health=YES|NO|unset (iOS/tvOS 12.0 and above)
     homekit=YES|NO|unset

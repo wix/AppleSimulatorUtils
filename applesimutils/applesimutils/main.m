@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "SetNotificationsPermission.h"
-#import "SetCriticalAlertsPermission.h"
 #import "SetServicePermission.h"
 #import "SetLocationPermission.h"
 #import "SetHealthKitPermission.h"
@@ -314,14 +313,6 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 			
 			needsSpringBoardRestart |= YES;
 		}
-        else if([permission isEqualToString:@"criticalAlerts"])
-        {
-            assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
-            
-            success = [SetCriticalAlertsPermission setCriticalAlertsStatus:value forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
-            
-            needsSpringBoardRestart |= YES;
-        }
 		else if([permission isEqualToString:@"location"])
 		{
 			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
@@ -505,7 +496,6 @@ int main(int argc, const char* argv[]) {
 						@"calendar=YES|NO|unset",
 						@"camera=YES|NO|unset",
 						@"contacts=YES|NO|unset",
-						@"criticalAlerts=YES|NO|unset",
 						@"faceid=YES|NO|unset",
 						@"health=YES|NO|unset (iOS/tvOS 12.0 and above)",
 						@"homekit=YES|NO|unset",
