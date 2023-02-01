@@ -56,7 +56,7 @@ Available Permissions:
     medialibrary=YES|NO|unset
     microphone=YES|NO|unset
     motion=YES|NO|unset
-    notifications=YES|NO|unset
+    notifications=YES|NO|critical|unset
     photos=YES|NO|limited|unset (“limited” supported on iOS/tvOS 14.0 and above)
     reminders=YES|NO|unset
     siri=YES|NO|unset

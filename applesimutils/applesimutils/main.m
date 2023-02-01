@@ -307,7 +307,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		}
 		else if([permission isEqualToString:@"notifications"])
 		{
-			assertStringInArrayValues(value, @[@"YES", @"NO", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
+			assertStringInArrayValues(value, @[@"YES", @"NO", @"critical", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
 			
 			success = [SetNotificationsPermission setNotificationsStatus:value forBundleIdentifier:bundleIdentifier displayName:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
 			
@@ -506,7 +506,7 @@ int main(int argc, const char* argv[]) {
 						@"medialibrary=YES|NO|unset",
 						@"microphone=YES|NO|unset",
 						@"motion=YES|NO|unset",
-						@"notifications=YES|NO|unset",
+						@"notifications=YES|NO|critical|unset",
 						@"photos=YES|NO|limited|unset (“limited” supported on iOS/tvOS 14.0 and above)",
 						@"reminders=YES|NO|unset",
 						@"siri=YES|NO|unset",
