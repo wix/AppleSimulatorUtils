@@ -117,37 +117,42 @@ const NSTimeInterval AppleSimUtilsRetryTimeout = 30.0f;
 	return [bundleURL URLByAppendingPathComponent:executableName];
 }
 
-+ (NSURL*)launchDaemonPlistURLForDaemon:(NSString*)daemon
++ (NSURL*)launchDaemonPlistURLForDaemon:(NSString*)daemon runtimeBundleURL:(NSURL*)runtimeBundleURL
 {
 	if([daemon hasSuffix:@".plist"] == NO)
 	{
 		daemon = [daemon stringByAppendingString:@".plist"];
 	}
-	
-	NSFileManager *fileManager = [NSFileManager defaultManager];
-	NSURL* developerTools = [SimUtils developerURL];
-	
+
+	//Xcode 14 and 15 (using runtimeBundleURL)
+	NSURL *daemonURL = [runtimeBundleURL URLByAppendingPathComponent:[NSString stringWithFormat:@"Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/%@", daemon]];
+
 	//Xcode 11
-	NSURL *locationdDaemonURL = [developerTools URLByAppendingPathComponent:[NSString stringWithFormat:@"Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/%@", daemon]];
-	
+	NSURL* developerTools = [SimUtils developerURL];
+
+	if ([daemonURL checkResourceIsReachableAndReturnError:NULL] == NO)
+	{
+		daemonURL = [developerTools URLByAppendingPathComponent:[NSString stringWithFormat:@"Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/%@", daemon]];
+	}
+
 	//Xcode 9
-	if ([fileManager fileExistsAtPath:locationdDaemonURL.path] == NO)
+	if ([daemonURL checkResourceIsReachableAndReturnError:NULL] == NO)
 	{
-		locationdDaemonURL = [developerTools URLByAppendingPathComponent:[NSString stringWithFormat:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/%@", daemon]];
+		daemonURL = [developerTools URLByAppendingPathComponent:[NSString stringWithFormat:@"Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/System/Library/LaunchDaemons/%@", daemon]];
 	}
-	
+
 	//Older
-	if ([fileManager fileExistsAtPath:locationdDaemonURL.path] == NO)
+	if ([daemonURL checkResourceIsReachableAndReturnError:NULL] == NO)
 	{
-		locationdDaemonURL = [developerTools URLByAppendingPathComponent:[NSString stringWithFormat:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/%@", daemon]];
+		daemonURL = [developerTools URLByAppendingPathComponent:[NSString stringWithFormat:@"Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/System/Library/LaunchDaemons/%@", daemon]];
 	}
-	
-	if ([fileManager fileExistsAtPath:locationdDaemonURL.path] == NO)
+
+	if ([daemonURL checkResourceIsReachableAndReturnError:NULL] == NO)
 	{
 		return nil;
 	}
 	
-	return locationdDaemonURL;
+	return daemonURL;
 }
 
 + (void)restartSpringBoardForSimulatorId:(NSString*)simulatorId
@@ -171,7 +176,7 @@ static NSMutableArray<dispatch_block_t>* _blocks;
 }
 
 __attribute__((destructor))
-static void cleanup()
+static void cleanup(void)
 {
 	[_blocks enumerateObjectsUsingBlock:^(dispatch_block_t  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
 		obj();

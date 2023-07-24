@@ -56,7 +56,7 @@ static void shutdownSimulator(NSString* simulatorId)
 	[shutdownTask waitUntilExit];
 }
 
-static NSArray* simulatorDevicesList()
+static NSArray* simulatorDevicesList(void)
 {
 	LNLog(LNLogLevelDebug, @"Obtaining simulator device list");
 	
@@ -114,7 +114,7 @@ static NSArray* simulatorDevicesList()
 	return allDevices;
 }
 
-static NSPredicate* predicateByBooted()
+static NSPredicate* predicateByBooted(void)
 {
 	return [NSPredicate predicateWithFormat:@"state ==[c] %@", @"Booted"];
 }
@@ -274,6 +274,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		@"speech": @"kTCCServiceSpeechRecognition",
 		@"userTracking": @"kTCCServiceUserTracking",
 	};
+	NSURL *runtimeBundleURL = [NSURL fileURLWithPath:simulator[@"os"][@"bundlePath"]];
 	
 	NSArray<NSString*>* parsedArguments = [permissionsArgument componentsSeparatedByString:@","];
 	
@@ -317,7 +318,7 @@ static BOOL performPermissionsPass(NSString* permissionsArgument, NSString* simu
 		{
 			assertStringInArrayValues(value, @[@"never", @"always", @"inuse", @"unset"], -10, [NSString stringWithFormat:@"Error: Illegal value “%@” parsed for permission “%@”.", value, permission]);
 			
-			success = [SetLocationPermission setLocationPermission:value forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier error:&err];
+			success = [SetLocationPermission setLocationPermission:value forBundleIdentifier:bundleIdentifier simulatorIdentifier:simulatorIdentifier runtimeBundleURL:runtimeBundleURL error:&err];
 			
 			needsSpringBoardRestart |= NO;
 		}
@@ -640,7 +641,8 @@ int main(int argc, const char* argv[]) {
 			{
 				[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
 					NSString* simulatorId = simulator[@"udid"];
-				
+                    NSURL *runtimeBundleURL = [NSURL fileURLWithPath:simulator[@"os"][@"bundlePath"]];
+
 					NSString* title = [NSString stringWithFormat:@"%@ (%@, %@)", simulator[@"name"], simulatorId, simulator[@"state"]];
 					NSString* underline = [@"" stringByPaddingToLength:title.length withString:@"-" startingAtIndex:0];
 					LNLog(LNLogLevelStdOut, @"%@\n%@", title, underline);
@@ -676,13 +678,13 @@ int main(int argc, const char* argv[]) {
 						simPaths[@"TCC Database Path"] = [url URLByAppendingPathComponent:@"TCC/TCC.db"].path;
 					}
 					
-					url = [SetLocationPermission locationdURL];
+					url = [SetLocationPermission locationdURLForRuntimeBundleURL:runtimeBundleURL];
 					if(url.path != nil)
 					{
 						simPaths[@"locationd Daemon Info Plist Path"] = url.path;
 					}
 					
-					url = securitydURL();
+					url = securitydURL(runtimeBundleURL);
 					if(url.path != nil)
 					{
 						simPaths[@"securityd Daemon Info Plist Path"] = url.path;
@@ -742,6 +744,7 @@ int main(int argc, const char* argv[]) {
 			
 			[filteredSimulators enumerateObjectsUsingBlock:^(NSDictionary*  _Nonnull simulator, NSUInteger idx, BOOL * _Nonnull stop) {
 				NSString* simulatorId = simulator[@"udid"];
+				NSURL *runtimeBundleURL = [NSURL fileURLWithPath:simulator[@"os"][@"bundlePath"]];
 				
 				BOOL needsSimShutdown = NO;
 				if([simulator[@"state"] isEqualToString:@"Shutdown"] && [settings objectForKey:@"setPermissions"] != nil)
@@ -769,14 +772,14 @@ int main(int argc, const char* argv[]) {
 				
 				if([settings boolForKey:@"clearKeychain"])
 				{
-					performClearKeychainPass(simulatorId);
+					performClearKeychainPass(simulatorId, runtimeBundleURL);
 					
 					needsSpringBoardRestart = YES;
 				}
 				
 				if([settings boolForKey:@"clearMedia"])
 				{
-					performClearMediaPass(simulatorId);
+					performClearMediaPass(simulatorId, runtimeBundleURL);
 					
 					needsSpringBoardRestart = YES;
 				}

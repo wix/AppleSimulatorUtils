@@ -9,19 +9,19 @@
 #import "ClearMedia.h"
 #import "SimUtils.h"
 
-extern NSURL* assetsdURL(void)
+extern NSURL* assetsdURL(NSURL* runtimeBundleURL)
 {
 	static NSURL *assetsdURL;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		assetsdURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.assetsd"];
+		assetsdURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.assetsd" runtimeBundleURL:runtimeBundleURL];
 	});
 	return assetsdURL;
 }
 
-static void assetsdCtl(NSString* simulatorId, BOOL stop)
+static void assetsdCtl(NSString* simulatorId, NSURL* runtimeBundleURL, BOOL stop)
 {
-	NSURL *locationdDaemonURL = assetsdURL();
+	NSURL *locationdDaemonURL = assetsdURL(runtimeBundleURL);
 	NSCAssert(locationdDaemonURL != nil, @"Launch daemon “com.apple.mobileassetd” not found. Please open an issue.");
 	
 	NSTask* rebootTask = [NSTask new];
@@ -31,11 +31,11 @@ static void assetsdCtl(NSString* simulatorId, BOOL stop)
 	[rebootTask waitUntilExit];
 }
 
-void performClearMediaPass(NSString* simulatorIdentifier)
+void performClearMediaPass(NSString* simulatorIdentifier, NSURL* runtimeBundleURL)
 {
-	assetsdCtl(simulatorIdentifier, YES);
+	assetsdCtl(simulatorIdentifier, runtimeBundleURL, YES);
 	NSURL* mediaURL = [[SimUtils dataURLForSimulatorId:simulatorIdentifier] URLByAppendingPathComponent:@"Media"];
 	[NSFileManager.defaultManager removeItemAtURL:[mediaURL URLByAppendingPathComponent:@"DCIM"] error:NULL];
 	[NSFileManager.defaultManager removeItemAtURL:[mediaURL URLByAppendingPathComponent:@"PhotoData"] error:NULL];
-	assetsdCtl(simulatorIdentifier, NO);
+	assetsdCtl(simulatorIdentifier, runtimeBundleURL, NO);
 }

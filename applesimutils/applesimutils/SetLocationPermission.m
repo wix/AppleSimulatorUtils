@@ -9,9 +9,9 @@
 #import "SetLocationPermission.h"
 #import "SimUtils.h"
 
-static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
+static void startStopLocationdCtl(NSString* simulatorId, NSURL* runtimeBundleURL, BOOL stop)
 {
-	NSURL *locationdDaemonURL = [SetLocationPermission locationdURL];
+	NSURL *locationdDaemonURL = [SetLocationPermission locationdURLForRuntimeBundleURL:runtimeBundleURL];
 	NSCAssert(locationdDaemonURL != nil, @"Launch daemon “com.apple.locationd” not found. Please open an issue.");
 	
 	NSTask* rebootTask = [NSTask new];
@@ -23,17 +23,17 @@ static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 
 @implementation SetLocationPermission
 
-+ (NSURL*)locationdURL
++ (NSURL*)locationdURLForRuntimeBundleURL:(NSURL*)runtimeBundleURL
 {
 	static NSURL *locationdDaemonURL;
 	static dispatch_once_t onceToken;
 	dispatch_once(&onceToken, ^{
-		 locationdDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.locationd"];
+		 locationdDaemonURL = [SimUtils launchDaemonPlistURLForDaemon:@"com.apple.locationd" runtimeBundleURL:runtimeBundleURL];
 	});
 	return locationdDaemonURL;
 }
 
-+ (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error
++ (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId runtimeBundleURL:(NSURL*)runtimeBundleURL error:(NSError**)error
 {
 	LNLog(LNLogLevelDebug, @"Setting location permission");
 	
@@ -86,11 +86,11 @@ static void startStopLocationdCtl(NSString* simulatorId, BOOL stop)
 		locationClients[bundleIdentifier] = bundlePermissions;
 	}
 	
-	startStopLocationdCtl(simulatorId, YES);
+	startStopLocationdCtl(simulatorId, runtimeBundleURL, YES);
 	
 	[[NSPropertyListSerialization dataWithPropertyList:locationClients format:NSPropertyListBinaryFormat_v1_0 options:0 error:NULL] writeToURL:plistURL atomically:YES];
 	
-	startStopLocationdCtl(simulatorId, NO);
+	startStopLocationdCtl(simulatorId, runtimeBundleURL, NO);
 	
 	return YES;
 }

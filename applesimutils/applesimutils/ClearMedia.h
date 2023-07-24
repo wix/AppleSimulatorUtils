@@ -8,4 +8,4 @@
 
 #import <Foundation/Foundation.h>
 
-extern void performClearMediaPass(NSString* simulatorIdentifier);
+extern void performClearMediaPass(NSString* simulatorIdentifier, NSURL* runtimeBundleURL);
