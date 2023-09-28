@@ -10,8 +10,8 @@
 
 @interface SetLocationPermission : NSObject
 
-+ (NSURL*)locationdURL;
++ (NSURL*)locationdURLForRuntimeBundleURL:(NSURL*)runtimeBundleURL;
 
-+ (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId error:(NSError**)error;
++ (BOOL)setLocationPermission:(NSString*)permission forBundleIdentifier:(NSString*)bundleIdentifier simulatorIdentifier:(NSString*)simulatorId runtimeBundleURL:(NSURL*)runtimeBundleURL error:(NSError**)error;
 
 @end

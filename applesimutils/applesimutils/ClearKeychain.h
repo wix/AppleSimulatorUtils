@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSURL* securitydURL(void);
+extern NSURL* securitydURL(NSURL* runtimeBundleURL);
 
-extern void performClearKeychainPass(NSString* simulatorIdentifier);
+extern void performClearKeychainPass(NSString* simulatorIdentifier, NSURL* runtimeBundleURL);

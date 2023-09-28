@@ -164,6 +164,7 @@
 				391EBF361E91212B0009AACD /* Frameworks */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		391596DD1E8CBAA900FDD6F5 /* Products */ = {
 			isa = PBXGroup;
