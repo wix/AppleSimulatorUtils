@@ -1,6 +1,15 @@
 # AppleSimulatorUtils
 A collection of utils for Apple simulators.
 
+## Deprecation Notice
+
+**AppleSimulatorUtils** remains an actively maintained project.
+However, we have deprecated certain functionalities that overlap with features provided by the **`xcrun simctl`** command in the latest **Command Line Tools for Xcode**. 
+In addition to avoid redundancy, it is better to use the **official** tool provided by Apple.
+
+For a comprehensive list of deprecated commands and their `xcrun simctl` alternatives, please refer to our [Deprecations Document](./DEPRECATIONS.md).
+
+
 ## Installing
 
 Install [brew](https://brew.sh), then:
