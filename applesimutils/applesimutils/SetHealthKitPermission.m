@@ -191,9 +191,25 @@
     }
     else
     {
+      NSMutableString* query;
+      NSMutableString* values;
+      NSMutableDictionary* baseParams;
+      if (osVersion.majorVersion > 16 || (osVersion.majorVersion == 16 && osVersion.minorVersion > 1))
+      {
+        query = @"source_id, object_type, status, request, mode, date_modified, modification_epoch, provenance, deleted_object_anchor, object_limit_anchor, object_limit_modified, sync_identity".mutableCopy;
+        values = @":source_id, :object_type, :status, :request, :mode, :date_modified, :modification_epoch, :provenance, :deleted_object_anchor, :object_limit_anchor, :object_limit_modified, :sync_identity".mutableCopy;
+        baseParams = [@{@"source_id": rowID, @"status": permission == HealthKitPermissionStatusAllow ? @101 : @104, @"request": @203, @"mode": @0, @"date_modified": @(NSDate.date.timeIntervalSinceReferenceDate), @"modification_epoch": @1, @"provenance": @0, @"deleted_object_anchor": @0, @"object_limit_anchor": @0, @"object_limit_modified": NSNull.null, @"sync_identity": @1} mutableCopy];
+      }
+      else
+      {
+        query = @"source_id, object_type, status, request, mode, date_modified, modification_epoch, provenance, deleted_object_anchor, object_limit_anchor, object_limit_modified".mutableCopy;
+        values = @":source_id, :object_type, :status, :request, :mode, :date_modified, :modification_epoch, :provenance, :deleted_object_anchor, :object_limit_anchor, :object_limit_modified".mutableCopy;
+        baseParams = [@{@"source_id": rowID, @"status": permission == HealthKitPermissionStatusAllow ? @101 : @104, @"request": @203, @"mode": @0, @"date_modified": @(NSDate.date.timeIntervalSinceReferenceDate), @"modification_epoch": @1, @"provenance": @0, @"deleted_object_anchor": @0, @"object_limit_anchor": @0, @"object_limit_modified": NSNull.null} mutableCopy];
+      }
       for(int i = 0; i < 200; i++)
       {
-        if([db executeUpdate:@"insert into authorization (source_id, object_type, status, request, mode, date_modified, modification_epoch, provenance, deleted_object_anchor, object_limit_anchor, object_limit_modified) VALUES (:source_id, :object_type, :status, :request, :mode, :date_modified, :modification_epoch, :provenance, :deleted_object_anchor, :object_limit_anchor, :object_limit_modified)" withParameterDictionary:@{@"source_id": rowID, @"object_type": @(i), @"status": permission == HealthKitPermissionStatusAllow ? @101 : @104, @"request": @203, @"mode": @0, @"date_modified": @(NSDate.date.timeIntervalSinceReferenceDate), @"modification_epoch": @1, @"provenance": @0, @"deleted_object_anchor": @0, @"object_limit_anchor": @0, @"object_limit_modified": NSNull.null}] == NO)
+        baseParams[@"object_type"] = @(i);
+        if ([db executeUpdate:[NSString stringWithFormat:@"insert into authorization (%@) VALUES (%@)", query, values] withParameterDictionary:baseParams] == NO)
         {
           logcontinue_query_error(db);
         }
