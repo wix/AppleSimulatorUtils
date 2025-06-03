@@ -407,6 +407,35 @@ typedef NS_ENUM(NSUInteger, ASUBiometricType) {
 	ASUBiometricTypeFace,
 };
 
+static id filterObject(id obj, NSSet* allowedKeys) {
+	if ([obj isKindOfClass:[NSDictionary class]]) {
+		NSMutableDictionary* filtered = [NSMutableDictionary new];
+		[(NSDictionary*)obj enumerateKeysAndObjectsUsingBlock:^(NSString* key, id value, BOOL* stop) {
+			if ([allowedKeys containsObject:key]) {
+				if ([value isKindOfClass:[NSDictionary class]] || [value isKindOfClass:[NSArray class]]) {
+					id filteredValue = filterObject(value, allowedKeys);
+					if (filteredValue) {
+						filtered[key] = filteredValue;
+					}
+				} else {
+					filtered[key] = value;
+				}
+			}
+		}];
+		return filtered;
+	} else if ([obj isKindOfClass:[NSArray class]]) {
+		NSMutableArray* filtered = [NSMutableArray new];
+		[(NSArray*)obj enumerateObjectsUsingBlock:^(id item, NSUInteger idx, BOOL* stop) {
+			id filteredItem = filterObject(item, allowedKeys);
+			if (filteredItem) {
+				[filtered addObject:filteredItem];
+			}
+		}];
+		return filtered;
+	}
+	return obj;
+}
+
 /*
  com.apple.BiometricKit_Sim.fingerTouch.match
  com.apple.BiometricKit_Sim.fingerTouch.nomatch
@@ -451,7 +480,7 @@ int main(int argc, const char* argv[]) {
 		LNUsageSetExampleStrings(@[
 			@"%@ --byId <simulator UDID> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
 			@"%@ --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions \"<permission1>, <permission2>, ...\"",
-			@"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]",
+			@"%@ --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>] [--fields <key1,key2,...>]",
 			@"%@ --booted --biometricEnrollment <YES/NO>",
 			@"%@ --booted --biometricMatch",
 			@"%@ --booted --setLocation \"[51.51915, -0.12907]\""
@@ -467,6 +496,7 @@ int main(int argc, const char* argv[]) {
 			[LNUsageOption optionWithName:@"list" shortcut:@"l" valueRequirement:LNUsageOptionRequirementOptional description:@"Lists available simulators"],
 			[LNUsageOption optionWithName:@"bundle" shortcut:@"b" valueRequirement:LNUsageOptionRequirementRequired description:@"The app bundle identifier"],
 			[LNUsageOption optionWithName:@"maxResults" valueRequirement:LNUsageOptionRequirementRequired description:@"Limits the number of results returned from --list"],
+			[LNUsageOption optionWithName:@"fields" valueRequirement:LNUsageOptionRequirementRequired description:@"Comma-separated list of fields to include in --list output (e.g. \"udid,os,identifier\")"],
 			LNUsageOption.emptyOption,
 			[LNUsageOption optionWithName:@"setPermissions" shortcut:@"sp" valueRequirement:LNUsageOptionRequirementRequired description:@"Sets the specified permissions and restarts SpringBoard for the changes to take effect"],
 			[LNUsageOption optionWithName:@"clearKeychain" shortcut:@"ck" valueRequirement:LNUsageOptionRequirementNone description:@"Clears the simulator's keychain"],
@@ -618,7 +648,28 @@ int main(int argc, const char* argv[]) {
 					filteredSimulators = [filteredSimulators subarrayWithRange:NSMakeRange(0, MIN(filteredSimulators.count, maxResults))];
 				}
 				
-				LNLog(LNLogLevelStdOut, @"%@", [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:filteredSimulators options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding]);
+				// Apply field filtering if --fields option is provided
+				NSArray* compactedSimulators = filteredSimulators;
+				NSString* fieldsParam = [settings objectForKey:@"fields"];
+				if(fieldsParam != nil && fieldsParam.length > 0)
+				{
+					NSArray* fieldNames = [fieldsParam componentsSeparatedByString:@","];
+					NSMutableSet* allowedKeys = [NSMutableSet new];
+					[fieldNames enumerateObjectsUsingBlock:^(NSString* fieldName, NSUInteger idx, BOOL* stop) {
+						NSString* trimmedField = [fieldName stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+						if(trimmedField.length > 0)
+						{
+							[allowedKeys addObject:trimmedField];
+						}
+					}];
+					
+					if(allowedKeys.count > 0)
+					{
+						compactedSimulators = filterObject(filteredSimulators, allowedKeys);
+					}
+				}
+				
+				LNLog(LNLogLevelStdOut, @"%@", [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:compactedSimulators options:NSJSONWritingPrettyPrinted error:NULL] encoding:NSUTF8StringEncoding]);
 				
 				exit(0);
 			}

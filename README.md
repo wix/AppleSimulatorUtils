@@ -27,7 +27,7 @@ A collection of utils for Apple simulators.
 Usage Examples:
     applesimutils --byId <simulator UDID> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
     applesimutils --byName <simulator name> --byOS <simulator OS> --bundle <bundle identifier> --setPermissions "<permission1>, <permission2>, ..."
-    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>]
+    applesimutils --list [--byName <simulator name>] [--byOS <simulator OS>] [--byType <simulator device type>] [--maxResults <int>] [--fields <key1,key2,...>]
     applesimutils --booted --biometricEnrollment <YES/NO>
     applesimutils --booted --biometricMatch
 
@@ -41,6 +41,7 @@ Options:
     --list, -l                    Lists available simulators
     --bundle, -b                  The app bundle identifier
     --maxResults                  Limits the number of results returned from --list
+    --fields                      Comma-separated list of fields to include in --list output (e.g. "udid,os,identifier")
 
     --setPermissions, -sp         Sets the specified permissions and restarts SpringBoard for the changes to take effect
     --clearKeychain, -ck          Clears the simulator's keychain
